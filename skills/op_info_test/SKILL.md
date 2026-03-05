@@ -32,9 +32,10 @@ description: Generate and validate MindSpore Python ST op_info tests end-to-end 
 
 仅在以下条件全部满足时判定闭环完成：
 
-1. 远端任务 `status=success`。
-2. `summary.json` 的 `failed_cases` 为空。
-3. 不存在未处理的 `error_type=testcase`。
+1. 生成用例覆盖[workflow/op_info_generation.md]中所要求的全部场景。，除非是信息缺失等无法解决原因或者满足文档中省略条件，否则不允许有缺失场景。
+2. 远端任务 `status=success`。
+3. `summary.json` 的 `failed_cases` 为空。
+4. 不存在未处理的 `error_type=testcase`。
 
 ## 执行约束
 
