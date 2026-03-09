@@ -90,7 +90,8 @@ mindspore-aclnn-operator-devflow/
 │   ├── 07-export.md
 │   ├── 08-testing.md
 │   ├── 09-docs.md
-│   └── 10-delivery.md
+│   ├── 10-remote-build.md
+│   └── 11-delivery.md
 │
 ├── checklists/                  # 详细验收清单（按步骤1:1拆分）
 │   ├── pre-checks.md            #   每个文件包含完整的 Gate 1/2/3

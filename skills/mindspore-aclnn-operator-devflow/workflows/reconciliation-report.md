@@ -55,13 +55,13 @@
 
 ---
 
-## 03-general-infer、02-code-generation、01-yaml-definition、00-pre-checks、10-delivery
+## 03-general-infer、02-code-generation、01-yaml-definition、00-pre-checks、11-delivery
 
 - **03**：源文档 3.2.2 GeneralInfer、3.2.3 InferValue、4.1 动态 shape 分类；reference §4/§27 已摘要；03 引用 §4/§27，**已核对**，无大漏。
 - **02**：多源（YAML/gen_ops）；reference §2/§3；02 已引用，**已核对**。
 - **01**：多源（YAML/接口策略）；reference §2/§19；01 已引用，**已核对**。
 - **00**：2.接口开发、ACLNN 整体流程、PTA 审查；reference §19/§25/§28；00 已引用，**已核对**。
-- **10**：11.算子开发开源运作规范、Aclnn 整体流程；reference §10/§13/§21/§30；10 已引用，**已核对**。
+- **11**：11.算子开发开源运作规范、Aclnn 整体流程；reference §10/§13/§21/§30；11-delivery 已引用，**已核对**。
 
 ---
 
