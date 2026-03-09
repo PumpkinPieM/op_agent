@@ -12,8 +12,8 @@
 > | §0a 对标分析, §0b ACLNN 能力 | Pre-A / Pre-B |
 > | §0c 子算子盘点 | Pre-C（组合场景） |
 > | §0d 版本/环境, §0e 方案评审 | Pre-B |
-> | §0f RFC 流程 | Step 10（转测交付） |
-> | §0g Feature 文档 | Pre-B 初始化 → Step 10 补齐 |
+> | §0f RFC 流程 | Step 11（转测交付） |
+> | §0g Feature 文档 | Pre-B 初始化 → Step 11 补齐 |
 > | §1 YAML/生成 | Step 1 / Step 2 |
 > | §2 Infer | Step 3 |
 > | §3 PyBoost, §3b 接口层 | Step 4 / Step 7 |

@@ -115,4 +115,4 @@
 
 ## 下一步
 
-文档完成后，进入 **[Workflow 10: 转测交付](./10-delivery.md)**
+文档完成后，进入 **[Workflow 10: 远程编译验证](./10-remote-build.md)**

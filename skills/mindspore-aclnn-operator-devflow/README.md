@@ -6,7 +6,7 @@ PyBoost/KBK、动态 shape、测试与文档，帮助开发者更稳定地完成
 
 ## 结构一句话
 
-**SKILL** 看流程 → **workflows/** 按 00～10 做 → 某步细节查 **reference.md §X** → 自检用 **checklists.md**，交活用 **templates/**，溯源看 **traceability.md**。
+**SKILL** 看流程 → **workflows/** 按 00～11 做 → 某步细节查 **reference.md §X** → 自检用 **checklists.md**，交活用 **templates/**，溯源看 **traceability.md**。
 
 ## 文件结构
 
@@ -20,7 +20,8 @@ PyBoost/KBK、动态 shape、测试与文档，帮助开发者更稳定地完成
 | `examples.md` | 触发样例 | 「用户说 X → agent 做 Y」示例 |
 | `traceability.md` | 溯源（维护用） | 原始来源文档 → skill 落点；维护/全面检查时用 |
 | `workflows/reconciliation-report.md` | 核对报告（维护用） | workflow 与源文档逐节核对结果；维护时用 |
-| `scripts/` | 工具脚本 | PTA 支持范围探测脚本模板 |
+| `servers.json` | **服务器配置** | 远程编译服务器的 IP/账号/密码/目录/编译命令，按设备类型（910b/910a/gpu）组织 |
+| `scripts/` | 工具脚本 | PTA 支持范围探测脚本模板、远程部署编译脚本 |
 
 ### workflows/ 目录详情
 
@@ -36,7 +37,8 @@ PyBoost/KBK、动态 shape、测试与文档，帮助开发者更稳定地完成
 | `07-export.md` | Step 7: 导出与占位 |
 | `08-testing.md` | Step 8: 测试（UT + ST） |
 | `09-docs.md` | Step 9: 文档（EN + CN） |
-| `10-delivery.md` | Step 10: 转测交付 |
+| `10-remote-build.md` | Step 10: 远程编译验证（推送→编译→轮询修复） |
+| `11-delivery.md` | Step 11: 转测交付 |
 
 ## 如何使用
 
