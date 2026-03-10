@@ -2,3 +2,6 @@ __pycache__
 .DS_Store
 runtime/artifacts/runs/
 !runtime/artifacts/.gitkeep
+workspace/*
+!workspace/.gitkeep
+!workspace/README.md
