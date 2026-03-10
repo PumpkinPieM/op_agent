@@ -409,15 +409,6 @@ def _tensor_dense_lightning_indexer_grad_kl_loss(...):
 2. **TND 3D 静态 shape**：验证不同布局
 3. **动态 rank**：验证回退逻辑
 
-#### Python ST
-
-**覆盖 4 个测试用例：**
-1. `test_..._bsnd`：BSND 布局，fp16/bf16 × GRAPH/PYNATIVE
-2. `test_..._tnd`：TND 布局 + actual_seq_qlen/klen
-3. `test_..._with_rope`：含可选 query_rope/key_rope
-4. `test_..._pta_compare`：有 torch_npu 时做 PTA 0 偏差对比
-
----
 
 ## 四、产出文件清单
 

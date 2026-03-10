@@ -20,9 +20,9 @@
 
 ## 1. 前置条件
 
-本地已完成用例生成、修改并推送分支。
-
-如果接收任务指令中未明确server_ip, 则使用localhost作为server_ip。
+1. 本地已完成用例生成、修改并推送分支。
+2. 如果接收任务指令中未明确server_ip, 则使用localhost作为server_ip。
+3. 设置环境变量 `no_proxy=127.0.0.1,localhost`
 
 ## 2. 标准操作流程
 
@@ -48,7 +48,7 @@ cd $MINDSPORE_ROOT
 python .agents/skills/op_info_test/scripts/remote_runner_client.py \
   --server http://<server_ip>:18080 \
   submit \
-  --repo /home/panzh/mindspore \
+  --repo <mindspore_root> \
   --branch <your_branch> \
   --test-cmd "pytest tests/st/ops/op_info_tests/*.py -q --maxfail=1 --tb=short" \
   --timeout-sec 3600

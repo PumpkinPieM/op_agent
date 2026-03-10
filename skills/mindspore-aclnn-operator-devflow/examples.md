@@ -221,7 +221,7 @@
 - 告知用户：
   - 在现有 YAML 上加 `dispatch` 字段（`dispatch.Ascend: EyeAscend`），不新建 YAML
   - Infer/functional/nn/Tensor 接口不改
-  - 只做 PyBoost customize + KBK kernel 注册 + aclnn_config 映射 + ST 测试
+  - 只做 PyBoost customize + KBK kernel 注册 + aclnn_config 映射
   - 可跳过 Step 3（Infer）、Step 7（导出/接口）
 - 若签名不一致 → 转入示例 22/23 决策。
 

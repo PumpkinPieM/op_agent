@@ -34,7 +34,7 @@ PyBoost/KBK、动态 shape、测试与文档，帮助开发者更稳定地完成
 | `05-kbk.md` | Step 5: KBK（Graph） |
 | `06-bprop.md` | Step 6: BPROP 注册 |
 | `07-export.md` | Step 7: 导出与占位 |
-| `08-testing.md` | Step 8: 测试（UT + ST） |
+| `08-testing.md` | Step 8: 测试（UT） |
 | `09-docs.md` | Step 9: 文档（EN + CN） |
 | `10-delivery.md` | Step 10: 转测交付 |
 

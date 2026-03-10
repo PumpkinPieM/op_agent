@@ -47,8 +47,6 @@
 | | | 0~8 维支持 | | |
 | | | 其他功能点 | | |
 | 9 | 门禁用例补齐 | UT | | |
-| | | ST | | |
-| | | TEST_OP | | |
 | 10 | 支持 MS Adapter | | | |
 | 11 | 自动并行切分 | | | |
 | 12 | 混合精度（AMP） | | | |
@@ -135,13 +133,6 @@ xxx:
 ### UT（C++ GeneralInfer）
 - {覆盖场景}
 
-### ST（Ascend）
-- **功能对比**：{对比策略}
-- **场景**：{模式/dtype/特殊输入/异常}
-
-### TEST_OP
-- {覆盖说明}
-
 ## 13. 代码与文件改动说明 `[开发完成后]`
 
 | 类别 | 文件路径 |
@@ -155,7 +146,6 @@ xxx:
 | 文档(EN) | `mindspore/ops/op_def/yaml/doc/xxx_doc.yaml`（`_ext` 风格）或 `api_def/function_doc/`（旧风格） |
 | 文档(CN) | `docs/api/api_python/ops/mindspore.ops.xxx.rst` |
 | 测试(UT) | `tests/ut/cpp/ops/test_xxx_general_infer.cc` |
-| 测试(ST) | `tests/st/ops/ascend/test_xxx.py` |
 
 ## 14. 验收报告 `[转测前填写]`
 
@@ -172,7 +162,7 @@ xxx:
 | 自测内容 | 自测结果 | 备注 |
 | -------- | -------- | ---- |
 | 新增接口列表 | | |
-| 提供典型场景的 UT/ST 用例 | | |
+| 提供典型场景的 UT 用例 | | |
 | 接口是否提供中文 RST 并与英文注释对应 | | |
 | 接口描述是否详细准确 | | |
 | 与 PyTorch 的接口是否一致 | | |

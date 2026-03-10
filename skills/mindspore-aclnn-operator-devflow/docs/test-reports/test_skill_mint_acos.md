@@ -534,25 +534,6 @@ OP_FUNC_IMPL_INFER_TEST_CASES(
 | 8 | `{-1, 3}` | kFloat32 | `{-1, 3}` | kFloat32 | **动态 shape** |
 | 9 | `{-1, -1}` | kFloat64 | `{-1, -1}` | kFloat64 | 全动态 shape |
 
-### 8.2 Python ST — 已有（tests/st/mint/test_acos.py）
-
-该文件在本次开发前已存在，覆盖 3 个测试场景：
-
-**`test_acos_std`**：标准前向+反向（pynative / KBK 双模式）
-- 输入：`(2, 3, 4)` float32，值域 `[-1, 1]`
-- 前向验证：对比 `np.arccos`，`rtol=1e-4`
-- 反向验证：对比 `-1/sqrt(1-x^2)`，`rtol=1e-4`
-
-**`test_acos_dynamic_shape`**：动态 shape
-- 输入 1：`(2, 3)` float32
-- 输入 2：`(3, 4, 5)` float32
-- 使用 `TEST_OP` 框架验证
-
-**`test_acos_bfloat16`**：bfloat16 精度（910B）
-- 输入：`(2, 3)` bfloat16
-- 前向+反向验证，`atol=0.004, rtol=0.004`
-
----
 
 ## 九、完整改动清单
 

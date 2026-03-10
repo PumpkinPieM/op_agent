@@ -470,17 +470,6 @@ def _tensor_dense_lightning_indexer_grad_kl_loss(
 | 2 | 动态 rank | 全部 kShapeRankAny | 前 3 输出 kShapeRankAny, loss(1) |
 | 3 | bf16 + rope | query(1,128,8,64) bf16 + query_rope 提供 | d_qi(1,128,8,64) bf16, loss float32 |
 
-### 11.2 Python ST（Ascend 设备测试）
-
-**覆盖 4 个测试函数：**
-
-| 函数 | 布局 | 模式 | 特殊参数 | 验证内容 |
-|------|------|------|---------|---------|
-| `test_..._bsnd` | BSND 4D | PYNATIVE + GRAPH | 默认参数 | shape + dtype |
-| `test_..._tnd` | TND 3D | PYNATIVE + GRAPH | actual_seq_qlen/klen | shape + dtype |
-| `test_..._with_rope` | BSND 4D | PYNATIVE + GRAPH | query_rope + key_rope | shape + dtype |
-| `test_..._pta_compare` | BSND 4D | PYNATIVE | 完整对比 | PTA 0 偏差验证 |
-
 ---
 
 ## 十二、Feature 文档

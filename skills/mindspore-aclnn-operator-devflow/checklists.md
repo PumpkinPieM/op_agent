@@ -51,7 +51,7 @@
 - [ ] `[MUST]` **C++ API / Prim 可用性确认**：PyBoost 拼接所需的 C++ API 函数已存在于 `functions.h`；KBK 拼接所需的 Prim 原语已在 `gen_ops_primitive_*.h` 中生成。
 - [ ] `[MUST]` **缺失子算子已补齐**：盘点为"❌ 未接入"的子算子已走完步骤 1-8 并通过 UT。
 - [ ] `[MUST]` **实施顺序正确**：叶子算子先于组合算子实现；有依赖关系的按拓扑序。
-- [ ] `[SHOULD]` **子算子级验证通过**：每个子算子独立 UT/ST 通过后，再进入组合层开发。
+- [ ] `[SHOULD]` **子算子级验证通过**：每个子算子独立 UT 通过后，再进入组合层开发。
 - [ ] `[SHOULD]` **中间 tensor 对齐验证**：组合实现中的中间 tensor 与 PTA 逐阶段对比过。
 
 ### 0d. 版本/环境/影响面
@@ -62,7 +62,7 @@
 ### 0e. 方案评审与交付范围
 - [ ] `[MUST]` **交付范围写清楚**：支持的平台、模式（Pynative/KBK/GE）、动态 shape/rank、反向、性能/显存目标、遗留问题。
 - [ ] `[MUST]` **接口设计决策明确**：接口分析五要素已完成——是否新增原语 / 复用原有原语；是否新增接口 / 复用原有接口；YAML 策略已确定（加 dispatch / 新建 `_ext` / 新建 / `ops.extend`）。详见 `reference.md` §15.4。
-- [ ] `[MUST]` **接口/原语变更评审**：按评审规则确认（新增→重点评审；功能扩展→需评审；非兼容修改→原则不允许）。涉及修改已有原语参数签名时，参考 MS 仓库相似算子处理方式，确保已有 UT/ST 回归通过、跨后端（GE/CPU/GPU/Lite）不受影响。
+- [ ] `[MUST]` **接口/原语变更评审**：按评审规则确认（新增→重点评审；功能扩展→需评审；非兼容修改→原则不允许）。涉及修改已有原语参数签名时，参考 MS 仓库相似算子处理方式，确保已有 UT 回归通过、跨后端（GE/CPU/GPU/Lite）不受影响。
 - [ ] `[MUST]` **CPU/GPU 不回退（存量场景）**：若复用存量原语或适配存量算子 API，必须确保原有 CPU/GPU 流程正常、功能不退化；全新算子不需要新增 CPU/GPU 支持。
 - [ ] `[SHOULD]` **问题归因与结论**：CANN 问题要有正式书面记录；框架/方案限制要有会议纪要（含议题/时间/人员/背景/结论）。
 - [ ] `[SHOULD]` **差异收敛**：若无法对标，明确需要评审/新增接口。
@@ -190,11 +190,10 @@
 - [ ] `[SHOULD]` **KBK 动态 shape + inplace**：必要时用 `ib->Depend(target, inplace_call)` 保序。
 - [ ] `[SHOULD]` **反向实现简洁性**：不要引入额外不必要的算子，避免误差累积。
 
-## 6. 测试（UT/ST/自验）
+## 6. 测试（UT自验）
 
 ### 6a. 测试文件产出（逐项确认，不允许遗漏）
 - [ ] `[MUST]` **C++ UT 文件已产出**：`tests/ut/cpp/ops/test_ops_{op_name}.cc`，覆盖动态维/动态秩/unknown/None。
-- [ ] `[MUST]` **Python ST 文件已产出或确认已有覆盖**：`tests/st/ops/share/_op_info/op_database.py`。
 
 ### 6b. 场景覆盖
 - [ ] `[MUST]` **默认参数场景验证**：使用所有默认参数值调用前向+反向，确认基本路径可通。
@@ -226,23 +225,6 @@
 - [ ] `[SHOULD]` **AMP 混合精度**：确认是否已支持或不涉及（新增 Primitive 需关注 amp_white/black_list）。
 - [ ] `[SHOULD]` **多 Tensor 输入 dtype 不一致**：若多输入算子，确认是否支持各输入 dtype 不同。
 - [ ] `[SHOULD]` **输出 shape 是否依赖计算结果**：若是 compute-depend 输出，需要 SyncOutputShape 机制。
-
-## 7. 精度 0 偏差（对标 PTA）
-- [ ] `[SHOULD]` **MS 与 PTA 使用相同种子和输入**（§6a 的种子要求是通用可复现；此处强调 MS/PTA 双侧输入完全一致）。
-- [ ] `[SHOULD]` **二进制一致性**：用 `md5sum`（或等价方式）对比输出 `.npy`，确保 bitwise 一致（若目标要求如此）。
-- [ ] `[SHOULD]` **Kernel 一致性**：通过 profiling 验证 MS 与 PTA 调用了相同的底层 kernel。
-
-## 8. 性能与显存（对标 PTA）
-
-### 8a. 性能
-- [ ] `[MUST]` **性能达标**：Ascend 算子性能与 PTA 对比 ≤1.1 倍（或按项目门槛）。
-- [ ] `[SHOULD]` **性能自验覆盖**：≥3 种规格（小/中/大），含 kernel 性能和端到端性能。
-- [ ] `[SHOULD]` **性能工具**：使用 `apitimewrapper`（或等价工具）打点；排除框架首次启动/拷贝耗时。
-
-### 8b. 显存
-- [ ] `[SHOULD]` **MS 显存统计**：`mindspore.runtime.max_memory_allocated()`
-- [ ] `[SHOULD]` **PTA 显存统计**：`torch_npu.npu.max_memory_allocated()`
-- [ ] `[SHOULD]` **对比位置一致**：正向/反向在相同阶段统计，避免把初始化/编译混入。
 
 ## 9. 文档（中英文一致）
 
@@ -337,7 +319,6 @@
 
 ### E. 测试文件
 - [ ] `[MUST]` `tests/ut/cpp/ops/test_ops_{op_name}.cc`（C++ UT，必须新建）
-- [ ] `[MUST]` `tests/st/ops/share/_op_info/op_database.py`(须存在对应接口名的注册)
 
 ### F. 中文 RST 文档（按接口形态，公开 API 必须）
 > 每个接口形态可能需要独立的中文 RST 文件，不要只写一份。
