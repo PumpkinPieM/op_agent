@@ -349,9 +349,6 @@
 ### K. BPROP（如需要反向）
 - [ ] `[MUST]` `ccsrc/frontend/expander/grad/grad_*_ops.cc` 中 `REG_BPROP_BUILDER` 注册
 
-### L. 构建系统
-- [ ] `[MUST]` 路径 2 的新 `.cc` 文件在 `CMakeLists.txt` 的 `GLOB_RECURSE` 范围内
-
 ---
 
 ## 提交前必检 Top-25（精简版）

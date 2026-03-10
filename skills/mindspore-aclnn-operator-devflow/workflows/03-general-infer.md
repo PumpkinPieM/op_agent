@@ -76,7 +76,3 @@
 
 - **InferInfo API**：以`mindspore/core/include/ops/infer_info/infer_info.h`中接口定义为主，按项目已有用法写（如 `GetScalarValueWithCheck` / `GetArrayValue` / `HasUnknownValue` / `IsNone`），不要臆造 API。
 - **Infer 职责**：只做推导，不做运行时合法性校验（合法性让ACLNN接口内部处理）。
-
-## 下一步
-
-GeneralInfer 完成后，进入 **[Workflow 4: PyBoost](./04-pyboost.md)**

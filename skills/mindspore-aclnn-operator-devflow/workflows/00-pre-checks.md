@@ -128,7 +128,7 @@
 
 > **⚠️ "交付给用户"的含义：生成实际的 .md 文件到工作区，并告知用户文件路径。**
 >
-> - PTA 源码审查报告：按 `templates/pta-analysis-report.md` 模板填充后，用 Write 工具
+> - PTA 源码审查报告：按 `templates/pta-analysis-report.md` 模板填充
 >   **生成文件**（如 `{op_name}_pta_analysis.md`），在消息中告知用户文件路径。
 > - Feature 文档：按 `templates/feature-document.md` 模板填写 §1-§4、§6、§8 后，
 >   **生成文件**（如 `{op_name}_feature.md`），在消息中告知用户文件路径。
@@ -185,7 +185,3 @@
 - [ ] Pre-C（组合场景）：已规划实施顺序
 
 ---
-
-## 下一步
-
-前置检查完成后，进入 **[Workflow 1: YAML 定义](./01-yaml-definition.md)**

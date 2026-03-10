@@ -75,7 +75,3 @@ YAML 最小模板见 `reference.md` §18.1。
 - [ ] 对照相似算子检查字段完整性（无缺 `py_method`、keys 结构正确）
 
 ---
-
-## 下一步
-
-YAML 定义完成后，进入 **[Workflow 2: 代码生成](./02-code-generation.md)**

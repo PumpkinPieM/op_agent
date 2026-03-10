@@ -51,6 +51,3 @@ C++ UT 文件：
 - [ ] 覆盖场景：动态 shape / 静态 shape / 非连续 tensor / 空 tensor / 特殊值
 
 ---
-## 下一步
-
-测试完成后，进入 **[Workflow 9: 文档](./09-docs.md)**

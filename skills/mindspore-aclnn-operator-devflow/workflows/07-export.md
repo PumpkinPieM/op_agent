@@ -59,9 +59,3 @@
 - [ ] 接口重载：api_def 多条目配置正确、deprecated YAML 参数与 py_method 一致（如涉及）
 
 ---
-
-## 下一步
-
-导出完成后，进入 **[Workflow 8: 测试](./08-testing.md)**
-
-> 如果不涉及 functional/nn/Tensor 导出，本步骤可精简。

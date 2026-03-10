@@ -85,7 +85,3 @@ python mindspore/ops/op_def/gen_ops.py
 - **Windows 编码**：英文 YAML 文档避免夹杂中文（可能触发编码问题）；中文放 RST。
 
 ---
-
-## 下一步
-
-代码生成完成后，进入 **[Workflow 3: GeneralInfer](./03-general-infer.md)**

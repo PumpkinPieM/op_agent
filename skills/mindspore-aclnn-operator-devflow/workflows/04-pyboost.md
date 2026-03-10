@@ -111,7 +111,3 @@
 - [ ] 原始算子 YAML 已加 `view: True`
 
 ---
-
-## 下一步
-
-PyBoost 完成后，进入 **[Workflow 5: KBK](./05-kbk.md)**
