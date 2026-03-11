@@ -20,7 +20,7 @@
 
 ## 执行步骤
 
-### Step 1：C++ UT（`reference.md` §8.1）—— 必须新建
+### Step 1：C++ UT（[`reference.md` 8.1 C++ UT](reference.md#testing-cpp-ut)）—— 必须新建
 
 典型构造：
 - 标量：`ShapeVector{}` + `CreateScalar<T>(value)`
@@ -51,6 +51,3 @@ C++ UT 文件：
 - [ ] 覆盖场景：动态 shape / 静态 shape / 非连续 tensor / 空 tensor / 特殊值
 
 ---
-## 下一步
-
-测试完成后，进入 **[Workflow 9: 文档](./09-docs.md)**

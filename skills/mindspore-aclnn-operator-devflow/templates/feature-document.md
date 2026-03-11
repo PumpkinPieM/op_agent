@@ -1,15 +1,16 @@
 # {算子名} 算子开发 Feature 文档
 
 > **说明**：本文档是算子评审和转测交付的**必须产物**。
-> Pre-B 阶段初始化 §1-§4、§6、§8；其余章节在对应开发步骤完成后回填。
+> Pre-B 阶段初始化 [1. 背景描述](#feature-background)、[2. 标杆与接口](#feature-benchmark-api)、[3. 任务清单](#feature-task-list)、[4. 功能与接口说明](#feature-functional-spec)、[6. 约束与类型](#feature-constraints)、[8. 与 PTA 的差异与对齐](#feature-pta-alignment)；其余章节在对应开发步骤完成后回填。
 > 每个章节标注了填写时机：`[Pre-B 阶段]` / `[Step X 回填]` / `[开发完成后]`。
 
----
 
+<a id="feature-background"></a>
 ## 1. 背景描述 `[Pre-B 阶段]`
 
 {描述算子的背景、来源（如 NSA/DSA 等算法论文）、MindSpore 为何需要此算子}
 
+<a id="feature-benchmark-api"></a>
 ## 2. 标杆与接口（Benchmark & API） `[Pre-B 阶段]`
 
 - **标杆接口**：`torch_npu.npu_xxx` / `torch.xxx`
@@ -19,6 +20,7 @@
   - nn：`mindspore.mint.nn.Xxx`（若需要）
   - Tensor：`Tensor.xxx`（若需要）
 
+<a id="feature-task-list"></a>
 ## 3. 任务清单（Tasks） `[Pre-B 阶段初始化，开发中更新状态]`
 
 > 标准 13 大类，逐项标注状态。
@@ -52,6 +54,7 @@
 | 12 | 混合精度（AMP） | | | |
 | 13 | 安全与异常 | 异常用例与报错规范 | | |
 
+<a id="feature-functional-spec"></a>
 ## 4. 功能与接口说明 `[Pre-B 阶段]`
 
 ### 功能概述
@@ -75,6 +78,7 @@ mindspore.ops.xxx(
 | param1 | Tensor | 必选 | — | {描述} |
 | ... | | | | |
 
+<a id="feature-yaml-definition"></a>
 ## 5. YAML 定义（参考） `[Step 1 完成后]`
 
 ```yaml
@@ -89,6 +93,7 @@ xxx:
         Ascend: XxxAscend
 ```
 
+<a id="feature-constraints"></a>
 ## 6. 约束与类型 `[Pre-B 阶段]`
 
 - **设备**：Ascend（{具体芯片系列}）
@@ -96,6 +101,7 @@ xxx:
 - **形状与范围**：{列出各输入的 shape 约束}
 - **空 Tensor**：{支持/不支持，说明}
 
+<a id="feature-execution-modes"></a>
 ## 7. 执行模式与适配 `[Step 4/5 完成后]`
 
 ### Pynative（PyBoost）
@@ -104,17 +110,20 @@ xxx:
 ### Graph（KBK/O0）
 - {实现说明}
 
+<a id="feature-pta-alignment"></a>
 ## 8. 与 PTA 的差异与对齐 `[Pre-B 阶段初始化，开发中补齐]`
 
 - **功能对齐**：{与 PTA 的对齐情况}
 - **精度**：{对比策略，0 偏差/rtol-atol}
 - **差异**：{列出与 PTA 的差异及原因}
 
+<a id="feature-dynamic-shape"></a>
 ## 9. 动态 Shape/Rank 支持 `[Step 3 完成后]`
 
 - {动态维/动态秩推导策略}
 - {编译期未知时的回退方案}
 
+<a id="feature-validation-and-errors"></a>
 ## 10. 异常与校验 `[Step 3/4 完成后]`
 
 ### 推导期（Infer）
@@ -123,16 +132,19 @@ xxx:
 ### 运行期（ACLNN）
 - {列出运行期校验项}
 
+<a id="feature-bprop"></a>
 ## 11. 反向（BPROP） `[Step 6 完成后]`
 
 - {BPROP 注册方式、反向输入输出、梯度处理}
 - 若通过自动微分实现则说明"无需显式 bprop"
 
+<a id="feature-test-plan"></a>
 ## 12. 测试方案 `[Step 8 完成后]`
 
 ### UT（C++ GeneralInfer）
 - {覆盖场景}
 
+<a id="feature-code-change-summary"></a>
 ## 13. 代码与文件改动说明 `[开发完成后]`
 
 | 类别 | 文件路径 |
@@ -147,6 +159,7 @@ xxx:
 | 文档(CN) | `docs/api/api_python/ops/mindspore.ops.xxx.rst` |
 | 测试(UT) | `tests/ut/cpp/ops/test_xxx_general_infer.cc` |
 
+<a id="feature-acceptance-report"></a>
 ## 14. 验收报告 `[转测前填写]`
 
 ### 基本信息

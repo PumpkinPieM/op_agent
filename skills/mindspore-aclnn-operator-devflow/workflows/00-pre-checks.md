@@ -66,21 +66,21 @@
 
 ### 执行步骤
 
-1. **PTA 源码审查（必做）**：审查 op-plugin 三类关键文件（详见 `reference.md` §19）
+1. **PTA 源码审查（必做）**：审查 op-plugin 三类关键文件（详见 [`reference.md` 19 PTA 源码审查方法](reference.md#pta-source-review)）
    - `op_plugin_functions.yaml`：函数签名、参数类型/默认值
    - `derivatives.yaml`：反向注册、可微输入
    - `XxxKernelNpuOpApi.cpp`：实际 ACLNN 调用、参数预处理
    - 注意 PTA 是否有**同名接口重载**（同函数名、不同参数签名）
-2. **接口分析五要素（必做）**（`reference.md` §15.4.1）：
+2. **接口分析五要素（必做）**（[`reference.md` 15.4.1 接口分析五要素](reference.md#api-analysis-five-factors)）：
    - 功能 / 参数定义 / 数据类型是否一致
    - **是否要新增原语**；**是新增接口还是复用原有接口**
-3. **确定 YAML 策略**（`reference.md` §15.4.2）：
+3. **确定 YAML 策略**（[`reference.md` 15.4.2 YAML 三种场景](reference.md#yaml-three-scenarios)）：
    - 已有 YAML + 复用原有原语 → 加 `dispatch` 字段
    - 已有 YAML + 新增原语 → 新建 YAML 加 `_ext` 后缀
    - 没有 YAML → 新建
-   - 若不兼容且不能改存量接口 → `ops.extend`（`reference.md` §15.4.3）
-   - 若需修改已有原语参数签名 → 参考 MS 仓库相似算子处理方式，具体分析兼容性（`reference.md` §15.4.4）
-4. **确定接入路径（核心决策）**（`reference.md` §2.3）：
+   - 若不兼容且不能改存量接口 → `ops.extend`（[`reference.md` 15.4.3 `ops.extend` 命名空间](reference.md#ops-extend-namespace)）
+   - 若需修改已有原语参数签名 → 参考 MS 仓库相似算子处理方式，具体分析兼容性（[`reference.md` 15.4.4 修改已有原语参数签名与接口重载](reference.md#existing-primitive-signature-change)）
+4. **确定接入路径（核心决策）**（[`reference.md` 2.3 两条接入路径](reference.md#dispatch-path-selection)）：
    - 分析 MindSpore API 参数能否**原样透传**给 ACLNN 接口
    - **路径 1（自动生成）**：参数直通 → YAML 不写 `Ascend` 字段 → Step 4/5 跳过手写
    - **路径 2（Customize）**：参数需预处理 → YAML 写 `Ascend: XxxAscend` → Step 4/5 必须手写
@@ -104,36 +104,36 @@
 
 1. 从 `templates/feature-document.md` 复制一份，命名为 `{算子名}_Feature.md`
 2. 基于 Pre-B 的分析结果，填写以下章节：
-   - §1（背景描述）
-   - §2（标杆与接口）
-   - §3（任务清单——标准 13 大类表格，初始化每项状态）
-   - §4（功能与接口说明——接口签名、参数说明）
-   - §6（约束与类型——设备、dtype、shape 约束）
-   - §8（与 PTA 的差异与对齐——初始化版）
+   - [1. 背景描述](../templates/feature-document.md#feature-background)
+   - [2. 标杆与接口](../templates/feature-document.md#feature-benchmark-api)
+   - [3. 任务清单](../templates/feature-document.md#feature-task-list)（标准 13 大类表格，初始化每项状态）
+   - [4. 功能与接口说明](../templates/feature-document.md#feature-functional-spec)（接口签名、参数说明）
+   - [6. 约束与类型](../templates/feature-document.md#feature-constraints)（设备、dtype、shape 约束）
+   - [8. 与 PTA 的差异与对齐](../templates/feature-document.md#feature-pta-alignment)（初始化版）
 3. **后续每完成一个 Workflow Step，必须回填 Feature 文档对应章节**：
-   - Step 1 → §5（YAML）
-   - Step 3 → §9（动态 Shape）、§10（异常）
-   - Step 4/5 → §7（执行模式）
-   - Step 6 → §11（反向）
-   - Step 8 → §12（测试方案）
-   - 代码完成后 → §13（代码改动）、§14（验收报告）
+   - Step 1 → [5. YAML 定义](../templates/feature-document.md#feature-yaml-definition)
+   - Step 3 → [9. 动态 Shape/Rank 支持](../templates/feature-document.md#feature-dynamic-shape)、[10. 异常与校验](../templates/feature-document.md#feature-validation-and-errors)
+   - Step 4/5 → [7. 执行模式与适配](../templates/feature-document.md#feature-execution-modes)
+   - Step 6 → [11. 反向（BPROP）](../templates/feature-document.md#feature-bprop)
+   - Step 8 → [12. 测试方案](../templates/feature-document.md#feature-test-plan)
+   - 代码完成后 → [13. 代码与文件改动说明](../templates/feature-document.md#feature-code-change-summary)、[14. 验收报告](../templates/feature-document.md#feature-acceptance-report)
 
 ### 检查点
 
 > **⛔ HARD GATE：在进入 Step 1 之前，以下两项必须完成并交付给用户：**
 > 1. ✅ PTA 源码审查报告（Pre-B 产出，使用 `templates/pta-analysis-report.md` 模板）
-> 2. ✅ Feature 文档初始化版（§1-§4、§6、§8 已填写）
+> 2. ✅ Feature 文档初始化版（已填写 [1. 背景描述](../templates/feature-document.md#feature-background)、[2. 标杆与接口](../templates/feature-document.md#feature-benchmark-api)、[3. 任务清单](../templates/feature-document.md#feature-task-list)、[4. 功能与接口说明](../templates/feature-document.md#feature-functional-spec)、[6. 约束与类型](../templates/feature-document.md#feature-constraints)、[8. 与 PTA 的差异与对齐](../templates/feature-document.md#feature-pta-alignment)）
 >
 > **缺少任何一项则停下，禁止继续。不可默默跳过。**
 
 > **⚠️ "交付给用户"的含义：生成实际的 .md 文件到工作区，并告知用户文件路径。**
 >
-> - PTA 源码审查报告：按 `templates/pta-analysis-report.md` 模板填充后，用 Write 工具
+> - PTA 源码审查报告：按 `templates/pta-analysis-report.md` 模板填充
 >   **生成文件**（如 `{op_name}_pta_analysis.md`），在消息中告知用户文件路径。
-> - Feature 文档：按 `templates/feature-document.md` 模板填写 §1-§4、§6、§8 后，
+> - Feature 文档：按 `templates/feature-document.md` 模板填写 [1. 背景描述](../templates/feature-document.md#feature-background)、[2. 标杆与接口](../templates/feature-document.md#feature-benchmark-api)、[3. 任务清单](../templates/feature-document.md#feature-task-list)、[4. 功能与接口说明](../templates/feature-document.md#feature-functional-spec)、[6. 约束与类型](../templates/feature-document.md#feature-constraints)、[8. 与 PTA 的差异与对齐](../templates/feature-document.md#feature-pta-alignment) 后，
 >   **生成文件**（如 `{op_name}_feature.md`），在消息中告知用户文件路径。
 > - 后续每个 Step 完成时，用 StrReplace 工具**回填 Feature 文件的对应章节**，
->   在执行报告中告知用户"已更新 Feature 文件 §X"。
+>   在执行报告中告知用户"已更新 Feature 文件对应稳定锚点章节"。
 >
 > agent 常见错误：做了分析但只在脑中/消息中记录，没有生成文件。
 > 文件不存在 = 文档未产出。
@@ -148,10 +148,10 @@
 ### 执行步骤
 
 1. **提取 ACLNN 调用链**：从 PTA C++ 代码中提取前向+反向的全部
-   `EXEC_NPU_CMD` / `aclnnXxx` 调用（详见 `reference.md` §22.2）
-2. **盘点 MS 覆盖情况**：逐个搜索确认子算子是否已接入（`reference.md` §22.3）
+   `EXEC_NPU_CMD` / `aclnnXxx` 调用（详见 [`reference.md` 22.2 调用链提取方法](reference.md#aclnn-callchain-extraction)）
+2. **盘点 MS 覆盖情况**：逐个搜索确认子算子是否已接入（[`reference.md` 22.3 MS 侧覆盖盘点方法](reference.md#ms-coverage-inventory)）
 3. **产出覆盖盘点表**（使用 `templates/aclnn-callchain-inventory.md` 模板）
-4. **规划实施顺序**：叶子算子先、组合算子后；按拓扑序（`reference.md` §22.5）
+4. **规划实施顺序**：叶子算子先、组合算子后；按拓扑序（[`reference.md` 22.5 实施顺序原则](reference.md#callchain-rollout-order)）
 
 ---
 
@@ -179,13 +179,9 @@
 - [ ] Pre-B：若涉及新增/修改接口或原语，已确认评审要求和跨后端影响
 - [ ] Pre-B：已记录版本矩阵
 - [ ] Pre-B：如发现代码与文档不一致，已整理差异清单交给用户确认
-- [ ] **🔒 Feature 文档初始化版已生成**（§1-§4、§6、§8 已填写）——此项不可跳过
+- [ ] **🔒 Feature 文档初始化版已生成**（已填写 [1. 背景描述](../templates/feature-document.md#feature-background)、[2. 标杆与接口](../templates/feature-document.md#feature-benchmark-api)、[3. 任务清单](../templates/feature-document.md#feature-task-list)、[4. 功能与接口说明](../templates/feature-document.md#feature-functional-spec)、[6. 约束与类型](../templates/feature-document.md#feature-constraints)、[8. 与 PTA 的差异与对齐](../templates/feature-document.md#feature-pta-alignment)）——此项不可跳过
 - [ ] Pre-C（组合场景）：已提取完整 ACLNN 调用链
 - [ ] Pre-C（组合场景）：已产出覆盖盘点表
 - [ ] Pre-C（组合场景）：已规划实施顺序
 
 ---
-
-## 下一步
-
-前置检查完成后，进入 **[Workflow 1: YAML 定义](./01-yaml-definition.md)**

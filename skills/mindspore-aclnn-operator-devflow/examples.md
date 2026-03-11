@@ -187,13 +187,13 @@
 
 **期望 agent 行为**：
 - **不要假设可以找到一个对应的 aclnnFoo 大算子**，先确认 PTA 的调用链是事实。
-- 按 `reference.md` §22 的方法：
+- 按 [`reference.md` 22 ACLNN 调用链分析](reference.md#aclnn-callchain-analysis) 的方法：
   1. 从 PTA C++ 代码中提取完整调用链，标注每个 `aclnnXxx` 的用途和中间 tensor。
   2. 产出**覆盖盘点表**：逐个搜索 MS 仓库确认 aclnnA/B/C 的接入状态。
   3. 对缺失的子算子，评估工作量并规划实施顺序（叶子先、组合后）。
 - 给出实施计划：
   - 阶段 1：补齐缺失子算子（各走 YAML→Infer→PyBoost→KBK→UT）。
-  - 阶段 2：在 PyBoost 用 C++ API 拼接 + KBK 用 Meta DSL 构图（参考 §23 组合模式）。
+  - 阶段 2：在 PyBoost 用 C++ API 拼接 + KBK 用 Meta DSL 构图（参考 [`reference.md` 23 组合实现模式](reference.md#composite-implementation)）。
   - 阶段 3：分层验证（子算子级 → 中间 tensor 对齐 → 最终输出对齐）。
 - 向用户输出盘点表和实施计划，确认后再动手。
 
@@ -241,7 +241,7 @@
 
 **期望 agent 行为**：
 - 对比已有 `XxxAttention` 与 PTA 接口，产出参数差异表格。
-- 给出决策分析（参考 `reference.md` §15.4）：
+- 给出决策分析（参考 [`reference.md` 15.4 原语与接口接入策略](reference.md#api-integration-strategy)）：
   - **若可兼容修改**（新参数可加默认值、不影响已有调用方和其他后端）→ 直接修改现有 YAML + Infer + 接口层。搜索 MS 仓库中相似算子的扩展方式作为参考。需走"功能扩展"评审。
   - **若不可兼容**（改了会破坏已有行为）→ 新增原语加 `_ext` 后缀。需走"新增接口"重点评审。
   - **若功能完全不一致** → 走 `ops.extend`。
@@ -253,11 +253,11 @@
 **期望 agent 行为**：
 - 从 `templates/feature-document.md` 复制模板，替换算子名。
 - 根据已有的方案设计（Pre-B 产出）和实现代码，自动填充：
-  - §1 背景描述、§2 标杆接口、§3 任务清单（逐项标注状态）、§4 功能与接口说明
-  - §5 YAML 定义（从实际 YAML 文件中提取）、§6 约束与类型
-  - §7-§12 的各实现/测试/异常章节
-- §13 代码改动说明：自动列出所有新增/修改的文件路径。
-- §14 验收报告：生成四张表框架（资料/功能/性能/安全编码），标注"待测试"状态。
+  - [1. 背景描述](templates/feature-document.md#feature-background)、[2. 标杆与接口](templates/feature-document.md#feature-benchmark-api)、[3. 任务清单](templates/feature-document.md#feature-task-list)、[4. 功能与接口说明](templates/feature-document.md#feature-functional-spec)
+  - [5. YAML 定义](templates/feature-document.md#feature-yaml-definition)（从实际 YAML 文件中提取）、[6. 约束与类型](templates/feature-document.md#feature-constraints)
+  - [7. 执行模式与适配](templates/feature-document.md#feature-execution-modes) 到 [12. 测试方案](templates/feature-document.md#feature-test-plan) 的各实现/测试/异常章节
+- [13. 代码与文件改动说明](templates/feature-document.md#feature-code-change-summary)：自动列出所有新增/修改的文件路径。
+- [14. 验收报告](templates/feature-document.md#feature-acceptance-report)：生成四张表框架（资料/功能/性能/安全编码），标注"待测试"状态。
 - 提示用户：验收报告需在实际测试通过后更新自测结果。
 
 ## 示例 25：Feature 文档已有部分内容，需要补齐
@@ -265,7 +265,7 @@
 
 **期望 agent 行为**：
 - 读取已有的 Feature 文档，识别哪些章节已填写、哪些空缺。
-- 根据实际代码实现，补齐 §5 YAML、§7 执行模式、§9-§12 等开发章节。
-- 生成 §13 代码改动列表、§14 验收报告。
-- 更新 §3 任务清单中每项的最终状态。
+- 根据实际代码实现，补齐 [5. YAML 定义](templates/feature-document.md#feature-yaml-definition)、[7. 执行模式与适配](templates/feature-document.md#feature-execution-modes)、[9. 动态 Shape/Rank 支持](templates/feature-document.md#feature-dynamic-shape) 到 [12. 测试方案](templates/feature-document.md#feature-test-plan) 等开发章节。
+- 生成 [13. 代码与文件改动说明](templates/feature-document.md#feature-code-change-summary)、[14. 验收报告](templates/feature-document.md#feature-acceptance-report)。
+- 更新 [3. 任务清单](templates/feature-document.md#feature-task-list) 中每项的最终状态。
 - 不覆盖用户已填写的内容，仅填充空缺部分。

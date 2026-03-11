@@ -5,40 +5,43 @@
 >
 > **优先级标记**：`[MUST]` = 必须通过；`[SHOULD]` = 强烈建议；`[NICE]` = 锦上添花。
 >
-> **本文件 `§` 编号与 SKILL.md workflow 步骤的对应关系**：
+> 本文件保留显示编号用于阅读顺序；涉及跨文档引用时，优先使用稳定锚点链接。
 >
 > | 本文件章节 | 对应 workflow 步骤 |
 > | --- | --- |
-> | §0a 对标分析, §0b ACLNN 能力 | Pre-A / Pre-B |
-> | §0c 子算子盘点 | Pre-C（组合场景） |
-> | §0d 版本/环境, §0e 方案评审 | Pre-B |
-> | §0g Feature 文档 | Pre-B 初始化 → Step 10 补齐 |
-> | §1 YAML/生成 | Step 1 / Step 2 |
-> | §2 Infer | Step 3 |
-> | §3 PyBoost, §3b 接口层 | Step 4 / Step 7 |
-> | §4 KBK | Step 5 |
-> | §5 BPROP | Step 6 |
-> | §6 测试 | Step 8 |
-> | §7 精度, §8 性能/显存 | 验收自验 |
-> | §9 文档 | Step 9 |
-> | §10 安全编码, §11 质量门禁 | 通用质量 |
-> | §12 最终文件清单 | 提交前验证 |
+> | [0a 对标分析](#checklists-benchmark-analysis), [0b ACLNN 能力](#checklists-cann-aclnn-capability) | Pre-A / Pre-B |
+> | [0c 子算子盘点](#checklists-sub-operator-inventory) | Pre-C（组合场景） |
+> | [0d 版本/环境](#checklists-version-environment), [0e 方案评审](#checklists-solution-review) | Pre-B |
+> | [0f Feature 文档](#checklists-feature-document) | Pre-B 初始化 → Step 10 补齐 |
+> | [1 YAML/生成](#checklists-yaml-generation) | Step 1 / Step 2 |
+> | [2 Infer](#checklists-infer) | Step 3 |
+> | [3 PyBoost](#checklists-pyboost), [3b 接口层](#checklists-api-layer) | Step 4 / Step 7 |
+> | [4 KBK](#checklists-kbk) | Step 5 |
+> | [5 BPROP](#checklists-bprop) | Step 6 |
+> | [6 测试](#checklists-testing) | Step 8 |
+> | 7 精度, 8 性能/显存 | 验收自验 |
+> | [9 文档](#checklists-documentation) | Step 9 |
+> | [10 安全编码](#checklists-security-review), [11 质量门禁](#checklists-quality-gates) | 通用质量 |
+> | [12 最终文件清单](#checklists-final-file-list) | 提交前验证 |
 
+<a id="checklists-solution-design"></a>
 ## 0. 方案设计与对标（需求到落地）
 
+<a id="checklists-benchmark-analysis"></a>
 ### 0a. 对标分析
 - [ ] `[MUST]` **对标对象明确**：PyTorch/PTA 的接口名、参数名/顺序/默认值、行为与约束（dtype/shape/layout/边界）。
 - [ ] `[MUST]` **对标文档到位**：PTA 接口文档/示例齐全（包含约束、异常、边界）。
 - [ ] `[MUST]` **对标代码到位**：定位 PTA 接入实现（torch_npu/op-plugin）并确认其实际调用的 ACLNN/aten 组合与参数预处理。
-- [ ] `[MUST]` **PTA 源码三件套审查**（详见 `reference.md` §19）：
+- [ ] `[MUST]` **PTA 源码三件套审查**（详见 [`reference.md` 19 PTA 源码审查方法](reference.md#pta-source-review)）：
   - `op_plugin_functions.yaml`：前向/反向精确签名、参数类型/默认值、返回值个数
   - `derivatives.yaml`：可微输入、grad 函数参数传递顺序、`output_differentiability`
   - `XxxKernelNpuOpApi.cpp`（含 Grad）：实际 ACLNN 调用、None 处理、隐藏默认值、输出构造
 - [ ] `[MUST]` **前向/反向参数差异已记录**：参数名/顺序/类型在前向与反向间的差异已识别并记入方案。
 - [ ] `[MUST]` **代码与文档不一致已确认**：若发现 PTA 代码与文档矛盾，已整理差异清单交给用户，用户已找 ACLNN/PTA 接口人确认结论并记录。
 - [ ] `[MUST]` **PTA 对标七要素**：接口名、参数名/顺序/默认值、算法行为、输入支持范围、隐式类型转换、同名重载、性能基线。
-- [ ] `[MUST]` **ACLNN 调用链已提取**：若 PTA C++ 中有多个 ACLNN 调用，已提取完整调用链（前向+反向），画出依赖图（详见 `reference.md` §22）。
+- [ ] `[MUST]` **ACLNN 调用链已提取**：若 PTA C++ 中有多个 ACLNN 调用，已提取完整调用链（前向+反向），画出依赖图（详见 [`reference.md` 22 ACLNN 调用链分析](reference.md#aclnn-callchain-analysis)）。
 
+<a id="checklists-cann-aclnn-capability"></a>
 ### 0b. CANN/ACLNN 能力
 - [ ] `[MUST]` **CANN/ACLNN 能力确认**：正向/反向是否都有 ACLNN 大算子；不支持点形成书面结论。
 - [ ] `[MUST]` **ACLNN 接口实证（反幻觉）**：已通过 grep 或查阅头文件确认 `aclnnXxx` 接口真实存在，且参数签名与代码一致（禁止仅凭经验臆造）。
@@ -46,6 +49,7 @@
 - [ ] `[SHOULD]` **反向路径算子完整性**：反向函数中所用到的所有算子都已接入 ACLNN（避免退回非 ACLNN 路径）。
 - [ ] `[SHOULD]` **aclnn 接口映射（仅路径 1）**：若走路径 1（自动生成）且算子名与 ACLNN 不一致，在 `aclnn_config.yaml`（或等价配置）中添加映射。路径 2（Customize / 显式编码接入）**不需要**修改 `aclnn_config.yaml`。
 
+<a id="checklists-sub-operator-inventory"></a>
 ### 0c. 子算子盘点与补缺（组合场景）
 - [ ] `[MUST]` **覆盖盘点表已产出**：调用链中每个子算子在 MS 中的接入状态已逐个确认（YAML/Infer/PyBoost/KBK）。
 - [ ] `[MUST]` **C++ API / Prim 可用性确认**：PyBoost 拼接所需的 C++ API 函数已存在于 `functions.h`；KBK 拼接所需的 Prim 原语已在 `gen_ops_primitive_*.h` 中生成。
@@ -54,25 +58,28 @@
 - [ ] `[SHOULD]` **子算子级验证通过**：每个子算子独立 UT 通过后，再进入组合层开发。
 - [ ] `[SHOULD]` **中间 tensor 对齐验证**：组合实现中的中间 tensor 与 PTA 逐阶段对比过。
 
+<a id="checklists-version-environment"></a>
 ### 0d. 版本/环境/影响面
 - [ ] `[SHOULD]` **版本矩阵记录**：torch/torch_npu/CANN/芯片信息（支持范围会随版本变化，必须固定证据）。
 - [ ] `[SHOULD]` **文档不足则跑探测**：生成并运行 PTA 支持范围探测脚本，回传 JSON 结果，再固化约束。
 - [ ] `[SHOULD]` **影响面评估**：复用存量原语/接口时确保 CPU/GPU 不回退；全新算子不需要新增 CPU/GPU 支持。GE/Lite 有影响要给出 Pass/Expander/占位方案。
 
+<a id="checklists-solution-review"></a>
 ### 0e. 方案评审与交付范围
 - [ ] `[MUST]` **交付范围写清楚**：支持的平台、模式（Pynative/KBK/GE）、动态 shape/rank、反向、性能/显存目标、遗留问题。
-- [ ] `[MUST]` **接口设计决策明确**：接口分析五要素已完成——是否新增原语 / 复用原有原语；是否新增接口 / 复用原有接口；YAML 策略已确定（加 dispatch / 新建 `_ext` / 新建 / `ops.extend`）。详见 `reference.md` §15.4。
+- [ ] `[MUST]` **接口设计决策明确**：接口分析五要素已完成——是否新增原语 / 复用原有原语；是否新增接口 / 复用原有接口；YAML 策略已确定（加 dispatch / 新建 `_ext` / 新建 / `ops.extend`）。详见 [`reference.md` 15.4 原语与接口接入策略](reference.md#api-integration-strategy)。
 - [ ] `[MUST]` **接口/原语变更评审**：按评审规则确认（新增→重点评审；功能扩展→需评审；非兼容修改→原则不允许）。涉及修改已有原语参数签名时，参考 MS 仓库相似算子处理方式，确保已有 UT 回归通过、跨后端（GE/CPU/GPU/Lite）不受影响。
 - [ ] `[MUST]` **CPU/GPU 不回退（存量场景）**：若复用存量原语或适配存量算子 API，必须确保原有 CPU/GPU 流程正常、功能不退化；全新算子不需要新增 CPU/GPU 支持。
 - [ ] `[SHOULD]` **问题归因与结论**：CANN 问题要有正式书面记录；框架/方案限制要有会议纪要（含议题/时间/人员/背景/结论）。
 - [ ] `[SHOULD]` **差异收敛**：若无法对标，明确需要评审/新增接口。
 
-### 0f. Feature 文档（评审与交付必须产物，`reference.md` §24）
-- [ ] `[MUST]` **Pre-B 阶段初始化**：从 `templates/feature-document.md` 复制，填写 §1-§4、§6、§8。
+<a id="checklists-feature-document"></a>
+### 0f. Feature 文档（评审与交付必须产物，[`reference.md` 24 Feature 文档](reference.md#feature-document-reference)）
+- [ ] `[MUST]` **Pre-B 阶段初始化**：从 `templates/feature-document.md` 复制，填写 [1. 背景描述](templates/feature-document.md#feature-background)、[2. 标杆与接口](templates/feature-document.md#feature-benchmark-api)、[3. 任务清单](templates/feature-document.md#feature-task-list)、[4. 功能与接口说明](templates/feature-document.md#feature-functional-spec)、[6. 约束与类型](templates/feature-document.md#feature-constraints)、[8. 与 PTA 的差异与对齐](templates/feature-document.md#feature-pta-alignment)。
 - [ ] `[MUST]` **任务清单（13 大类）已逐项填写**：Primitive/functional/nn/tensor、后端/dtype、vmap、动态Shape、反向、资料、性能、功能、门禁、MS Adapter、并行、AMP、安全异常。
-- [ ] `[MUST]` **开发章节同步更新**：每完成一个 Workflow Step，回填 Feature 文档对应章节（§5/§7/§9/§10/§11/§12）。
-- [ ] `[MUST]` **代码改动说明完整**（§13）：列出所有新增/修改文件的完整路径。
-- [ ] `[MUST]` **验收报告 — 资料验证表**（§14，17 项逐项自测标注）：
+- [ ] `[MUST]` **开发章节同步更新**：每完成一个 Workflow Step，回填 Feature 文档对应章节（[5. YAML 定义](templates/feature-document.md#feature-yaml-definition) / [7. 执行模式与适配](templates/feature-document.md#feature-execution-modes) / [9. 动态 Shape/Rank 支持](templates/feature-document.md#feature-dynamic-shape) / [10. 异常与校验](templates/feature-document.md#feature-validation-and-errors) / [11. 反向（BPROP）](templates/feature-document.md#feature-bprop) / [12. 测试方案](templates/feature-document.md#feature-test-plan)）。
+- [ ] `[MUST]` **代码改动说明完整**（[13. 代码与文件改动说明](templates/feature-document.md#feature-code-change-summary)）：列出所有新增/修改文件的完整路径。
+- [ ] `[MUST]` **验收报告 — 资料验证表**（[14. 验收报告](templates/feature-document.md#feature-acceptance-report)，17 项逐项自测标注）：
   1. 新增接口列表
   2. 典型场景 UT/ST 用例
   3. 中文 RST 与英文注释对应
@@ -90,7 +97,7 @@
   15. 样例有打印结果
   16. 样例执行情况是否 ok
   17. 算子与 API 能力沙盘是否补齐
-- [ ] `[MUST]` **验收报告 — 功能验证表**（§14，26 项逐项自测标注）：
+- [ ] `[MUST]` **验收报告 — 功能验证表**（[14. 验收报告](templates/feature-document.md#feature-acceptance-report)，26 项逐项自测标注）：
   1. 默认参数场景是否验证
   2. 空 Tensor 输入的正反向是否验证
   3. inf 和 nan 是否验证
@@ -117,16 +124,17 @@
   24. 是否会使得运算符或存量 ops 接口调用到新增的原语
   25. 是否已支持 amp（混合精度）特性
   26. 若多 Tensor 输入，是否支持各 Tensor 数据类型不一致
-- [ ] `[MUST]` **验收报告 — 性能验证表**（§14，4 项）：
+- [ ] `[MUST]` **验收报告 — 性能验证表**（[14. 验收报告](templates/feature-document.md#feature-acceptance-report)，4 项）：
   1. 性能测试覆盖 ≥3 种规格
   2. 反向显存优化（SetUnusedInputs）
   3. 性能不低于友商（波动 ≤10%）
   4. 显存持平 PTA
-- [ ] `[MUST]` **验收报告 — 安全编码检视表**（§14，12 项）：
+- [ ] `[MUST]` **验收报告 — 安全编码检视表**（[14. 验收报告](templates/feature-document.md#feature-acceptance-report)，12 项）：
   指针判空/先用后校/越界/除零/内存泄露/异常路径释放/nothrow/安全函数库/类型转换溢出/冗余代码/敏感信息/弱随机数
-- [ ] `[SHOULD]` **与 PTA 差异说明清晰**（§8）：明确列出差异及原因。
+- [ ] `[SHOULD]` **与 PTA 差异说明清晰**（[8. 与 PTA 的差异与对齐](templates/feature-document.md#feature-pta-alignment)）：明确列出差异及原因。
 - [ ] `[SHOULD]` **Feature 文档随代码 PR 一起提交**。
 
+<a id="checklists-yaml-generation"></a>
 ## 1. YAML / 接口生成
 - [ ] `[MUST]` **接入路径已明确**：路径 1（自动生成，参数直通）或路径 2（Customize，参数需预处理），记录决策依据。
 - [ ] `[MUST]` **前向/反向 YAML 各 1 份**（如需要反向单算子）。
@@ -136,6 +144,7 @@
 - [ ] `[SHOULD]` **若需自定义**：使用"先自动生成骨架→拷贝到 customize→改造→恢复 YAML"的套路。
 - [ ] `[SHOULD]` **英文 YAML 不混入中文**：Windows GBK 编码可能导致生成/编译问题。
 
+<a id="checklists-infer"></a>
 ## 2. Infer（GeneralInfer 优先）
 - [ ] `[MUST]` **只做 shape/type 推导**：不做运行期合法性校验（交给 ACLNN/运行时）。
 - [ ] `[MUST]` **动态约定**：局部动态用 -1，动态秩用 -2（或项目等价常量）。
@@ -145,16 +154,18 @@
 - [ ] `[MUST]` **Infer 注册宏完整**：按项目新接口注册（以仓库现有模式为准）。
 - [ ] `[SHOULD]` **InferInfo API 规范**：使用 `GetScalarValueWithCheck`/`GetArrayValue`/`HasUnknownValue`/`IsNone`，不臆造 API。
 
+<a id="checklists-pyboost"></a>
 ## 3. PyBoost（Pynative）
 - [ ] `[MUST]` **路径 1**：确认 gen_ops.py 自动生成的 PyBoost 调用代码存在且参数正确，编译通过。
 - [ ] `[MUST]` **路径 2 输入转换规范**：tuple/list → `std::vector<int64_t>`；标量按框架工具函数取值。
 - [ ] `[MUST]` **路径 2 调用 ACLNN 两段式**：workspace size + launch（以项目封装宏为准）。
 - [ ] `[MUST]` **非 Ascend 占位**：明确报错（RuntimeError/NotImplementedError）且文档同步说明。
-- [ ] `[SHOULD]` **View 算子**（如涉及纯 shape/strides 变换，详见 `reference.md` §26）：
+- [ ] `[SHOULD]` **View 算子**（如涉及纯 shape/strides 变换，详见 [`reference.md` 26 View 算子开发](reference.md#view-operator-development)）：
   - 原始算子 YAML 已加 `view: True`
   - `ops/view/{op_name}_view_strides_calc.cc` + 头文件已实现 strides 计算
   - `REG_VIEW_STRIDES_CALC_FUN` 注册完成
 
+<a id="checklists-api-layer"></a>
 ## 3b. 接口层（functional / nn / Tensor）
 - [ ] `[MUST]` **functional 使用 `_get_cache_prim`**：避免反复 `__init__` 造成性能问题。
 - [ ] `[MUST]` **nn.Cell construct 不直接 raise**：编译期校验/抛错使用 `@constexpr` 辅助函数。
@@ -164,6 +175,7 @@
 - [ ] `[SHOULD]` **mint 接口注册**：若需要 mint 接口，在对应 `__init__.py` 中注册。
 - [ ] `[SHOULD]` **复杂接口的"一对多映射"**：按参数分支选择不同 Primitive 或组合实现。
 
+<a id="checklists-kbk"></a>
 ## 4. KBK（Graph / KernelByKernel）
 - [ ] `[MUST]` **路径 1**：确认自动注册（`MS_ACLNN_COMMON_KERNEL_FACTORY_REG`）存在且算子名正确，编译通过。
 - [ ] `[MUST]` **路径 2 标准结构**：`GetWorkSpaceInfo()` + `Launch()` + 工厂注册宏完整。
@@ -173,11 +185,12 @@
 - [ ] `[SHOULD]` **无意义输出处理**：如有预留输出，覆写 `GetUseLessOutputIdx()`（或项目等价接口）避免 dump/溢出误检。
 - [ ] `[SHOULD]` **Compute-depend 输出**：最大 size 分配 + `Sync`/更新输出 shape（按框架要求）。
 - [ ] `[SHOULD]` **输入转属性优化**：若有输入实质是属性，覆写 `GetLaunchIgnoredInputAddressIdx()`。
-- [ ] `[SHOULD]` **View Host Kernel**（当 YAML 标记 `graph_view: True` 时，详见 `reference.md` §26.4）：
+- [ ] `[SHOULD]` **View Host Kernel**（当 YAML 标记 `graph_view: True` 时，详见 [`reference.md` 26 View 算子开发](reference.md#view-operator-development).4）：
   - View 专用 YAML 已配置 `graph_view: True` + `labels`
   - `ops/kernel/host/view/kernel_mod_impl/{op_name}_view.cc/.h` 已实现
   - `MS_HOST_REG_KERNEL` 注册完成
 
+<a id="checklists-bprop"></a>
 ## 5. BPROP（Expander）
 - [ ] `[MUST]` **反向输入/输出个数**：反向输入 = 正向输入 + 2（out, dout），反向输出 = 正向输入个数。
 - [ ] `[MUST]` **不可微分入参**：用 `ib->OutZeros(x)` 返回零梯度（MS 要求输出个数对齐）。
@@ -190,11 +203,13 @@
 - [ ] `[SHOULD]` **KBK 动态 shape + inplace**：必要时用 `ib->Depend(target, inplace_call)` 保序。
 - [ ] `[SHOULD]` **反向实现简洁性**：不要引入额外不必要的算子，避免误差累积。
 
+<a id="checklists-testing"></a>
 ## 6. 测试（UT自验）
 
 ### 6a. 测试文件产出（逐项确认，不允许遗漏）
 - [ ] `[MUST]` **C++ UT 文件已产出**：`tests/ut/cpp/ops/test_ops_{op_name}.cc`，覆盖动态维/动态秩/unknown/None。
 
+<a id="checklists-test-coverage"></a>
 ### 6b. 场景覆盖
 - [ ] `[MUST]` **默认参数场景验证**：使用所有默认参数值调用前向+反向，确认基本路径可通。
 - [ ] `[MUST]` **动态 shape 自验**：前端测试用例文件调用 `OpsFactory` 的 `test_op_dynamic` 方法。
@@ -213,6 +228,7 @@
 - [ ] `[MUST]` **广播**：确认是否支持输入间 shape 广播；不支持则有异常用例。
 - [ ] `[MUST]` **多 Tensor 输入 dtype 不一致场景**：确认是否支持多 Tensor 输入 dtype 不一致场景；不支持则有异常用例。非多Tensor输入的算子不需要。
 
+<a id="checklists-test-stability"></a>
 ### 6c. 测试组合与稳定性
 - [ ] `[MUST]` **测试组合覆盖**：接口形态（functional/nn/Tensor）× 后端 × 模式（Pynative/KBK）× shape 类型（静态/动态）。
 - [ ] `[MUST]` **关闭退避验证**：`export MS_DISABLE_KERNEL_BACKOFF=1` 环境下用例全部通过（防止退回非 ACLNN 路径）。
@@ -226,6 +242,7 @@
 - [ ] `[SHOULD]` **多 Tensor 输入 dtype 不一致**：若多输入算子，确认是否支持各输入 dtype 不同。
 - [ ] `[SHOULD]` **输出 shape 是否依赖计算结果**：若是 compute-depend 输出，需要 SyncOutputShape 机制。
 
+<a id="checklists-documentation"></a>
 ## 9. 文档（中英文一致）
 
 ### 9a. 文档产出
@@ -234,6 +251,7 @@
   英文 doc YAML ≠ 文档完成——中文 RST 是独立产物，**最容易遗漏**。
   仅"内部算子（不在 `__all__` 导出）"允许跳过，且须标注原因。
 
+<a id="checklists-documentation-content"></a>
 ### 9b. 文档内容完整性（资料验证）
 - [ ] `[MUST]` **接口描述详细准确**：功能、参数、返回值、约束、异常均有说明。
 - [ ] `[MUST]` **summary 提供公式**：涉及数学运算的算子必须有公式说明。
@@ -246,6 +264,7 @@
 - [ ] `[MUST]` **支持平台已填写**：`Ascend` / `GPU` / `CPU`。
 - [ ] `[SHOULD]` **算子与 API 能力沙盘已补齐**：在能力矩阵/索引中登记新接口。
 
+<a id="checklists-documentation-format"></a>
 ### 9c. 文档格式
 - [ ] `[MUST]` **中英文严格一致**：参数/默认值/必选可选/约束/示例一致。
 - [ ] `[MUST]` **接口列表按字母序**：避免冲突与重复。
@@ -254,6 +273,7 @@
 - [ ] `[SHOULD]` **交叉引用**：相关接口间使用 `:class:`/`:func:` 链接。
 - [ ] `[NICE]` **中文标点与反引号空格规范**：中文里 ` 或 `` 与前后保持 1 个空格。
 
+<a id="checklists-security-review"></a>
 ## 10. 安全编码检视
 - [ ] `[MUST]` **空指针判空**：Infer 中的 Primitive、输入输出、GetShape、GetType、GetValue 不需要判空外，其他情况需要判空。
 - [ ] `[MUST]` **指针先校验后使用**：不允许先使用后校验。
@@ -269,6 +289,7 @@
 - [ ] `[SHOULD]` 内存操作用安全函数库（securec 等，项目要求时）。
 - [ ] `[SHOULD]` 避免弱随机数、敏感信息硬编码、日志泄露敏感信息。
 
+<a id="checklists-quality-gates"></a>
 ## 11. 质量门禁（项目要求摘要）
 - [ ] `[MUST]` 行长 ≤120；无 Tab；UTF-8；无多余空格；文件末尾保留一行空行。
 - [ ] `[MUST]` 通过项目要求的 Check_*（Notebooklint/Pylint/Rstlint/Scanoss/Shellcheck/Tab/Utf8 等）。
@@ -277,6 +298,7 @@
 
 - [ ] `[MUST]` 若修改了参数名/类型/默认值/约束，已对 8 类文件（op_def/api_def YAML、GeneralInfer C++、PyBoost C++、KBK kernel C++、bprop C++、Python 接口层、中英文文档）做全量检索并同步更新，旧值零残留。
 
+<a id="checklists-final-file-list"></a>
 ## 12. 最终文件清单验证（提交前必做）
 
 > 根据接入路径，逐项确认所有必要文件都已就位。
@@ -312,7 +334,7 @@
 - [ ] `[SHOULD]` `python/mindspore/ops/tensor_method.py`（如需 Tensor 方法）：
   - import `{op_name}_ext`
   - 新增 `tensor_{op_name}` 包装函数
-- [ ] `[SHOULD]` 接口重载（如涉及同名多签名，详见 `reference.md` §25）：
+- [ ] `[SHOULD]` 接口重载（如涉及同名多签名，详见 [`reference.md` 25 接口重载适配](reference.md#api-overload-adaptation)）：
   - `ops/api_def/{op_name}.yaml` 多条目配置正确
   - `ops/op_def/deprecated/{op_name}_method.yaml` 参数与 py_method 一致（如需新旧兼容）
   - alias YAML 声明正确（如有符号别名）
@@ -320,6 +342,7 @@
 ### E. 测试文件
 - [ ] `[MUST]` `tests/ut/cpp/ops/test_ops_{op_name}.cc`（C++ UT，必须新建）
 
+<a id="checklists-final-file-list-cn-rst"></a>
 ### F. 中文 RST 文档（按接口形态，公开 API 必须）
 > 每个接口形态可能需要独立的中文 RST 文件，不要只写一份。
 
@@ -341,16 +364,13 @@
 - [ ] `[MUST]` `kernel/.../kernel_mod_impl/customize/{op_name}_aclnn_kernel.h` + `.cc`（KBK 前向）
 - [ ] `[MUST]` `kernel/.../kernel_mod_impl/customize/{op_name}_grad_aclnn_kernel.h` + `.cc`（KBK 反向，如需要）
 
-### J. View 算子文件（如涉及 View 特性，详见 `reference.md` §26）
+### J. View 算子文件（如涉及 View 特性，详见 [`reference.md` 26 View 算子开发](reference.md#view-operator-development)）
 - [ ] `[SHOULD]` `ops/op_def/yaml/{op_name}_view_op.yaml`（View 专用 YAML：`view: True` + `graph_view: True` + `labels`）
 - [ ] `[SHOULD]` `ops/view/{op_name}_view_strides_calc.cc` + `ops/include/view/{op_name}_view_strides_calc.h`（strides 计算 + `REG_VIEW_STRIDES_CALC_FUN` 注册）
 - [ ] `[SHOULD]` `ops/kernel/host/view/kernel_mod_impl/{op_name}_view.cc` + `.h`（KBK host kernel + `MS_HOST_REG_KERNEL` 注册）
 
 ### K. BPROP（如需要反向）
 - [ ] `[MUST]` `ccsrc/frontend/expander/grad/grad_*_ops.cc` 中 `REG_BPROP_BUILDER` 注册
-
-### L. 构建系统
-- [ ] `[MUST]` 路径 2 的新 `.cc` 文件在 `CMakeLists.txt` 的 `GLOB_RECURSE` 范围内
 
 ---
 
@@ -360,28 +380,28 @@
 
 | # | 检查项 | 来源章节 |
 | --- | --- | --- |
-| 1 | **接入路径已明确**（路径 1 自动 / 路径 2 Customize）且 YAML dispatch 配置正确 | §1 YAML |
-| 2 | PTA 源码三件套已审查（functions.yaml / derivatives.yaml / C++） | §0a 对标分析 |
-| 3 | **Feature 文档 14 个章节已全部填写** | §0f Feature 文档 |
-| 4 | **Feature 文档验收报告四张表已逐项自测**（资料验证 17 项 + 功能验证 26 项 + 性能验证 4 项 + 安全编码 12 项） | §0f Feature 文档 |
-| 5 | **复用存量原语/接口时，CPU/GPU 流程不回退**（已有 UT/ST 回归通过） | §0e 方案评审 |
-| 6 | gen_ops.py 跑通，functional_overload.py 已生成 | §1 YAML/生成 |
-| 7 | **`aclnn_config.yaml` 已添加映射**（`{OpName}: 'aclnn{Op}'`）——**仅路径 1**；路径 2 跳过 | §12-C |
-| 8 | Infer 里没有修改属性（禁止 AddAttr） | §2 Infer |
-| 9 | **Python 接口导出完整**：`math_func.py` import + 别名 + `__all__`；`mint/__init__.py`；`tensor_method.py` | §12-D |
-| 10 | 前向/反向分文件、分注册，命名空间一致（路径 2） | §4 KBK |
-| 11 | 反向输入/输出个数正确（+2 / 对齐） | §5 BPROP |
-| 12 | 不可微分入参返回了 OutZeros | §5 BPROP |
-| 13 | 若为手写接口，functional 使用了 `_get_cache_prim` | §3b 接口层 |
-| 14 | 非 Ascend 设备有占位 RuntimeError | §3 PyBoost |
-| 15 | **中文 RST 已创建**（每个接口形态一份：ops/mint/Tensor，别名也要） | §12-F |
-| 16 | **最终文件清单 §12 全量验证通过**（A-L 逐项确认） | §12 |
-| 17 | 中英文文档参数/默认值/示例一致，**样例有打印结果** | §9b/9c 文档 |
-| 18 | 测试覆盖：动态 shape + 空张量 + 多布局 + None + dtype 全覆盖 | §6b 场景覆盖 |
-| 19 | **`MS_DISABLE_KERNEL_BACKOFF=1` 退避关闭验证**通过 | §6c 测试组合 |
-| 20 | 稳定性：关键用例跑 100 次无偶现 | §6c 稳定性 |
-| 21 | **异常用例校验具体报错信息**（TypeError/ValueError/RuntimeError message 断言） | §6b 场景覆盖 |
-| 22 | **文档 summary 提供公式**（涉及数学运算的算子）；支持平台已填写 | §9b 文档内容 |
-| 23 | **不影响存量 ops 接口**（新增原语不会被存量接口意外调用） | §6d 功能合规 |
-| 24 | **安全编码 12 项全过**（指针/越界/除零/内存/nothrow/类型转换/冗余） | §10 安全编码 |
-| 25 | 行长 ≤120，无 Tab，UTF-8，文件末尾空行 | §11 质量门禁 |
+| 1 | **接入路径已明确**（路径 1 自动 / 路径 2 Customize）且 YAML dispatch 配置正确 | [1 YAML/生成](#checklists-yaml-generation) |
+| 2 | PTA 源码三件套已审查（functions.yaml / derivatives.yaml / C++） | [0a 对标分析](#checklists-benchmark-analysis) |
+| 3 | **Feature 文档 14 个章节已全部填写** | [0f Feature 文档](#checklists-feature-document) |
+| 4 | **Feature 文档验收报告四张表已逐项自测**（资料验证 17 项 + 功能验证 26 项 + 性能验证 4 项 + 安全编码 12 项） | [0f Feature 文档](#checklists-feature-document) |
+| 5 | **复用存量原语/接口时，CPU/GPU 流程不回退**（已有 UT/ST 回归通过） | [0e 方案评审](#checklists-solution-review) |
+| 6 | gen_ops.py 跑通，functional_overload.py 已生成 | [1 YAML/生成](#checklists-yaml-generation) |
+| 7 | **`aclnn_config.yaml` 已添加映射**（`{OpName}: 'aclnn{Op}'`）——**仅路径 1**；路径 2 跳过 | [12 最终文件清单](#checklists-final-file-list) |
+| 8 | Infer 里没有修改属性（禁止 AddAttr） | [2 Infer](#checklists-infer) |
+| 9 | **Python 接口导出完整**：`math_func.py` import + 别名 + `__all__`；`mint/__init__.py`；`tensor_method.py` | [12 最终文件清单](#checklists-final-file-list) |
+| 10 | 前向/反向分文件、分注册，命名空间一致（路径 2） | [4 KBK](#checklists-kbk) |
+| 11 | 反向输入/输出个数正确（+2 / 对齐） | [5 BPROP](#checklists-bprop) |
+| 12 | 不可微分入参返回了 OutZeros | [5 BPROP](#checklists-bprop) |
+| 13 | 若为手写接口，functional 使用了 `_get_cache_prim` | [3b 接口层](#checklists-api-layer) |
+| 14 | 非 Ascend 设备有占位 RuntimeError | [3 PyBoost](#checklists-pyboost) |
+| 15 | **中文 RST 已创建**（每个接口形态一份：ops/mint/Tensor，别名也要） | [12 最终文件清单](#checklists-final-file-list-cn-rst) |
+| 16 | **最终文件清单已全量验证通过**（A-L 逐项确认） | [12 最终文件清单](#checklists-final-file-list) |
+| 17 | 中英文文档参数/默认值/示例一致，**样例有打印结果** | [9 文档内容完整性](#checklists-documentation-content) / [9c 文档格式](#checklists-documentation-format) |
+| 18 | 测试覆盖：动态 shape + 空张量 + 多布局 + None + dtype 全覆盖 | [6b 场景覆盖](#checklists-test-coverage) |
+| 19 | **`MS_DISABLE_KERNEL_BACKOFF=1` 退避关闭验证**通过 | [6c 测试组合与稳定性](#checklists-test-stability) |
+| 20 | 稳定性：关键用例跑 100 次无偶现 | [6c 测试组合与稳定性](#checklists-test-stability) |
+| 21 | **异常用例校验具体报错信息**（TypeError/ValueError/RuntimeError message 断言） | [6b 场景覆盖](#checklists-test-coverage) |
+| 22 | **文档 summary 提供公式**（涉及数学运算的算子）；支持平台已填写 | [9 文档内容完整性](#checklists-documentation-content) |
+| 23 | **不影响存量 ops 接口**（新增原语不会被存量接口意外调用） | [0e 方案评审](#checklists-solution-review) |
+| 24 | **安全编码 12 项全过**（指针/越界/除零/内存/nothrow/类型转换/冗余） | [10 安全编码](#checklists-security-review) |
+| 25 | 行长 ≤120，无 Tab，UTF-8，文件末尾空行 | [11 质量门禁](#checklists-quality-gates) |

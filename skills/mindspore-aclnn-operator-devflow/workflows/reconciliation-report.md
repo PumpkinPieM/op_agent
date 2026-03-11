@@ -1,5 +1,7 @@
 # Workflow 与源文档核对报告
 
+**该文档用于skill迭代，不参与skill执行。skill执行应忽略该文档。**
+
 本报告记录各 workflow 与对应源文档的逐节核对结果，用于落实 `traceability.md` 中「Workflow 与源文档对齐」纪律。  
 核对方法：打开源文档，按章节/表格逐项问「该条在 workflow 或 checklists 中是否体现？」；未体现则记入下表「遗漏/建议补充」。
 
