@@ -20,7 +20,7 @@
 
 ## 执行步骤
 
-### Step 1：C++ UT（`reference.md` §8.1）—— 必须新建
+### Step 1：C++ UT（[`reference.md` 8.1 C++ UT](reference.md#testing-cpp-ut)）—— 必须新建
 
 典型构造：
 - 标量：`ShapeVector{}` + `CreateScalar<T>(value)`

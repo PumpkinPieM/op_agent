@@ -87,7 +87,7 @@ Copy-Item -Recurse -Force .cursor\skills\* .claude\skills\
 | 局限 | 建议的补强方式 |
 | --- | --- |
 | **算子类型覆盖有限**：主要基于路径 2（Customize）复杂算子经验，路径 1、符号重载、纯 Python 组合等场景覆盖较浅 | 拿不同类型的算子实际跑一遍 workflow，记录不适用的步骤并调整 |
-| **框架实现细节可能滞后**：`gen_ops.py`、注册宏、GeneralInfer API 等已基于源码写入 `reference.md`（§3-§7），但框架持续演进 | 实现时对照同目录已有算子的最新代码；skill 已内置"仓库现状 > 文档描述"原则 |
+| **框架实现细节可能滞后**：`gen_ops.py`、注册宏、GeneralInfer API 等已基于源码写入 `reference.md`（例如 [4 GeneralInfer 推导约定](reference.md#general-infer) 到 [7 BPROP 接线要点](reference.md#bprop-reference)），但框架持续演进 | 实现时对照同目录已有算子的最新代码；skill 已内置"仓库现状 > 文档描述"原则 |
 | **AI 幻觉风险**：可能编造不存在的接口或误判参数属性，尤其在缺乏上下文时 | skill 已内置核心行为准则（三位一体校验、无证不推、疑点上报）；见 SKILL.md 核心行为准则 |
 | **隐性知识依赖人工补充**：组内口头惯例、评审偏好、已废弃流程无法从文档或代码中获取 | 让有经验的开发者审阅 `checklists.md`，标注过时/缺失的条目 |
 | **排障案例不够丰富**：常见编译报错、ST 失败的典型原因覆盖不全 | 收集组内 Top 10 常见问题，补充到 `reference.md` 对应章节 |

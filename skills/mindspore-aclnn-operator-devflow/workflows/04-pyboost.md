@@ -52,20 +52,20 @@
 
 #### Step 1：单算子直连模式
 
-标准三段式（`reference.md` §5）：
+标准三段式（[`reference.md` 5 PyBoost 实现要点](reference.md#pyboost-reference)）：
 1. 输出 tensor 分配
 2. 参数转换（tuple→vector / None 处理等）
 3. ACLNN 两段式调用（`LAUNCH_ACLNN` 或项目等价宏）
 
 ### Step 2：组合算子模式（C++ 小算子 API 拼接）
 
-当目标算子由多个小算子拼接组合实现时（`reference.md` §23.1）：
+当目标算子由多个小算子拼接组合实现时（[`reference.md` 23.1 PyBoost 拼接](reference.md#composite-pyboost-pattern)）：
 1. 引入头文件 `#include "mindspore/ccsrc/include/pynative/utils/pyboost/functions/auto_generate/functions.h"`
 2. 直接调用 C++ 小算子 API（如 `add()`/`mul()`/`sum_ext()` 等）拼接计算逻辑，**无需手动 `LAUNCH_ACLNN`**
 3. YAML 设置 `bprop_expander: False`，由小算子各自负责自动微分
 4. 若大算子已有独立 bprop，需用 `RequireGradGuard(false)` 禁止小算子重复做自动微分
 
-### Step 3：View 算子模式（零拷贝，`reference.md` §26）
+### Step 3：View 算子模式（零拷贝，[`reference.md` 26 View 算子开发](reference.md#view-operator-development)）
 
 当算子为纯 shape/strides 变换（如 transpose、reshape、expand_dims、slice 等）时：
 
@@ -77,7 +77,7 @@
 
 > View 专用 YAML（`{op_name}_view_op.yaml`）的 strides calc 通常直接委托给原始算子的 strides 计算函数。
 
-### Step 4：输入参数转换（`reference.md` §5.1）
+### Step 4：输入参数转换（[`reference.md` 5.1 输入参数转换](reference.md#pyboost-argument-normalization)）
 
 - tuple/list → `std::vector<int64_t>`
 - 可选输入 None → 定义 None 语义，PyBoost/Infer/KBK 同步处理
@@ -89,7 +89,7 @@
 > ⚠️ 宏名、头文件、工具函数可能随版本变化。不要照搬 reference.md 中的示例，
 > 以 `customize/` 目录下最新的已有算子代码为准。
 
-代码骨架见 `reference.md` §18.3（单算子）/ §23.1（C++ API 拼接）/ §26.3（View strides calc），但**以仓库实际代码为最终参考**。
+代码骨架见 [`reference.md` 18.3 PyBoost customize 骨架](reference.md#pyboost-skeleton)（单算子）/ [`reference.md` 23.1 PyBoost 拼接](reference.md#composite-pyboost-pattern)（C++ API 拼接）/ [`reference.md` 26.3 Strides 计算实现](reference.md#view-strides-calculation)，但**以仓库实际代码为最终参考**。
 
 ---
 

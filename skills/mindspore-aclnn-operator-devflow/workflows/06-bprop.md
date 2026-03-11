@@ -18,36 +18,36 @@
 
 ## 执行步骤
 
-### Step 1：基本接线（`reference.md` §7）
+### Step 1：基本接线（[`reference.md` 7 BPROP 接线要点](reference.md#bprop-reference)）
 
 - 只为需要梯度的输入构建反向子图
 - 非张量/不需要梯度的输入返回零梯度占位
 - 使用 `need_compute_grad_out()` 做必要性判断
 
-### Step 2：I/O 个数规则（`reference.md` §7.1）
+### Step 2：I/O 个数规则（[`reference.md` 7.1 反向输入/输出个数经验规则](reference.md#bprop-io-rules)）
 
 - 反向输入 = 正向输入个数 + 2（`out` 与 `dout`）
 - 反向输出 = 正向输入个数（每个输入一个梯度）
 - 多输出正向：`out` 在反向侧通常是 tuple → `TupleGetItem`
 
-### Step 3：进阶注意事项（`reference.md` §12）
+### Step 3：进阶注意事项（[`reference.md` 12 反向实现注意事项](reference.md#bprop-advanced-notes)）
 
 | 场景 | 处理方式 |
 | --- | --- |
 | 不可微分入参 | `ib->OutZeros(x)` |
 | 全部不可微分 | `ReturnZeros` |
 | 梯度理论为 0 | `ib->ZerosLikeExt()` |
-| inplace 反向 | 输入与输出为同一对象时，**只要有一个被用于反向就不能加入 SetUnusedInputs**；反向逻辑需要「更新前的 self」时，注册 **CloneInplaceInput**（见算子反向注意事项 §3） |
+| inplace 反向 | 输入与输出为同一对象时，**只要有一个被用于反向就不能加入 SetUnusedInputs**；反向逻辑需要「更新前的 self」时，注册 **CloneInplaceInput**（见 [`reference.md` 12 反向实现注意事项](reference.md#bprop-advanced-notes)） |
 | KBK 动态 shape inplace | `ib->Depend(target, inplace_call)` |
-| str 类型参数梯度 | 若在 str 位置返回 OutZeros，KBK 反向动态 shape 可能报错，以实际框架行为为准（见算子反向注意事项 §7） |
+| str 类型参数梯度 | 若在 str 位置返回 OutZeros，KBK 反向动态 shape 可能报错，以实际框架行为为准（见 [`reference.md` 12 反向实现注意事项](reference.md#bprop-advanced-notes)） |
 
-### Step 4：SetUnusedInputs（`reference.md` §7.2）
+### Step 4：SetUnusedInputs（[`reference.md` 7.2 SetUnusedInputs 的使用场景](reference.md#bprop-set-unused-inputs)）
 
 反向不依赖某些输入 tensor value 时，标记 unused 以尽早释放内存。
 
-代码骨架见 `reference.md` §18.5。
+代码骨架见 [`reference.md` 18.5 BPROP builder 骨架](reference.md#bprop-builder-skeleton)。
 
-### Step 5：图模式动态输入处理（`reference.md` §7.3）
+### Step 5：图模式动态输入处理（[`reference.md` 7.3 图模式动态输入处理](reference.md#bprop-dynamic-inputs)）
 
 > 图模式（KBK）下正向输入的**值或 shape** 在编译态可能未知，bprop builder 中
 > 基于正向输入的 ShapeCalc 或控制流分支需要能延迟到运行时执行。

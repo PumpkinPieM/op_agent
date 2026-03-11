@@ -40,7 +40,7 @@
 
 > ⚠️ **这是最容易被遗漏的步骤。** 先搜索仓库中是否已有对应的中文 RST。
 
-按 `reference.md` §10 的规范：
+按 [`reference.md` 10 文档与资料开发要点](reference.md#documentation-reference) 的规范：
 - 文件位置：`docs/api/api_python/ops/` 下（或 mint/nn 对应目录）
 - **先看仓库里同类算子的中文 RST 文件**确认格式和目录结构
 - **文件名、文件内标题、接口定义三者严格一致**（functional 场景通常只有文件名多 `func_` 前缀）
@@ -51,7 +51,7 @@
 - 旧文档是否需要更新指向新接口
 - 是否需要为新接口（如 `mint.acos`）新增独立的中文 RST
 
-### Step 3：一致性检查（`reference.md` §10.1）
+### Step 3：一致性检查（[`reference.md` 10.1 总原则](reference.md#documentation-general-principles)）
 
 | 检查项 | 英文 | 中文 |
 | --- | --- | --- |
@@ -60,7 +60,7 @@
 | 必选/可选 | ✅ 一致 | ✅ 一致 |
 | 示例 | ✅ 可运行 | ✅ 可运行 |
 
-### Step 4：落点确认（`reference.md` §10.2）
+### Step 4：落点确认（[`reference.md` 10.2 常见场景与落点](reference.md#documentation-output-mapping)）
 
 | 接口类型 | 英文位置 | 中文位置 |
 | --- | --- | --- |

@@ -20,7 +20,7 @@
 
 ### Step 1：确定 YAML 结构
 
-参照同目录下**同类算子**的 YAML 文件，确认字段层级（按目标算子特征搜索，见 `reference.md` §2.4）。
+参照同目录下**同类算子**的 YAML 文件，确认字段层级（按目标算子特征搜索，见 [`reference.md` 2.4 相似算子查找策略](reference.md#similar-operator-search)）。
 > ⚠️ YAML 字段结构可能随版本迭代变化，以 `op_def/yaml/` 目录下最新已有算子为准，不要只看文档模板。
 
 核心字段：
@@ -33,13 +33,13 @@
 
 ### Step 2：一致性校验
 
-同一个参数（如 `actual_seq_len`）必须在以下位置一致（`reference.md` §2.1）：
+同一个参数（如 `actual_seq_len`）必须在以下位置一致（[`reference.md` 2.1 最小一致性原则](reference.md#yaml-minimal-consistency)）：
 - YAML（op_def + api_def + function_doc）
 - GeneralInfer、PyBoost、KBK、文档、测试
 
 ### Step 3：dispatch 配置（根据接入路径）
 
-**这是路径决策在 YAML 中的落地点**（`reference.md` §2.3）：
+**这是路径决策在 YAML 中的落地点**（[`reference.md` 2.3 两条接入路径](reference.md#dispatch-path-selection)）：
 
 **路径 1（自动生成）**——参数直通，不需要 Customize：
 ```yaml
@@ -62,7 +62,7 @@ dispatch:
 
 ### Step 4：代码骨架参考
 
-YAML 最小模板见 `reference.md` §18.1。
+YAML 最小模板见 [`reference.md` 18.1 YAML 最小模板](reference.md#yaml-skeleton)。
 
 ---
 

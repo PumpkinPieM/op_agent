@@ -1,0 +1,4 @@
+interface:
+  display_name: "MindSpore ACLNN 算子流程"
+  short_description: "指导 MindSpore ACLNN 算子适配与交付"
+  default_prompt: "使用 $mindspore-aclnn-operator-devflow 规划并执行一个 MindSpore ACLNN 算子适配任务。"

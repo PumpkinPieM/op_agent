@@ -52,11 +52,11 @@ python mindspore/ops/op_def/gen_ops.py
 | function_doc 缺条目 | 文档节点缺失 | 补齐参数文档，保持一致 |
 | 编码问题 | 英文 YAML 混入中文 | 移除中文，中文放 RST |
 
-详见 `reference.md` §3。
+详见 [`reference.md` 3 gen_ops.py 常见问题定位](reference.md#gen-ops-py-troubleshooting)。
 
 ### Step 4：路径 2 的"先生成后改造"流程
 
-**仅路径 2 需要**（`reference.md` §2.5）：
+**仅路径 2 需要**（[`reference.md` 2.5 dispatch + 先自动生成，再拷贝改造](reference.md#dispatch-bootstrap-pattern)）：
 1. YAML 中打开 `dispatch.enable: True`
 2. 临时注释掉 `dispatch.Ascend` 自定义声明
 3. 运行 gen_ops.py 生成可编译骨架（此时按路径 1 生成完整代码）
