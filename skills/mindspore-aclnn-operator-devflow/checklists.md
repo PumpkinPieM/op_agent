@@ -124,11 +124,6 @@
   24. 是否会使得运算符或存量 ops 接口调用到新增的原语
   25. 是否已支持 amp（混合精度）特性
   26. 若多 Tensor 输入，是否支持各 Tensor 数据类型不一致
-- [ ] `[MUST]` **验收报告 — 性能验证表**（[14. 验收报告](templates/feature-document.md#feature-acceptance-report)，4 项）：
-  1. 性能测试覆盖 ≥3 种规格
-  2. 反向显存优化（SetUnusedInputs）
-  3. 性能不低于友商（波动 ≤10%）
-  4. 显存持平 PTA
 - [ ] `[MUST]` **验收报告 — 安全编码检视表**（[14. 验收报告](templates/feature-document.md#feature-acceptance-report)，12 项）：
   指针判空/先用后校/越界/除零/内存泄露/异常路径释放/nothrow/安全函数库/类型转换溢出/冗余代码/敏感信息/弱随机数
 - [ ] `[SHOULD]` **与 PTA 差异说明清晰**（[8. 与 PTA 的差异与对齐](templates/feature-document.md#feature-pta-alignment)）：明确列出差异及原因。
@@ -383,7 +378,7 @@
 | 1 | **接入路径已明确**（路径 1 自动 / 路径 2 Customize）且 YAML dispatch 配置正确 | [1 YAML/生成](#checklists-yaml-generation) |
 | 2 | PTA 源码三件套已审查（functions.yaml / derivatives.yaml / C++） | [0a 对标分析](#checklists-benchmark-analysis) |
 | 3 | **Feature 文档 14 个章节已全部填写** | [0f Feature 文档](#checklists-feature-document) |
-| 4 | **Feature 文档验收报告四张表已逐项自测**（资料验证 17 项 + 功能验证 26 项 + 性能验证 4 项 + 安全编码 12 项） | [0f Feature 文档](#checklists-feature-document) |
+| 4 | **Feature 文档验收报告四张表已逐项自测**（资料验证 17 项 + 功能验证 26 项 + 安全编码 12 项） | [0f Feature 文档](#checklists-feature-document) |
 | 5 | **复用存量原语/接口时，CPU/GPU 流程不回退**（已有 UT/ST 回归通过） | [0e 方案评审](#checklists-solution-review) |
 | 6 | gen_ops.py 跑通，functional_overload.py 已生成 | [1 YAML/生成](#checklists-yaml-generation) |
 | 7 | **`aclnn_config.yaml` 已添加映射**（`{OpName}: 'aclnn{Op}'`）——**仅路径 1**；路径 2 跳过 | [12 最终文件清单](#checklists-final-file-list) |

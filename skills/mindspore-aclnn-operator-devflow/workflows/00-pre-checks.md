@@ -91,7 +91,8 @@
    - 若**全新算子（新原语 + 新接口）**，不需要新增 CPU/GPU 支持，仅做 Ascend
    - 是否影响 GE/Lite 现有流程；有影响需 Pass/Expander 消除
 6. **版本矩阵记录**：torch / torch_npu / CANN 版本
-7. **产出 PTA 差异记录**（使用 `templates/pta-analysis-report.md` 模板）
+7. **aclnn接口定义**: `resources/aclnn_doc`中查找相关接口aclnn文档（如`aclnnAbs.md`）
+8. **产出 PTA 差异记录**（使用 `templates/pta-analysis-report.md` 模板）
 
 ---
 

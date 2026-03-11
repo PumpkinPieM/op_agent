@@ -2,7 +2,7 @@
 
 ## 目标
 
-实现算子的形状/类型推导（C++），处理动态 shape/rank 回退。
+实现算子的输出shape/dtype推导（C++），需要注意输入为动态shape/rank场景(dim, rank在当前阶段未知)。
 可选：实现 InferValue 常量折叠。
 
 ## 输入
@@ -18,6 +18,10 @@
 ---
 
 ## 执行步骤
+
+GeneralInfer中主要通过inferinfo类接口获取输入信息进行推导。 常用 API（[`reference.md` 4.3 常用 InferInfo API](reference.md#general-infer-api)）
+
+代码骨架见 [`reference.md` 18.2 GeneralInfer 骨架](reference.md#general-infer-skeleton)。
 
 ### Step 1：实现 InferShape
 
@@ -44,21 +48,6 @@
 
 通常输出 dtype 与输入一致或按算子语义确定。
 
-### Step 4：常用 API（[`reference.md` 4.3 常用 InferInfo API](reference.md#general-infer-api)）
-
-以项目已有实现为准：
-- `GetScalarValueWithCheck<T>()`
-- `GetArrayValue<T>()` + `HasUnknownValue()`
-- `IsNone()`
-
-### Step 5（可选）：InferValue 常量折叠
-
-当算子输入编译期全部已知时（[`reference.md` 20 InferValue 常量折叠](reference.md#infervalue-constant-folding)）：
-- C++ 实现（优先）或 Python 回调
-- 验证：全常量输入 UT + IR 图中确认 ValueNode
-
-代码骨架见 [`reference.md` 18.2 GeneralInfer 骨架](reference.md#general-infer-skeleton)。
-
 ---
 
 ## 成功标准
@@ -70,7 +59,6 @@
 - [ ] （可选）InferValue 实现并验证
 
 ---
-
 
 ## 注意事项
 
