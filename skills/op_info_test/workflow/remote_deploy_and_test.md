@@ -1,11 +1,13 @@
 # remote_deploy_and_test 操作手册
 
+<a id="remote-deploy-overview"></a>
 ## 概述
 
 本章节用于指导 `op_info_test` 的远端执行闭环：提交测试任务、等待任务完成、读取结果、失败时下载产物用于分析。
 
 目标是通过统一 API 完成“客户端发起 + 服务端执行”的流程，避免人工登录服务端逐步操作。
 
+<a id="remote-deploy-roles"></a>
 ## 背景与角色
 
 该流程包含两个角色：
@@ -18,14 +20,17 @@
 1. `server` 和 `client` 在同一台机器（local 模式），可直接访问 `/tmp/op_info_artifacts/<job_id>/`。
 2. `server` 在远端机器、`client` 在本地机器（remote 模式），通过 `--server http://<server_ip>:18080` 调用 API，推荐使用 `status/download` 获取结果和产物。
 
+<a id="remote-deploy-prerequisites"></a>
 ## 1. 前置条件
 
 1. 本地已完成用例生成、修改并推送分支。
 2. 如果接收任务指令中未明确server_ip, 则使用localhost作为server_ip。
 3. 设置环境变量 `no_proxy=127.0.0.1,localhost`
 
+<a id="remote-deploy-standard-flow"></a>
 ## 2. 标准操作流程
 
+<a id="remote-deploy-start-server"></a>
 ### 步骤 0：启动服务端（远端机器）
 
 ```bash
@@ -41,6 +46,7 @@ python .agents/skills/op_info_test/scripts/remote_runner_server.py \
 
 服务端已在测试任务开始前独立启动, 在测试任务中无需关注。
 
+<a id="remote-deploy-submit-job"></a>
 ### 步骤 1：提交任务（客户端机器）
 
 ```bash
@@ -56,6 +62,7 @@ python .agents/skills/op_info_test/scripts/remote_runner_client.py \
 
 记录返回的 `job_id`。
 
+<a id="remote-deploy-wait-job"></a>
 ### 步骤 2：等待任务结束
 
 ```bash
@@ -72,6 +79,7 @@ python .agents/skills/op_info_test/scripts/remote_runner_client.py \
   status --job-id <job_id>
 ```
 
+<a id="remote-deploy-read-summary"></a>
 ### 步骤 3：读取测试摘要
 
 推荐在客户端通过 API 读取摘要（适用于服务端在远端机器）：
@@ -103,12 +111,14 @@ python .agents/skills/op_info_test/scripts/remote_runner_client.py \
   download --job-id <job_id> --output ./<job_id>_artifacts.zip
 ```
 
+<a id="remote-deploy-next-round"></a>
 ### 步骤 4：按结果进入下一轮
 
 1. `status=success`：闭环结束。
 2. `error_type=testcase`：按 `failed_cases/top_traceback` 修正用例，重新执行步骤 1 到步骤 4。
 3. `error_type=infra`：停止自动改用例，先处理环境问题。
 
+<a id="remote-deploy-optional-actions"></a>
 ## 3. 可选操作
 
 取消任务：

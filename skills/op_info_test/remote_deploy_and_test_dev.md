@@ -1,5 +1,6 @@
 # remote_deploy_and_test 实现说明（仅用于 skill 开发演进）
 
+<a id="remote-deploy-dev-doc-positioning"></a>
 ## 1. 文档定位
 
 1. 本文档描述远端 runner 的实现约束与输出契约。
@@ -7,12 +8,14 @@
 3. 本文档中的输出规范用于后续脚本演进
 4. 设计不用过度考虑兼容性问题
 
+<a id="remote-deploy-dev-artifact-layout"></a>
 ## 2. 任务产物目录
 
 1. 每个任务的产物目录固定为：`<artifact_root>/<job_id>/`。
 2. 默认 `artifact_root=/tmp/op_info_artifacts`。
 3. 目录内输出件包括：`pytest.log`、`junit.xml`、`env.txt`、`deploy_meta.json`、`summary.json`。
 
+<a id="remote-deploy-dev-artifact-overview"></a>
 ## 3. 输出件总览
 
 | 输出件 | 格式 | 复杂度 | 生成条件 |
@@ -28,8 +31,10 @@
 1. “复杂度=中/高”的输出件需要模板，模板位于 `template/` 目录。
 2. JSON 输出统一由服务端 `write_json` 写出，编码 UTF-8、`ensure_ascii=true`、2 空格缩进、key 排序。
 
+<a id="remote-deploy-dev-artifact-spec"></a>
 ## 4. 各输出件详细规范
 
+<a id="remote-deploy-dev-pytest-log"></a>
 ### 4.1 `pytest.log`
 
 内容要求：
@@ -50,6 +55,7 @@
 
 1. `template/pytest_log.template.txt`
 
+<a id="remote-deploy-dev-junit-xml"></a>
 ### 4.2 `junit.xml`
 
 内容要求：
@@ -68,6 +74,7 @@
 
 1. `template/junit_xml.template.xml`
 
+<a id="remote-deploy-dev-env-txt"></a>
 ### 4.3 `env.txt`
 
 内容要求：
@@ -83,6 +90,7 @@
 1. UTF-8 文本。
 2. 末尾保留换行。
 
+<a id="remote-deploy-dev-deploy-meta"></a>
 ### 4.4 `deploy_meta.json`
 
 字段与要求：
@@ -96,6 +104,7 @@
 
 1. `template/deploy_meta.template.json`
 
+<a id="remote-deploy-dev-summary-json"></a>
 ### 4.5 `summary.json`
 
 字段与要求：
@@ -118,6 +127,7 @@
 
 1. `template/summary.template.json`
 
+<a id="remote-deploy-dev-status-api"></a>
 ## 5. API 输出件规范（状态查询）
 
 `GET /jobs/{job_id}` 返回 job 状态输出，其结构用于客户端轮询和闭环判断。
@@ -138,6 +148,7 @@
 
 1. `template/job_status_response.template.json`
 
+<a id="remote-deploy-dev-download-api"></a>
 ## 6. API 输出件规范（产物下载）
 
 `GET /jobs/{job_id}/artifacts.zip` 返回当前 job 的全部产物压缩包，用于客户端在 `status=failed` 后拉取分析。
@@ -149,6 +160,7 @@
 3. 返回 `Content-Type: application/zip`。
 4. 返回 `Content-Disposition: attachment; filename="<job_id>_artifacts.zip"`。
 
+<a id="remote-deploy-dev-templates"></a>
 ## 7. 模板列表
 
 1. `template/summary.template.json`

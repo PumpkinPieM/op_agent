@@ -1,3 +1,4 @@
+<a id="op-info-smoke-steps"></a>
 1. check the agent permission. Ask for full permission if it's not given.
 2. checkout commit c3099e48e
 3. execute the following command: 

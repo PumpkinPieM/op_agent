@@ -5,13 +5,15 @@ description: Generate and validate MindSpore Python ST op_info tests end-to-end 
 
 执行 op_info 测试端到端闭环，优先直接落地，不在中途停下提问；仅在权限受限、关键信息缺失且无法合理推断时提问。
 
-> `reference.md`等共享文档保存在`../_shared/`路径下。
+> 共享参考文档使用 [`../_shared/reference.md`](../_shared/reference.md#reference-index)。
 
+<a id="op-info-test-routing"></a>
 ## 快速路由
 
 - 指令包含 `smoketest` / `冒烟`：直接执行 [workflow/smoke.md](workflow/smoke.md)。
 - 其他 op_info 用例新增/修复请求：执行下述完整闭环。
 
+<a id="op-info-test-end-to-end-flow"></a>
 ## 完整闭环流程
 
 1. 从 `master` 新建分支：`add_opinfo_test_[op_name]`。
@@ -30,6 +32,7 @@ description: Generate and validate MindSpore Python ST op_info tests end-to-end 
    - 未覆盖场景及原因。
    - 远端任务与结果摘要。
 
+<a id="op-info-test-done-criteria"></a>
 ## 完成判定
 
 仅在以下条件全部满足时判定闭环完成：
@@ -39,6 +42,7 @@ description: Generate and validate MindSpore Python ST op_info tests end-to-end 
 3. `summary.json` 的 `failed_cases` 为空。
 4. 不存在未处理的 `error_type=testcase`。
 
+<a id="op-info-test-constraints"></a>
 ## 执行约束
 
 - 优先复用本 skill 内现有文档、脚本与模板，不重复造轮子。

@@ -5,11 +5,13 @@ description: Generate and validate MindSpore Python ST op_info tests end-to-end 
 
 生成 op_info 测试，优先直接落地，不在中途停下提问；仅在权限受限、关键信息缺失且无法合理推断时提问。
 
+<a id="op-info-test-only-routing"></a>
 ## 快速路由
 
 - 指令包含 `smoketest` / `冒烟`：直接执行 [workflow/smoke.md](workflow/smoke.md)。
 - 其他 op_info 用例新增/修复请求：执行下述完整闭环。
 
+<a id="op-info-test-only-flow"></a>
 ## 完整闭环流程
 
 1. 从 `master` 新建分支：`add_opinfo_test_[op_name]`。
@@ -19,6 +21,7 @@ description: Generate and validate MindSpore Python ST op_info tests end-to-end 
    - 覆盖场景与边界。
    - 未覆盖场景及原因。
 
+<a id="op-info-test-only-constraints"></a>
 ## 执行约束
 
 - 不改动与目标接口无关的测试内容。
