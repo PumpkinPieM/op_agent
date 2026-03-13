@@ -1,0 +1,30 @@
+{
+  "_auth_method_options": "ssh_key | env | password — see workflows/remote-build.md",
+  "servers": {
+    "910b": {
+      "host": "192.168.x.xx",
+      "user": "your_username",
+      "auth_method": "ssh_key",
+      "remote_dir": "/home/your_path/mindspore",
+      "build_cmd": "bash build.sh -e ascend -V 910b -j128",
+      "description": "Ascend 910B dev server"
+    },
+    "910a": {
+      "host": "192.168.x.xx",
+      "user": "your_username",
+      "auth_method": "ssh_key",
+      "remote_dir": "/home/your_path/mindspore",
+      "build_cmd": "bash build.sh -e ascend -j128",
+      "description": "Ascend 910A dev server"
+    },
+    "gpu": {
+      "host": "192.168.x.xx",
+      "user": "your_username",
+      "auth_method": "ssh_key",
+      "remote_dir": "/home/your_path/mindspore",
+      "build_cmd": "bash build.sh -e gpu -V 11.6 -j64",
+      "description": "GPU dev server"
+    }
+  },
+  "default": "910b"
+}
