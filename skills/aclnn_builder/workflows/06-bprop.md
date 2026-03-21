@@ -2,17 +2,16 @@
 
 ## 目标
 
-在 bprop builder 中把反向图接起来，确保梯度路径正确。
+在 bprop builder 中实现反向图。
 
 ## 输入
 
 - **PTA derivatives.yaml 分析**：哪些输入可微、grad 函数参数传递
-- **反向 YAML 定义**：反向算子参数
-- **反向 PyBoost/KBK**：已实现的反向 kernel
+- **反向算子 YAML 定义**：反向算子参数
 
 ## 输出
 
-- **BPROP 注册代码**：在合适的 `grad_*ops.cc` 中添加
+- **BPROP 实现代码**：在合适的 `grad_*ops.cc` 中添加
 
 ---
 
@@ -49,7 +48,7 @@
 
 ### Step 5：图模式动态输入处理（[`reference.md` 7.3 图模式动态输入处理](reference.md#bprop-dynamic-inputs)）
 
-> 图模式（KBK）下正向输入的**值或 shape** 在编译态可能未知，bprop builder 中
+> 图模式（KBK）下正向输入的**值或 shape** 在图编译态可能未知，bprop builder 中
 > 基于正向输入的 ShapeCalc 或控制流分支需要能延迟到运行时执行。
 > **不处理此场景会导致图模式下反向编译失败或结果错误。**
 
@@ -57,9 +56,9 @@
 
 | 场景 | 检查方法 | 处理方式 |
 | --- | --- | --- |
-| 标量输入值 unknown | `GetScalarValue<>()->has_value()` | 值已知走编译期分支；unknown 走 `Conditional` 运行时分支 |
+| 标量输入值 unknown | `GetScalarValue<>()->has_value()` | 值已知走图编译期分支；unknown 走 `Conditional` 运行时分支 |
 | 输入 shape 动态 | `IsDynamicRank()` / `IsDynamicShape()` | shape 依赖的计算用 `DEF_PURE_SHAPE_CALC` + `ib->ShapeCalc` 延迟 |
-| 控制流依赖运行时值 | 编译期值可能变化 | 用 `ib->Conditional(cond, true_br, false_br)` 替代 C++ if/else |
+| 控制流依赖运行时值 | 图编译期值可能变化 | 用 `ib->Conditional(cond, true_br, false_br)` 替代 C++ if/else |
 
 > 🚫 **反模式禁令（绝对禁止）**：
 >
@@ -79,12 +78,12 @@
 > p = p_node->BuildValue();
 > p_opt = GetScalarValue<float>(p);
 > if (p_opt->has_value()) {
->   // 编译期已知 → C++ if/else 分支优化
+>   // 图编译期已知 → C++ if/else 分支优化
 >   auto p_val = p_opt.value();
 >   // ... 按值分支
 >   if (p_val...) 
 > } else {
->   // 编译期未知 → 用 Conditional 构建运行时分支
+>   // 图编译期未知 → 用 Conditional 构建运行时分支
 >   auto true_branch = [&ib](...) { ... };
 >   auto false_branch = [&ib](...) { ... };
 >   result = ib->Conditional(cond, true_branch, false_branch);
@@ -107,7 +106,6 @@
 - [ ] 不可微分入参已返回零梯度占位
 - [ ] 与 PTA `derivatives.yaml` 的可微输入列表对齐
 - [ ] **图模式动态输入场景已处理**（标量 unknown → Conditional；shape 动态 → ShapeCalc/动态路径）
-- [ ] 编译通过
 
 ---
 
@@ -116,5 +114,5 @@
 1. **bprop 标量 unknown 直接报错退出**：在 `ContainsValueAny()` 为 true 时
    用 `MS_EXCEPTION` 抛异常而非构建运行时分支。
    → 必须用 `ib->Conditional(cond, true_branch, false_branch)` 处理。
-   编译期值已知时走 C++ if/else 分支；unknown 时走 `Conditional` 运行时分支。
+   图编译期值已知时走 C++ if/else 分支；unknown 时走 `Conditional` 运行时分支。
    参考 `ReduceStd` bprop 的写法。详见 `workflows/06-bprop.md` Step 5。

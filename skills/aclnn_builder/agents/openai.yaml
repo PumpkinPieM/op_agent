@@ -1,4 +1,4 @@
 interface:
-  display_name: "MindSpore ACLNN 算子流程"
-  short_description: "指导 MindSpore ACLNN 算子适配与交付"
-  default_prompt: "使用 $mindspore-aclnn-operator-devflow 规划并执行一个 MindSpore ACLNN 算子适配任务。"
+  display_name: "MindSpore ACLNN Builder"
+  short_description: "Plan and execute MindSpore ACLNN operator work"
+  default_prompt: "Use $aclnn-builder to plan and execute a MindSpore ACLNN operator adaptation task."

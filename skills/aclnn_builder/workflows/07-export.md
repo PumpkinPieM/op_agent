@@ -2,27 +2,22 @@
 
 ## 目标
 
-确保算子通过 ops 包正确导出，非 Ascend 设备有清晰错误占位；接口满足对标 PyTorch 要求（见下）。
-
-## 输入
-
-- **算子实现**：前向/反向的完整代码
+确保算子通过 mint 包正确导出，非 Ascend 设备有清晰错误占位；接口满足对标 PyTorch 要求。
 
 ## 输出
 
 - **ops 包导出**：`__init__.py` / `__all__` 更新
 - **接口文件**：functional / nn / Tensor 方法（按需）
-- **占位实现**：非 Ascend 设备的 RuntimeError
 
-**接口对标约束**（来自 2. 接口开发 2.1）：接口名、参数名、顺序与默认值、算法与精度、输入范围（dtype）、性能不低于 PyTorch 的 1/2、Parameter 名/name 等需与 PyTorch 一致；无法一致需经 CCB/接口设计评审。详见 [`reference.md` 19 PTA 源码审查方法](reference.md#pta-source-review)。
+**接口对标约束**：接口名、参数名、顺序与默认值、输入范围（dtype）与pta一致
 
 ---
 
 ## 执行步骤
 
-### Step 1：ops 包显式导出
+### Step 1：mint 显式导出
 
-- 在 `mindspore/ops/` 相关 `__init__.py` 中**对应算子类别**和 **`__all__` 两处**添加算子名（见 2. 接口开发 2.1.3/2.2）。
+- 在 `mindspore/python/mindspore/mint/` 相关 `__init__.py` 中**对应算子类别**和 **`__all__` 两处**添加算子名。
 - 确保 `__all__` 列表包含新算子
 
 ### Step 2：接口开发（[`reference.md` 15 接口开发要点](reference.md#api-development)）
@@ -43,18 +38,16 @@
 4. **如有符号别名** → 新增 alias YAML（如 `__mul__.yaml: alias: mul`）
 5. **如涉及 functional 重载** → `interface` 字段增加 `function`，更新 `mint/__init__.py` 导入源为 `functional_overload`
 
-### Step 3：非 Ascend 设备占位
+## 限制
 
-- 清晰的 RuntimeError 说明该算子仅支持 Ascend
-- 不要让用户遇到难以理解的内部错误
+`xxxExt`, `xxx_ext`接口只是内部接口，export为对外接口时应该`import xxx_ext as xxx`，移除ext后缀。永远不要直接对外ext接口。
 
 ---
 
 ## 成功标准
 
-- [ ] ops 包中可正常 import 算子
+- [ ] 可从mint正常 import 算子
 - [ ] functional/nn/Tensor 接口可用（按需）
-- [ ] 非 Ascend 设备给出清晰错误信息
 - [ ] `_get_cache_prim` 使用正确（functional 接口）
 - [ ] 接口重载：api_def 多条目配置正确、deprecated YAML 参数与 py_method 一致（如涉及）
 

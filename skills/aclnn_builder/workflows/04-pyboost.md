@@ -1,15 +1,17 @@
 # Workflow 4: PyBoost（Pynative, C++）
 
+PyBoost是PyNative模式下的算子调用流程。
+
 ## 目标
 
-实现 Pynative 路径下的 ACLNN 算子调用。
+实现 Pyboost 路径下的 ACLNN 算子调用。
 **根据接入路径不同，本步骤工作量差异很大：**
 - **路径 1（自动生成）**：gen_ops.py 已生成完整调用代码，此步只需**验证**
 - **路径 2（Customize）**：需要在 customize 目录手写实现文件
 
 ## 输入
 
-- **接入路径**：Pre-B 确定的路径 1 或路径 2
+- **接入路径**：auto/customize
 - **YAML 定义**：参数列表、dispatch 配置
 - **PTA 源码分析**：ACLNN 调用细节、参数预处理逻辑
 - **（组合场景）ACLNN 调用链**：子算子列表与依赖关系
@@ -18,7 +20,6 @@
 
 - **路径 1**：验证自动生成的 PyBoost 调用代码正确
 - **路径 2**：手写 PyBoost 实现文件 `op_name_ascend_customize.cc/.h`
-- **（反向）PyBoost Grad 实现文件（路径 2）**
 
 ---
 
@@ -30,16 +31,14 @@
 > 只需验证 gen_ops.py 自动生成的调用代码正确：
 
 1. **确认生成代码存在**：检查自动生成目录下有对应的 PyBoost 调用模板产物
-2. **确认 ACLNN 调用参数正确**：自动生成的 `LAUNCH_ACLNN(aclnnXxx, ...)` 参数顺序/类型无误
-3. **编译验证**：确保自动生成代码编译通过
-4. 验证通过后，直接进入 [Workflow 5: KBK](./05-kbk.md)
+2. **确认 ACLNN 调用参数正确**：自动生成的 `LAUNCH_ACLNN(aclnnXxx, ...)` 参数顺序/类型和aclnn文档中接口一致。
 
 > **如果验证发现自动生成代码有问题**（参数不匹配等），
 > 说明参数无法直通，需要重新评估→改为路径 2。
 
 ### 路径 2 分支：手写 Customize 文件
 
-#### Step 0：ACLNN 接口核对（反幻觉）
+#### Step 0：ACLNN 接口核对
 
 > 若 Pre-B/Pre-C 阶段已确认接口信息（用户贴过文档、PTA 源码已分析），直接引用之前的结论即可，跳过本步。
 
@@ -97,11 +96,10 @@
 
 **路径 1**：
 - [ ] 确认自动生成的 PyBoost 调用代码存在且参数正确
-- [ ] 编译通过
 
 **路径 2**：
-- [ ] PyBoost 前向 Customize 实现完成，编译通过
-- [ ] PyBoost 反向 Customize 实现完成（如需要），编译通过
+- [ ] PyBoost 前向 Customize 实现完成
+- [ ] PyBoost 反向 Customize 实现完成（如需要）
 - [ ] 参数转换正确（tuple/None/标量）
 - [ ] 组合场景：中间 tensor 分配正确，调用顺序与 PTA 一致
 - [ ] 风格与同目录已有实现一致
