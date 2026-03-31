@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Single-task remote deploy and test service for op_info_test.
+"""Single-task remote deploy and test service for op-info-test.
 
 This script implements a minimal single-client/single-task API server.
 No queue is introduced. A global file lock guarantees mutual exclusion.

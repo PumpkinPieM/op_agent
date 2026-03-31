@@ -19,6 +19,8 @@ Implement the backward graph in the bprop builder.
 
 ## Steps
 
+The bprop c++ implementation can be found in `mindspore/ccsrc/frontend/expander/grad/grad_xxx_ops.cc`.
+
 ### Step 1: Basic Wiring (`reference.md#bprop-reference`)
 
 - Build the backward subgraph only for inputs that actually require gradients

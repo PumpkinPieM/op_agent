@@ -1,0 +1,4 @@
+interface:
+  display_name: "Op Info Test"
+  short_description: "Generate and validate MindSpore OpInfo ST tests"
+  default_prompt: "Use $op-info-test to add, isolate, and validate MindSpore op_info ST coverage for this operator."
