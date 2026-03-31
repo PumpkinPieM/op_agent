@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.Tensor.triu::triu_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.triu",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "triu",
+    "op_branch": "triu_op.yaml",
+    "op": "triu",
+    "primitive": "Triu"
+  },
+  "resolver": {
+    "py_method": "tensor_triu",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "triu",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/triu.yaml",
+    "source_file": "mindspore/ops/api_def/triu.yaml"
+  },
+  "coverage": {
+    "coverage_key": "triu::Triu",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/triu_op.yaml",
+    "class_name": "Triu",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnTriu"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/triu.cc",
+      "mindspore/ops/infer/ops_func_impl/triu.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/triu.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/triu_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/triu_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_triu.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_func_triu.py",
+      "tests/st/ops/test_ops_triu.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/triu_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.triu::triu_op.yaml",
+    "coverage_key": "triu::Triu"
+  }
+}

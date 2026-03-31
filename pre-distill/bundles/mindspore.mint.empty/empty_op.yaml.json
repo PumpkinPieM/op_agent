@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.mint.empty::empty_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.empty",
+    "public_surface": "mindspore.mint",
+    "api_name": "empty",
+    "op_branch": "empty_op.yaml",
+    "op": "empty",
+    "primitive": "Empty"
+  },
+  "resolver": {
+    "py_method": "tensor_empty",
+    "interface": "function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "empty",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.empty",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "empty::Empty",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/empty_op.yaml",
+    "class_name": "Empty",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "EmptyAscend",
+    "aclnn": [
+      "aclnnEmpty"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/empty.cc",
+      "mindspore/ops/infer/ops_func_impl/empty.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/empty.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/empty.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/empty_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/empty_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_empty.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/empty_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.empty::empty_op.yaml",
+    "coverage_key": "empty::Empty"
+  }
+}

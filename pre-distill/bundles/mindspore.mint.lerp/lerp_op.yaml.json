@@ -1,0 +1,79 @@
+{
+  "bundle_key": "mindspore.mint.lerp::lerp_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.lerp",
+    "public_surface": "mindspore.mint",
+    "api_name": "lerp",
+    "op_branch": "lerp_op.yaml",
+    "op": "lerp",
+    "primitive": "Lerp"
+  },
+  "resolver": {
+    "py_method": "tensor_lerp",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "lerp",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.lerp",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "lerp::Lerp",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/lerp_op.yaml",
+    "class_name": "Lerp",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "LerpAscend",
+    "aclnn": [
+      "aclnnLerp"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/lerp.cc",
+      "mindspore/ops/infer/ops_func_impl/lerp.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/lerp.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/lerp.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/lerp_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/lerp_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_lerp.cc"
+    ],
+    "st": [
+      "tests/st/ops/cpu/test_lerp_op.py",
+      "tests/st/ops/dynamic_shape/grad/test_lerp.py",
+      "tests/st/ops/gpu/test_lerp_op.py",
+      "tests/st/ops/test_func_lerp.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/lerp_doc.yaml",
+      "mindspore/ops/op_def/yaml/doc/lerp_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.lerp::lerp_op.yaml",
+    "coverage_key": "lerp::Lerp"
+  }
+}

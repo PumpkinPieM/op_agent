@@ -1,0 +1,66 @@
+{
+  "bundle_key": "mindspore.mint.bitwise_xor::bitwise_xor_scalar_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.bitwise_xor",
+    "public_surface": "mindspore.mint",
+    "api_name": "bitwise_xor",
+    "op_branch": "bitwise_xor_scalar_op.yaml",
+    "op": "bitwise_xor_scalar",
+    "primitive": "BitwiseXorScalar"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.math_func",
+    "target_symbol": "bitwise_xor_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.math_func.bitwise_xor_scalar_",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "bitwise_xor_scalar::BitwiseXorScalar",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/bitwise_xor_scalar_op.yaml",
+    "class_name": "BitwiseXorScalar",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnBitwiseXorScalar"
+    ],
+    "aclnn_source": [
+      "default_guess"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": false,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/bitwise_xor_scalar.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/bitwise_xor_scalar.h"
+    ],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/bitwise_xor_scalar_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.bitwise_xor::bitwise_xor_scalar_op.yaml",
+    "coverage_key": "bitwise_xor_scalar::BitwiseXorScalar"
+  }
+}
