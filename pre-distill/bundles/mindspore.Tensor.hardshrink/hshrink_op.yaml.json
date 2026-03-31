@@ -1,0 +1,76 @@
+{
+  "bundle_key": "mindspore.Tensor.hardshrink::hshrink_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.hardshrink",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "hardshrink",
+    "op_branch": "hshrink_op.yaml",
+    "op": "hshrink",
+    "primitive": "HShrink"
+  },
+  "resolver": {
+    "py_method": "tensor_hardshrink",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "hardshrink",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/hardshrink.yaml",
+    "source_file": "mindspore/ops/api_def/hardshrink.yaml"
+  },
+  "coverage": {
+    "coverage_key": "hshrink::HShrink",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/hshrink_op.yaml",
+    "class_name": "HShrink",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "HShrinkAscend",
+    "aclnn": [
+      "aclnnHardshrink"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/hshrink.cc",
+      "mindspore/ops/infer/ops_func_impl/hshrink.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/hshrink.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/hshrink.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/hshrink_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/hshrink_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_nn_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_hshrink.cc"
+    ],
+    "st": [
+      "tests/st/ops/cpu/test_hshrink_op.py",
+      "tests/st/ops/gpu/test_hshrink_op.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/hshrink_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.hardshrink::hshrink_op.yaml",
+    "coverage_key": "hshrink::HShrink"
+  }
+}

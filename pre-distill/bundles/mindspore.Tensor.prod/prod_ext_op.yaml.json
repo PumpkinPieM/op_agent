@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.Tensor.prod::prod_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.prod",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "prod",
+    "op_branch": "prod_ext_op.yaml",
+    "op": "prod_ext",
+    "primitive": "ProdExt"
+  },
+  "resolver": {
+    "py_method": "tensor_prod",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "prod",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/prod.yaml",
+    "source_file": "mindspore/ops/api_def/prod.yaml"
+  },
+  "coverage": {
+    "coverage_key": "prod_ext::ProdExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/prod_ext_op.yaml",
+    "class_name": "ProdExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "ProdExtAscend",
+    "aclnn": [
+      "aclnnProd",
+      "aclnnProdDim"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/prod_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/prod_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/prod_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/prod_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/prod_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/prod_ext_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/prod_ext_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/prod_ext_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.prod::prod_ext_op.yaml",
+    "coverage_key": "prod_ext::ProdExt"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "bundle_key": "mindspore.ops.mul::mul_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.ops.mul",
+    "public_surface": "mindspore.ops",
+    "api_name": "mul",
+    "op_branch": "mul_op.yaml",
+    "op": "mul",
+    "primitive": "Mul"
+  },
+  "resolver": {
+    "py_method": "tensor_mul",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "mul",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/mul.yaml",
+    "source_file": "mindspore/ops/api_def/mul.yaml"
+  },
+  "coverage": {
+    "coverage_key": "mul::Mul",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/mul_op.yaml",
+    "class_name": "Mul",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnMul"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/mul.cc",
+      "mindspore/ops/infer/ops_func_impl/mul.cc",
+      "mindspore/ops/infer/ops_func_impl/mul.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/mul.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_mul.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_mul_op.py",
+      "tests/st/ops/ascend/test_tbe_ops/test_mul.py",
+      "tests/st/ops/cpu/test_mul_op.py",
+      "tests/st/ops/dynamic_shape/grad/test_mul.py",
+      "tests/st/ops/gpu/test_mul_op.py",
+      "tests/st/ops/test_ops_mul.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/__mul___doc.yaml",
+      "mindspore/ops/api_def/function_doc/mul_doc.yaml",
+      "mindspore/ops/op_def/yaml/doc/mul_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.ops.mul::mul_op.yaml",
+    "coverage_key": "mul::Mul"
+  }
+}

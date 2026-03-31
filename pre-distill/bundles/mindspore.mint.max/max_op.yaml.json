@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.mint.max::max_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.max",
+    "public_surface": "mindspore.mint",
+    "api_name": "max",
+    "op_branch": "max_op.yaml",
+    "op": "max",
+    "primitive": "Max"
+  },
+  "resolver": {
+    "py_method": "tensor_max",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "max",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.max",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "max::Max",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/max_op.yaml",
+    "class_name": "Max",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnMax"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/max.cc",
+      "mindspore/ops/infer/ops_func_impl/max.cc",
+      "mindspore/ops/infer/ops_func_impl/max.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/max.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [
+      "tests/st/ops/test_ops_max.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/max_doc.yaml",
+      "mindspore/ops/op_def/yaml/doc/max_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.max::max_op.yaml",
+    "coverage_key": "max::Max"
+  }
+}

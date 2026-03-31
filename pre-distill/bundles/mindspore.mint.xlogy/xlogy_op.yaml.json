@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.mint.xlogy::xlogy_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.xlogy",
+    "public_surface": "mindspore.mint",
+    "api_name": "xlogy",
+    "op_branch": "xlogy_op.yaml",
+    "op": "xlogy",
+    "primitive": "Xlogy"
+  },
+  "resolver": {
+    "py_method": "tensor_xlogy",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "xlogy",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.xlogy",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "xlogy::Xlogy",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/xlogy_op.yaml",
+    "class_name": "Xlogy",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnXLogYTensor"
+    ],
+    "aclnn_source": [
+      "aclnn_config",
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/xlogy.cc",
+      "mindspore/ops/infer/ops_func_impl/xlogy.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/xlogy.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [
+      "tests/st/ops/cpu/test_xlogy_op.py",
+      "tests/st/ops/dynamic_shape/grad/test_xlogy.py",
+      "tests/st/ops/test_ops_xlogy.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/xlogy_doc.yaml",
+      "mindspore/ops/op_def/yaml/doc/xlogy_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.xlogy::xlogy_op.yaml",
+    "coverage_key": "xlogy::Xlogy"
+  }
+}

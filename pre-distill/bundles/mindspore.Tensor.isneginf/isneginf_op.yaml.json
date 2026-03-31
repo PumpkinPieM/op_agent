@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.Tensor.isneginf::isneginf_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.isneginf",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "isneginf",
+    "op_branch": "isneginf_op.yaml",
+    "op": "isneginf",
+    "primitive": "IsNegInf"
+  },
+  "resolver": {
+    "py_method": "tensor_isneginf",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "isneginf",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/isneginf.yaml",
+    "source_file": "mindspore/ops/api_def/isneginf.yaml"
+  },
+  "coverage": {
+    "coverage_key": "isneginf::IsNegInf",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/isneginf_op.yaml",
+    "class_name": "IsNegInf",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnIsNegInf"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/isneginf.cc",
+      "mindspore/ops/infer/ops_func_impl/isneginf.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/isneginf.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_isneginf.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_isneginf.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/isneginf_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.isneginf::isneginf_op.yaml",
+    "coverage_key": "isneginf::IsNegInf"
+  }
+}

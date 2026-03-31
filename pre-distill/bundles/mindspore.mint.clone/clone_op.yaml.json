@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.mint.clone::clone_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.clone",
+    "public_surface": "mindspore.mint",
+    "api_name": "clone",
+    "op_branch": "clone_op.yaml",
+    "op": "clone",
+    "primitive": "Clone"
+  },
+  "resolver": {
+    "py_method": "tensor_clone",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.auto_generate",
+    "target_symbol": "clone",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.auto_generate.clone",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "clone::Clone",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/clone_op.yaml",
+    "class_name": "Clone",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "CloneAscend",
+    "aclnn": [
+      "aclnnInplaceCopy"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/clone.cc",
+      "mindspore/ops/infer/ops_func_impl/clone.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/clone.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/clone.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/clone_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/clone_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_clone.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/clone_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.clone::clone_op.yaml",
+    "coverage_key": "clone::Clone"
+  }
+}

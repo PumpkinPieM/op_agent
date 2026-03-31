@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.mint.rand_like::rand_like_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.rand_like",
+    "public_surface": "mindspore.mint",
+    "api_name": "rand_like",
+    "op_branch": "rand_like_ext_op.yaml",
+    "op": "rand_like_ext",
+    "primitive": "RandLikeExt"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.random_func",
+    "target_symbol": "rand_like_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.random_func.rand_like_ext",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "rand_like_ext::RandLikeExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/rand_like_ext_op.yaml",
+    "class_name": "RandLikeExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "RandLikeExtAscend",
+    "aclnn": [
+      "aclnnInplaceUniform"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/rand_like_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/rand_like_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/rand_like_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/rand_like_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/rand_ext_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/rand_ext_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_other_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_randlike_ext.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.rand_like::rand_like_ext_op.yaml",
+    "coverage_key": "rand_like_ext::RandLikeExt"
+  }
+}

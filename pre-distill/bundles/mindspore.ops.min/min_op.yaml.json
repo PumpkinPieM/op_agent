@@ -1,0 +1,72 @@
+{
+  "bundle_key": "mindspore.ops.min::min_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.ops.min",
+    "public_surface": "mindspore.ops",
+    "api_name": "min",
+    "op_branch": "min_op.yaml",
+    "op": "min",
+    "primitive": "Min"
+  },
+  "resolver": {
+    "py_method": "tensor_min",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "min",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/min.yaml",
+    "source_file": "mindspore/ops/api_def/min.yaml"
+  },
+  "coverage": {
+    "coverage_key": "min::Min",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/min_op.yaml",
+    "class_name": "Min",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnMin"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/min.cc",
+      "mindspore/ops/infer/ops_func_impl/min.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/min.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [
+      "tests/st/ops/test_ops_min.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/min_doc.yaml",
+      "mindspore/ops/op_def/yaml/doc/min_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.ops.min::min_op.yaml",
+    "coverage_key": "min::Min"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "bundle_key": "mindspore.mint.softmax_ext::softmax_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.softmax_ext",
+    "public_surface": "mindspore.mint",
+    "api_name": "softmax_ext",
+    "op_branch": "softmax_op.yaml",
+    "op": "softmax",
+    "primitive": "Softmax"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.nn_func",
+    "target_symbol": "softmax_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.softmax_impl",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "softmax::Softmax",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/softmax_op.yaml",
+    "class_name": "Softmax",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "SoftmaxAscend",
+    "aclnn": [
+      "aclnnSoftmax"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/softmax.cc",
+      "mindspore/ops/infer/ops_func_impl/softmax.cc",
+      "mindspore/ops/infer/ops_func_impl/softmax.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/softmax.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/softmax.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/softmax_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/softmax_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_nn_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_softmax.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_tbe_ops/test_softmax.py",
+      "tests/st/ops/cpu/test_softmax_op.py",
+      "tests/st/ops/gpu/test_softmax_op.py",
+      "tests/st/ops/test_ops_softmax.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/softmax_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.softmax_ext::softmax_op.yaml",
+    "coverage_key": "softmax::Softmax"
+  }
+}
