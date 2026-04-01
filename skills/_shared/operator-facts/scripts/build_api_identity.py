@@ -287,7 +287,7 @@ def dedupe_rows(rows: Iterable[dict]) -> List[dict]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Build phase-1 api_identity index for pre-distill.")
+    parser = argparse.ArgumentParser(description="Build phase-1 api_identity index for operator-facts.")
     parser.add_argument("--ms-root", type=Path, default=DEFAULT_MS_ROOT)
     parser.add_argument("--out-jsonl", type=Path, default=DEFAULT_OUT_DIR / "api_identity.jsonl")
     parser.add_argument("--out-csv", type=Path, default=DEFAULT_OUT_DIR / "api_identity.csv")

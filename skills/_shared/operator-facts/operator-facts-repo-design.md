@@ -298,8 +298,8 @@ distill/
 
 当前输出路径：
 
-- `pre-distill/data/ms_coverage.jsonl`
-- `pre-distill/data/ms_coverage.csv`
+- `operator-facts/data/ms_coverage.jsonl`
+- `operator-facts/data/ms_coverage.csv`
 
 这个层可以参考现有 `aclnn-dashboard` 的 MindSpore 覆盖结果，但 Ascend 侧判定逻辑以仓库真实代码和 `api-knowledge/backend-lens-ascend.md` 为准。
 
@@ -331,8 +331,8 @@ distill/
 
 当前输出路径：
 
-- `pre-distill/data/api_identity.jsonl`
-- `pre-distill/data/api_identity.csv`
+- `operator-facts/data/api_identity.jsonl`
+- `operator-facts/data/api_identity.csv`
 
 这个层可以基于现有 `api-knowledge/api-opname-inventory.md` 进一步结构化。
 

@@ -1,6 +1,6 @@
-# pre-distill
+# operator-facts
 
-`pre-distill` 是 ACLNN `Pre` 阶段的第一版蒸馏库。
+`operator-facts` 是 ACLNN `Pre` 阶段的第一版蒸馏库。
 
 当前阶段只产出两张索引：
 
@@ -35,24 +35,24 @@
 
 生成结果写到：
 
-- `pre-distill/data/api_identity.jsonl`
-- `pre-distill/data/api_identity.csv`
-- `pre-distill/data/ms_coverage.jsonl`
-- `pre-distill/data/ms_coverage.csv`
-- `pre-distill/data/op_bundles.jsonl`
-- `pre-distill/bundles/<public_api>/<op_branch>.json`
+- `operator-facts/data/api_identity.jsonl`
+- `operator-facts/data/api_identity.csv`
+- `operator-facts/data/ms_coverage.jsonl`
+- `operator-facts/data/ms_coverage.csv`
+- `operator-facts/data/op_bundles.jsonl`
+- `operator-facts/bundles/<public_api>/<op_branch>.json`
 
 ## 使用方式
 
 ```bash
-python pre-distill/scripts/build_phase1.py
+python operator-facts/scripts/build_phase1.py
 ```
 
 也可以单独运行：
 
 ```bash
-python pre-distill/scripts/build_api_identity.py
-python pre-distill/scripts/build_ms_coverage.py
+python operator-facts/scripts/build_api_identity.py
+python operator-facts/scripts/build_ms_coverage.py
 ```
 
 ## 当前覆盖范围

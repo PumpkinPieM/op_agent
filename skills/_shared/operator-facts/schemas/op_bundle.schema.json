@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "pre-distill op bundle v1",
+  "title": "operator-facts op bundle v1",
   "type": "object",
   "required": [
     "bundle_key",

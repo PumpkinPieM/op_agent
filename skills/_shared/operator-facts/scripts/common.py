@@ -13,7 +13,7 @@ import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MS_ROOT = REPO_ROOT / "mindspore" / "mindspore"
-DEFAULT_OUT_DIR = REPO_ROOT / "pre-distill" / "data"
+DEFAULT_OUT_DIR = REPO_ROOT / "operator-facts" / "data"
 MINT_INIT = DEFAULT_MS_ROOT / "python" / "mindspore" / "mint" / "__init__.py"
 
 

@@ -309,7 +309,7 @@ def resolve_dispatch_kind(entry: OpDefEntry) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Build phase-1 ms_coverage index for pre-distill.")
+    parser = argparse.ArgumentParser(description="Build phase-1 ms_coverage index for operator-facts.")
     parser.add_argument("--ms-root", type=Path, default=DEFAULT_MS_ROOT)
     parser.add_argument("--out-jsonl", type=Path, default=DEFAULT_OUT_DIR / "ms_coverage.jsonl")
     parser.add_argument("--out-csv", type=Path, default=DEFAULT_OUT_DIR / "ms_coverage.csv")

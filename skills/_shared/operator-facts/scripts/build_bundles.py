@@ -9,7 +9,7 @@ from typing import Dict, Iterable, List
 from common import DEFAULT_OUT_DIR, REPO_ROOT, write_jsonl
 
 
-DEFAULT_BUNDLE_ROOT = REPO_ROOT / "pre-distill" / "bundles"
+DEFAULT_BUNDLE_ROOT = REPO_ROOT / "operator-facts" / "bundles"
 
 
 def read_jsonl(path: Path) -> List[dict]:
@@ -119,7 +119,7 @@ def write_bundle_files(bundle_root: Path, bundles: Iterable[dict]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Build phase-1 op bundles for pre-distill.")
+    parser = argparse.ArgumentParser(description="Build phase-1 op bundles for operator-facts.")
     parser.add_argument("--api-identity", type=Path, default=DEFAULT_OUT_DIR / "api_identity.jsonl")
     parser.add_argument("--ms-coverage", type=Path, default=DEFAULT_OUT_DIR / "ms_coverage.jsonl")
     parser.add_argument("--out-jsonl", type=Path, default=DEFAULT_OUT_DIR / "op_bundles.jsonl")
