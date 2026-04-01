@@ -1,0 +1,76 @@
+{
+  "bundle_key": "mindspore.mint.pow::pow_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.pow",
+    "public_surface": "mindspore.mint",
+    "api_name": "pow",
+    "op_branch": "pow_op.yaml",
+    "op": "pow",
+    "primitive": "Pow"
+  },
+  "resolver": {
+    "py_method": "tensor_pow_tensor_tensor",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.function.math_func",
+    "target_symbol": "pow_ext",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.auto_generate.pow",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "pow::Pow",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/pow_op.yaml",
+    "class_name": "Pow",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnPowTensorTensor"
+    ],
+    "aclnn_source": [
+      "aclnn_config",
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/pow.cc",
+      "mindspore/ops/infer/ops_func_impl/pow.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/pow.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_pow.cc"
+    ],
+    "st": [
+      "tests/st/ops/cpu/test_pow_op.py",
+      "tests/st/ops/gpu/test_pow_op.py",
+      "tests/st/ops/test_ops_pow.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/pow_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.pow::pow_op.yaml",
+    "coverage_key": "pow::Pow"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "bundle_key": "mindspore.Tensor.less_equal::less_equal_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.less_equal",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "less_equal",
+    "op_branch": "less_equal_op.yaml",
+    "op": "less_equal",
+    "primitive": "LessEqual"
+  },
+  "resolver": {
+    "py_method": "tensor_le",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "less_equal",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/less_equal.yaml",
+    "source_file": "mindspore/ops/api_def/less_equal.yaml"
+  },
+  "coverage": {
+    "coverage_key": "less_equal::LessEqual",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/less_equal_op.yaml",
+    "class_name": "LessEqual",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnLeTensor"
+    ],
+    "aclnn_source": [
+      "aclnn_config",
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/less_equal.cc",
+      "mindspore/ops/infer/ops_func_impl/less_equal.cc",
+      "mindspore/ops/infer/ops_func_impl/less_equal.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/less_equal.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_less_equal.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_less_equal_op.py",
+      "tests/st/ops/ascend/test_tbe_ops/test_less_equal.py",
+      "tests/st/ops/cpu/test_less_equal_op.py",
+      "tests/st/ops/gpu/test_less_equal_op.py",
+      "tests/st/ops/test_ops_less_equal.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/less_equal_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.less_equal::less_equal_op.yaml",
+    "coverage_key": "less_equal::LessEqual"
+  }
+}

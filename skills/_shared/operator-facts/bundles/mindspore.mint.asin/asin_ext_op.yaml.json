@@ -1,0 +1,72 @@
+{
+  "bundle_key": "mindspore.mint.asin::asin_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.asin",
+    "public_surface": "mindspore.mint",
+    "api_name": "asin",
+    "op_branch": "asin_ext_op.yaml",
+    "op": "asin_ext",
+    "primitive": "AsinExt"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.math_func",
+    "target_symbol": "asin_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.math_func.asin_ext",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "asin_ext::AsinExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/asin_ext_op.yaml",
+    "class_name": "AsinExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnAsin"
+    ],
+    "aclnn_source": [
+      "aclnn_config",
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/asin_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/asin_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/asin_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_asin_ext.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/asin_ext_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.asin::asin_ext_op.yaml",
+    "coverage_key": "asin_ext::AsinExt"
+  }
+}

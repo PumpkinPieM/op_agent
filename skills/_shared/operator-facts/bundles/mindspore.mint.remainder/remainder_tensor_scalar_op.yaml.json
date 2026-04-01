@@ -1,0 +1,70 @@
+{
+  "bundle_key": "mindspore.mint.remainder::remainder_tensor_scalar_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.remainder",
+    "public_surface": "mindspore.mint",
+    "api_name": "remainder",
+    "op_branch": "remainder_tensor_scalar_op.yaml",
+    "op": "remainder_tensor_scalar",
+    "primitive": "RemainderTensorScalar"
+  },
+  "resolver": {
+    "py_method": "tensor_remainder",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "remainder",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.remainder",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "remainder_tensor_scalar::RemainderTensorScalar",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/remainder_tensor_scalar_op.yaml",
+    "class_name": "RemainderTensorScalar",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnRemainderTensorScalar"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/remainder_tensor_scalar.cc",
+      "mindspore/ops/infer/ops_func_impl/remainder_tensor_scalar.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/remainder_tensor_scalar.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/remainder_tensor_scalar_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/remainder_tensor_scalar_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_remainder_tensor_scalar.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.remainder::remainder_tensor_scalar_op.yaml",
+    "coverage_key": "remainder_tensor_scalar::RemainderTensorScalar"
+  }
+}

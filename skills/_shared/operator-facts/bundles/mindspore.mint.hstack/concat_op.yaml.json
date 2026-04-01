@@ -1,0 +1,77 @@
+{
+  "bundle_key": "mindspore.mint.hstack::concat_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.hstack",
+    "public_surface": "mindspore.mint",
+    "api_name": "hstack",
+    "op_branch": "concat_op.yaml",
+    "op": "concat",
+    "primitive": "Concat"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.array_func",
+    "target_symbol": "hstack",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.pyboost_inner_prim.concat_impl",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "concat::Concat",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/concat_op.yaml",
+    "class_name": "Concat",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "ConcatAscend",
+    "aclnn": [
+      "aclnnCat"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/concat.cc",
+      "mindspore/ops/infer/ops_func_impl/concat.cc",
+      "mindspore/ops/infer/ops_func_impl/concat.h",
+      "mindspore/ops/infer/symbol_ops_impl/concat.cc"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/concat.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/concat.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/concat_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/concat_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_concat.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_concat.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/concat_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.hstack::concat_op.yaml",
+    "coverage_key": "concat::Concat"
+  }
+}

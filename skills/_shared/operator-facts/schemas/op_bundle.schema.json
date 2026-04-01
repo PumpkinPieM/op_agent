@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "operator-facts op bundle v1",
+  "type": "object",
+  "required": [
+    "bundle_key",
+    "schema_version",
+    "generated_at",
+    "identity",
+    "resolver",
+    "coverage",
+    "evidence",
+    "refs"
+  ],
+  "properties": {
+    "bundle_key": {
+      "type": "string",
+      "description": "Primary bundle key, composed from public_api and op_branch."
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "public_api",
+        "public_surface",
+        "api_name",
+        "op_branch",
+        "op",
+        "primitive"
+      ],
+      "properties": {
+        "public_api": {
+          "type": "string"
+        },
+        "public_surface": {
+          "type": "string"
+        },
+        "api_name": {
+          "type": "string"
+        },
+        "op_branch": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string"
+        },
+        "primitive": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "resolver": {
+      "type": "object",
+      "required": [
+        "py_method",
+        "interface",
+        "target_module",
+        "target_symbol",
+        "resolver_kind",
+        "resolver_path",
+        "source_file"
+      ],
+      "properties": {
+        "py_method": {
+          "type": "string"
+        },
+        "interface": {
+          "type": "string"
+        },
+        "target_module": {
+          "type": "string"
+        },
+        "target_symbol": {
+          "type": "string"
+        },
+        "resolver_kind": {
+          "type": "string"
+        },
+        "resolver_path": {
+          "type": "string"
+        },
+        "source_file": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "coverage_key",
+        "op_yaml_path",
+        "class_name",
+        "dispatch_enable",
+        "dispatch_kind",
+        "dispatch_ascend",
+        "aclnn",
+        "aclnn_source",
+        "infer",
+        "pyboost",
+        "kbk",
+        "bprop",
+        "ut",
+        "st",
+        "docs_cn",
+        "docs_en"
+      ],
+      "properties": {
+        "coverage_key": {
+          "type": "string"
+        },
+        "op_yaml_path": {
+          "type": "string"
+        },
+        "class_name": {
+          "type": "string"
+        },
+        "dispatch_enable": {
+          "type": "boolean"
+        },
+        "dispatch_kind": {
+          "type": "string"
+        },
+        "dispatch_ascend": {
+          "type": "string"
+        },
+        "aclnn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aclnn_source": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "infer": {
+          "type": "boolean"
+        },
+        "pyboost": {
+          "type": "boolean"
+        },
+        "kbk": {
+          "type": "boolean"
+        },
+        "bprop": {
+          "type": "boolean"
+        },
+        "ut": {
+          "type": "boolean"
+        },
+        "st": {
+          "type": "boolean"
+        },
+        "docs_cn": {
+          "type": "boolean"
+        },
+        "docs_en": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "infer",
+        "pyboost",
+        "kbk",
+        "bprop",
+        "ut",
+        "st",
+        "docs_cn",
+        "docs_en"
+      ],
+      "properties": {
+        "infer": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pyboost": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "kbk": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bprop": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ut": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "st": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "docs_cn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "docs_en": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "refs": {
+      "type": "object",
+      "required": [
+        "identity_key",
+        "coverage_key"
+      ],
+      "properties": {
+        "identity_key": {
+          "type": "string"
+        },
+        "coverage_key": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
