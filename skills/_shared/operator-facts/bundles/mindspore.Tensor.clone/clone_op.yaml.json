@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.Tensor.clone::clone_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.Tensor.clone",
     "public_surface": "mindspore.Tensor",
     "api_name": "clone",
     "op_branch": "clone_op.yaml",
     "op": "clone",
-    "primitive": "Clone"
-  },
-  "resolver": {
-    "py_method": "tensor_clone",
+    "primitive": "Clone",
     "interface": "tensor",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "clone",
+    "py_method": "tensor_clone",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/clone.yaml",
     "source_file": "mindspore/ops/api_def/clone.yaml"
@@ -40,34 +38,5 @@
     "st": false,
     "docs_cn": false,
     "docs_en": true
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/clone.cc",
-      "mindspore/ops/infer/ops_func_impl/clone.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/clone.cc",
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/clone.h"
-    ],
-    "kbk": [
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/clone_aclnn_kernel.cc",
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/clone_aclnn_kernel.h"
-    ],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
-    ],
-    "ut": [
-      "tests/ut/cpp/ops/test_ops_clone.cc"
-    ],
-    "st": [],
-    "docs_cn": [],
-    "docs_en": [
-      "mindspore/ops/op_def/yaml/doc/clone_doc.yaml"
-    ]
-  },
-  "refs": {
-    "identity_key": "mindspore.Tensor.clone::clone_op.yaml",
-    "coverage_key": "clone::Clone"
   }
 }

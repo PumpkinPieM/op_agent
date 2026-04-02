@@ -318,7 +318,7 @@ def main() -> int:
     op_by_branch, _ = build_op_catalog(args.ms_root)
     aclnn_config = load_aclnn_config(args.ms_root)
     customize_kernel_map, customize_kernel_files = scan_kernel_customize(args.ms_root)
-    auto_kernel_map, auto_kernel_files = scan_kernel_auto_generate(args.ms_root)
+    _, auto_kernel_files = scan_kernel_auto_generate(args.ms_root)
     customize_pyboost_map, customize_pyboost_files = scan_pyboost_customize(args.ms_root)
     auto_pyboost_files = scan_pyboost_auto_generate(args.ms_root)
     infer_primitives, infer_files = scan_infer(args.ms_root)
@@ -365,23 +365,17 @@ def main() -> int:
             for key in candidate_keys:
                 aclnn_values.update(customize_kernel_map.get(key, set()))
                 aclnn_values.update(customize_pyboost_map.get(key, set()))
-            if aclnn_values:
-                aclnn_source.append("customize_source")
+            aclnn_source.append("customize_source")
             pyboost_evidence = match_named_files(candidate_keys, customize_pyboost_files)
             kbk_evidence = match_named_files(candidate_keys, customize_kernel_files)
         elif dispatch_kind == "auto_generate":
-            for key in candidate_keys:
-                mapped = aclnn_config.get(key)
-                if mapped:
-                    aclnn_values.add(mapped)
-                aclnn_values.update(auto_kernel_map.get(key, set()))
-            if any(aclnn_config.get(key) for key in candidate_keys):
+            mapped = next((aclnn_config.get(key) for key in sorted(candidate_keys) if aclnn_config.get(key)), None)
+            if mapped:
+                aclnn_values.add(mapped)
                 aclnn_source.append("aclnn_config")
-            if any(auto_kernel_map.get(key) for key in candidate_keys):
-                aclnn_source.append("auto_generate_source")
-            if not aclnn_values and entry.dispatch_enable:
+            else:
                 aclnn_values.add(f"aclnn{entry.class_name}")
-                aclnn_source.append("default_guess")
+                aclnn_source.append("auto_generate_source")
             pyboost_evidence = match_named_files(candidate_keys, auto_pyboost_files)
             kbk_evidence = match_named_files(candidate_keys, auto_kernel_files)
         else:
@@ -414,8 +408,8 @@ def main() -> int:
                 "aclnn": json_array_string(sorted(aclnn_values)),
                 "aclnn_source": ",".join(sorted(set(aclnn_source))),
                 "infer": "true" if infer_present else "false",
-                "pyboost": "true" if bool(pyboost_evidence) else "false",
-                "kbk": "true" if bool(kbk_evidence) else "false",
+                "pyboost": "true" if dispatch_kind == "auto_generate" else ("true" if bool(pyboost_evidence) else "false"),
+                "kbk": "true" if dispatch_kind == "auto_generate" else ("true" if bool(kbk_evidence) else "false"),
                 "bprop": "true" if bool(bprop_evidence) else "false",
                 "ut": "true" if bool(ut_evidence) else "false",
                 "st": "true" if bool(st_evidence) else "false",

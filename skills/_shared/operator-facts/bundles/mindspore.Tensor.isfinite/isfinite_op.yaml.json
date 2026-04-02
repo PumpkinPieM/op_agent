@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.Tensor.isfinite::isfinite_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.Tensor.isfinite",
     "public_surface": "mindspore.Tensor",
     "api_name": "isfinite",
     "op_branch": "isfinite_op.yaml",
     "op": "isfinite",
-    "primitive": "IsFinite"
-  },
-  "resolver": {
-    "py_method": "tensor_isfinite",
+    "primitive": "IsFinite",
     "interface": "tensor",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "isfinite",
+    "py_method": "tensor_isfinite",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/isfinite.yaml",
     "source_file": "mindspore/ops/api_def/isfinite.yaml"
@@ -40,34 +38,5 @@
     "st": true,
     "docs_cn": false,
     "docs_en": true
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/isfinite.cc",
-      "mindspore/ops/infer/ops_func_impl/isfinite.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/isfinite.h"
-    ],
-    "kbk": [
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
-    ],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
-    ],
-    "ut": [],
-    "st": [
-      "tests/st/ops/ascend/test_aicpu_ops/test_is_finite.py",
-      "tests/st/ops/cpu/test_isfinite_op.py",
-      "tests/st/ops/test_ops_isfinite.py"
-    ],
-    "docs_cn": [],
-    "docs_en": [
-      "mindspore/ops/op_def/yaml/doc/isfinite_doc.yaml"
-    ]
-  },
-  "refs": {
-    "identity_key": "mindspore.Tensor.isfinite::isfinite_op.yaml",
-    "coverage_key": "isfinite::IsFinite"
   }
 }

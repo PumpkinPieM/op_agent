@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.Tensor.sub_::inplace_sub_ext_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.Tensor.sub_",
     "public_surface": "mindspore.Tensor",
     "api_name": "sub_",
     "op_branch": "inplace_sub_ext_op.yaml",
     "op": "inplace_sub_ext",
-    "primitive": "InplaceSubExt"
-  },
-  "resolver": {
-    "py_method": "tensor_inplace_sub",
+    "primitive": "InplaceSubExt",
     "interface": "tensor",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "sub_",
+    "py_method": "tensor_inplace_sub",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/sub_.yaml",
     "source_file": "mindspore/ops/api_def/sub_.yaml"
@@ -40,28 +38,5 @@
     "st": false,
     "docs_cn": false,
     "docs_en": false
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/inplace_sub_ext.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_sub_ext.cc",
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_sub_ext.h"
-    ],
-    "kbk": [],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
-    ],
-    "ut": [
-      "tests/ut/cpp/ops/test_ops_inplace_sub_ext.cc"
-    ],
-    "st": [],
-    "docs_cn": [],
-    "docs_en": []
-  },
-  "refs": {
-    "identity_key": "mindspore.Tensor.sub_::inplace_sub_ext_op.yaml",
-    "coverage_key": "inplace_sub_ext::InplaceSubExt"
   }
 }

@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.mint.sub::sub_ext_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.mint.sub",
     "public_surface": "mindspore.mint",
     "api_name": "sub",
     "op_branch": "sub_ext_op.yaml",
     "op": "sub_ext",
-    "primitive": "SubExt"
-  },
-  "resolver": {
-    "py_method": "tensor_sub_ext",
+    "primitive": "SubExt",
     "interface": "tensor, function",
-    "target_module": "mindspore.ops.functional_overload",
     "target_symbol": "sub",
+    "py_method": "tensor_sub_ext",
     "resolver_kind": "api_def",
     "resolver_path": "mindspore.ops.functional_overload.sub",
     "source_file": "mindspore/python/mindspore/mint/__init__.py"
@@ -34,33 +32,11 @@
     ],
     "infer": true,
     "pyboost": true,
-    "kbk": false,
+    "kbk": true,
     "bprop": true,
     "ut": false,
     "st": false,
     "docs_cn": false,
     "docs_en": true
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/sub_ext.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/sub_ext.h"
-    ],
-    "kbk": [],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
-    ],
-    "ut": [],
-    "st": [],
-    "docs_cn": [],
-    "docs_en": [
-      "mindspore/ops/op_def/yaml/doc/sub_ext_doc.yaml"
-    ]
-  },
-  "refs": {
-    "identity_key": "mindspore.mint.sub::sub_ext_op.yaml",
-    "coverage_key": "sub_ext::SubExt"
   }
 }

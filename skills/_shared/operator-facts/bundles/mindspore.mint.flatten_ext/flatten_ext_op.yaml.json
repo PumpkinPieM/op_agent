@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.mint.flatten_ext::flatten_ext_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.mint.flatten_ext",
     "public_surface": "mindspore.mint",
     "api_name": "flatten_ext",
     "op_branch": "flatten_ext_op.yaml",
     "op": "flatten_ext",
-    "primitive": "FlattenExt"
-  },
-  "resolver": {
-    "py_method": "",
+    "primitive": "FlattenExt",
     "interface": "",
-    "target_module": "mindspore.ops.auto_generate",
     "target_symbol": "flatten_ext",
+    "py_method": "",
     "resolver_kind": "op_def",
     "resolver_path": "mindspore.ops.auto_generate.flatten_ext",
     "source_file": "mindspore/python/mindspore/mint/__init__.py"
@@ -30,38 +28,15 @@
       "aclnnFlattenExt"
     ],
     "aclnn_source": [
-      "default_guess"
+      "auto_generate_source"
     ],
     "infer": true,
-    "pyboost": false,
-    "kbk": false,
+    "pyboost": true,
+    "kbk": true,
     "bprop": true,
     "ut": true,
     "st": false,
     "docs_cn": false,
     "docs_en": true
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/flatten_ext.cc",
-      "mindspore/ops/infer/ops_func_impl/flatten_ext.h"
-    ],
-    "pyboost": [],
-    "kbk": [],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
-    ],
-    "ut": [
-      "tests/ut/cpp/ops/test_ops_flatten_ext.cc"
-    ],
-    "st": [],
-    "docs_cn": [],
-    "docs_en": [
-      "mindspore/ops/op_def/yaml/doc/flatten_ext_doc.yaml"
-    ]
-  },
-  "refs": {
-    "identity_key": "mindspore.mint.flatten_ext::flatten_ext_op.yaml",
-    "coverage_key": "flatten_ext::FlattenExt"
   }
 }

@@ -1,0 +1,63 @@
+{
+  "pta_key": "torch.foo::(Tensor x, int dim, bool keepdim=False)",
+  "pta_api": "torch.foo",
+  "overload_signature": "(Tensor x, int dim, bool keepdim=False)",
+  "params": [
+    {
+      "name": "x",
+      "type": "Tensor",
+      "required": true,
+      "default": null
+    },
+    {
+      "name": "dim",
+      "type": "int",
+      "required": true,
+      "default": null
+    },
+    {
+      "name": "keepdim",
+      "type": "bool",
+      "required": false,
+      "default": false
+    }
+  ],
+  "returns": [
+    {
+      "name": "output",
+      "type": "Tensor"
+    }
+  ],
+  "forward_aclnn": [
+    "aclnnFoo"
+  ],
+  "backward_exists": true,
+  "backward_aclnn": [
+    "aclnnFooBackward"
+  ],
+  "composite": false,
+  "preprocess_needed": true,
+  "custom_output_needed": false,
+  "refs": [
+    {
+      "role": "forward_signature",
+      "path": "op-plugin/op_plugin/config/op_plugin_functions.yaml",
+      "pattern": "foo("
+    },
+    {
+      "role": "backward_registration",
+      "path": "op-plugin/op_plugin/config/derivatives.yaml",
+      "pattern": "foo("
+    },
+    {
+      "role": "forward_logic",
+      "path": "op-plugin/op_plugin/ops/opapi/FooKernelNpuOpApi.cpp",
+      "pattern": "EXEC_NPU_CMD"
+    },
+    {
+      "role": "backward_logic",
+      "path": "op-plugin/op_plugin/ops/opapi/FooGradKernelNpuOpApi.cpp",
+      "pattern": "EXEC_NPU_CMD"
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "operator-facts pta_facts row",
+  "type": "object",
+  "required": [
+    "pta_key",
+    "pta_api",
+    "overload_signature",
+    "params",
+    "returns",
+    "forward_aclnn",
+    "backward_exists",
+    "backward_aclnn",
+    "composite",
+    "preprocess_needed",
+    "custom_output_needed",
+    "refs"
+  ],
+  "properties": {
+    "pta_key": {
+      "type": "string",
+      "description": "Primary key, composed from pta_api and overload_signature."
+    },
+    "pta_api": {
+      "type": "string",
+      "description": "PTA public API, such as torch.xxx or torch_npu.npu_xxx."
+    },
+    "overload_signature": {
+      "type": "string",
+      "description": "Canonical overload signature used to distinguish same-name overloads."
+    },
+    "params": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "required",
+          "default"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "default": {
+            "description": "Original PTA default value. Use null when absent.",
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "array"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "returns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "type"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "forward_aclnn": {
+      "type": "array",
+      "description": "ACLNN interfaces directly observed in PTA forward path.",
+      "items": {
+        "type": "string",
+        "pattern": "^aclnn[A-Z][A-Za-z0-9]*$"
+      }
+    },
+    "backward_exists": {
+      "type": "boolean"
+    },
+    "backward_aclnn": {
+      "type": "array",
+      "description": "ACLNN interfaces directly observed in PTA backward path.",
+      "items": {
+        "type": "string",
+        "pattern": "^aclnn[A-Z][A-Za-z0-9]*$"
+      }
+    },
+    "composite": {
+      "type": "boolean",
+      "description": "Whether PTA uses multiple ACLNN operators chained together."
+    },
+    "preprocess_needed": {
+      "type": "boolean",
+      "description": "Whether parameter handling requires handwritten logic before the ACLNN call."
+    },
+    "custom_output_needed": {
+      "type": "boolean",
+      "description": "Whether outputs or intermediates need manual tensor construction."
+    },
+    "refs": {
+      "type": "array",
+      "description": "Code anchors used during implementation, so code writing can jump directly to the relevant PTA locations.",
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "path",
+          "pattern"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "forward_signature",
+              "backward_registration",
+              "forward_logic",
+              "backward_logic",
+              "callchain_logic"
+            ]
+          },
+          "path": {
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

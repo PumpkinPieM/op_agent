@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.Tensor.unsqueeze::expand_dims_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.Tensor.unsqueeze",
     "public_surface": "mindspore.Tensor",
     "api_name": "unsqueeze",
     "op_branch": "expand_dims_op.yaml",
     "op": "expand_dims",
-    "primitive": "ExpandDims"
-  },
-  "resolver": {
-    "py_method": "tensor_unsqueeze",
+    "primitive": "ExpandDims",
     "interface": "tensor",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "unsqueeze",
+    "py_method": "tensor_unsqueeze",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/unsqueeze.yaml",
     "source_file": "mindspore/ops/api_def/unsqueeze.yaml"
@@ -30,44 +28,15 @@
       "aclnnExpandDims"
     ],
     "aclnn_source": [
-      "default_guess"
+      "auto_generate_source"
     ],
     "infer": true,
-    "pyboost": false,
-    "kbk": false,
+    "pyboost": true,
+    "kbk": true,
     "bprop": true,
     "ut": true,
     "st": true,
     "docs_cn": false,
     "docs_en": true
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/expand_dims.cc",
-      "mindspore/ops/infer/ops_func_impl/expand_dims.h",
-      "mindspore/ops/infer/symbol_ops_impl/expand_dims.cc"
-    ],
-    "pyboost": [],
-    "kbk": [],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
-    ],
-    "ut": [
-      "tests/ut/cpp/ops/test_ops_expand_dims.cc",
-      "tests/ut/cpp/ops/view/test_expand_dims.cc"
-    ],
-    "st": [
-      "tests/st/ops/ascend/test_aicpu_ops/test_expand_dims.py",
-      "tests/st/ops/cpu/test_expand_dims.py",
-      "tests/st/ops/gpu/test_expand_dims.py"
-    ],
-    "docs_cn": [],
-    "docs_en": [
-      "mindspore/ops/op_def/yaml/doc/expand_dims_doc.yaml"
-    ]
-  },
-  "refs": {
-    "identity_key": "mindspore.Tensor.unsqueeze::expand_dims_op.yaml",
-    "coverage_key": "expand_dims::ExpandDims"
   }
 }

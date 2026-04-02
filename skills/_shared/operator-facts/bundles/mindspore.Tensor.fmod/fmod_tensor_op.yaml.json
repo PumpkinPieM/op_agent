@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.Tensor.fmod::fmod_tensor_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.Tensor.fmod",
     "public_surface": "mindspore.Tensor",
     "api_name": "fmod",
     "op_branch": "fmod_tensor_op.yaml",
     "op": "fmod_tensor",
-    "primitive": "FmodTensor"
-  },
-  "resolver": {
-    "py_method": "fmod_tensor",
+    "primitive": "FmodTensor",
     "interface": "function, tensor",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "fmod",
+    "py_method": "fmod_tensor",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/fmod.yaml",
     "source_file": "mindspore/ops/api_def/fmod.yaml"
@@ -40,28 +38,5 @@
     "st": false,
     "docs_cn": false,
     "docs_en": false
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/fmod_tensor.cc",
-      "mindspore/ops/infer/ops_func_impl/fmod_tensor.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/fmod_tensor.h"
-    ],
-    "kbk": [
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
-    ],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
-    ],
-    "ut": [],
-    "st": [],
-    "docs_cn": [],
-    "docs_en": []
-  },
-  "refs": {
-    "identity_key": "mindspore.Tensor.fmod::fmod_tensor_op.yaml",
-    "coverage_key": "fmod_tensor::FmodTensor"
   }
 }

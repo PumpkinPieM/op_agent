@@ -52,18 +52,9 @@ def bundle_output_path(bundle_root: Path, public_api: str, op_branch: str) -> Pa
 def build_bundle(identity_row: dict, coverage_row: dict, generated_at: str) -> dict:
     aclnn = parse_json_array(coverage_row.get("aclnn", ""))
     aclnn_source = parse_csv_list(coverage_row.get("aclnn_source", ""))
-    evidence = {
-        "infer": parse_json_array(coverage_row.get("infer_evidence", "")),
-        "pyboost": parse_json_array(coverage_row.get("pyboost_evidence", "")),
-        "kbk": parse_json_array(coverage_row.get("kbk_evidence", "")),
-        "bprop": parse_json_array(coverage_row.get("bprop_evidence", "")),
-        "ut": parse_json_array(coverage_row.get("ut_evidence", "")),
-        "st": parse_json_array(coverage_row.get("st_evidence", "")),
-        "docs_cn": parse_json_array(coverage_row.get("docs_cn_evidence", "")),
-        "docs_en": parse_json_array(coverage_row.get("docs_en_evidence", "")),
-    }
     bundle = {
         "bundle_key": identity_row["identity_key"],
+        "bundle_mode": "ms_centered",
         "schema_version": "v1",
         "generated_at": generated_at,
         "identity": {
@@ -73,12 +64,9 @@ def build_bundle(identity_row: dict, coverage_row: dict, generated_at: str) -> d
             "op_branch": identity_row["op_branch"],
             "op": identity_row["op"],
             "primitive": identity_row["primitive"],
-        },
-        "resolver": {
-            "py_method": identity_row.get("py_method", ""),
             "interface": identity_row.get("interface", ""),
-            "target_module": identity_row.get("target_module", ""),
             "target_symbol": identity_row.get("target_symbol", ""),
+            "py_method": identity_row.get("py_method", ""),
             "resolver_kind": identity_row.get("resolver_kind", ""),
             "resolver_path": identity_row.get("resolver_path", ""),
             "source_file": identity_row.get("source_file", ""),
@@ -100,11 +88,6 @@ def build_bundle(identity_row: dict, coverage_row: dict, generated_at: str) -> d
             "st": parse_bool(coverage_row.get("st", "")),
             "docs_cn": parse_bool(coverage_row.get("docs_cn", "")),
             "docs_en": parse_bool(coverage_row.get("docs_en", "")),
-        },
-        "evidence": evidence,
-        "refs": {
-            "identity_key": identity_row["identity_key"],
-            "coverage_key": coverage_row["coverage_key"],
         },
     }
     return bundle

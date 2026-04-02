@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.Tensor.__mod__::remainder_tensor_tensor_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.Tensor.__mod__",
     "public_surface": "mindspore.Tensor",
     "api_name": "__mod__",
     "op_branch": "remainder_tensor_tensor_op.yaml",
     "op": "remainder_tensor_tensor",
-    "primitive": "RemainderTensorTensor"
-  },
-  "resolver": {
-    "py_method": "deprecated_tensor_mod",
+    "primitive": "RemainderTensorTensor",
     "interface": "tensor",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "__mod__",
+    "py_method": "deprecated_tensor_mod",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/__mod__.yaml",
     "source_file": "mindspore/ops/api_def/__mod__.yaml"
@@ -40,30 +38,5 @@
     "st": false,
     "docs_cn": false,
     "docs_en": false
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/remainder_tensor_tensor.cc",
-      "mindspore/ops/infer/ops_func_impl/remainder_tensor_tensor.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/remainder_tensor_tensor.h"
-    ],
-    "kbk": [
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
-    ],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
-    ],
-    "ut": [
-      "tests/ut/cpp/ops/test_ops_remainder_tensor_tensor.cc"
-    ],
-    "st": [],
-    "docs_cn": [],
-    "docs_en": []
-  },
-  "refs": {
-    "identity_key": "mindspore.Tensor.__mod__::remainder_tensor_tensor_op.yaml",
-    "coverage_key": "remainder_tensor_tensor::RemainderTensorTensor"
   }
 }

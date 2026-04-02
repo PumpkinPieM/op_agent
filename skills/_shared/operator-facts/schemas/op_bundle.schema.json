@@ -1,24 +1,28 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "operator-facts op bundle v1",
+  "title": "operator-facts ms-centered op bundle v1",
+  "description": "MindSpore-centered bundle that stores stable MS facts only. PTA facts remain in the separate pta_facts index, and integration decisions are deferred to pre-stage rule evaluation.",
   "type": "object",
   "required": [
     "bundle_key",
+    "bundle_mode",
     "schema_version",
     "generated_at",
     "identity",
-    "resolver",
-    "coverage",
-    "evidence",
-    "refs"
+    "coverage"
   ],
   "properties": {
     "bundle_key": {
       "type": "string",
-      "description": "Primary bundle key, composed from public_api and op_branch."
+      "description": "Primary MS-centered key, composed from public_api and op_branch."
+    },
+    "bundle_mode": {
+      "type": "string",
+      "const": "ms_centered"
     },
     "schema_version": {
-      "type": "string"
+      "type": "string",
+      "const": "v1"
     },
     "generated_at": {
       "type": "string"
@@ -31,7 +35,13 @@
         "api_name",
         "op_branch",
         "op",
-        "primitive"
+        "primitive",
+        "interface",
+        "target_symbol",
+        "py_method",
+        "resolver_kind",
+        "resolver_path",
+        "source_file"
       ],
       "properties": {
         "public_api": {
@@ -51,32 +61,14 @@
         },
         "primitive": {
           "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "resolver": {
-      "type": "object",
-      "required": [
-        "py_method",
-        "interface",
-        "target_module",
-        "target_symbol",
-        "resolver_kind",
-        "resolver_path",
-        "source_file"
-      ],
-      "properties": {
-        "py_method": {
-          "type": "string"
         },
         "interface": {
           "type": "string"
         },
-        "target_module": {
+        "target_symbol": {
           "type": "string"
         },
-        "target_symbol": {
+        "py_method": {
           "type": "string"
         },
         "resolver_kind": {
@@ -125,7 +117,12 @@
           "type": "boolean"
         },
         "dispatch_kind": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "auto_generate",
+            "customize",
+            "unsupported"
+          ]
         },
         "dispatch_ascend": {
           "type": "string"
@@ -139,7 +136,12 @@
         "aclnn_source": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "aclnn_config",
+              "auto_generate_source",
+              "customize_source"
+            ]
           }
         },
         "infer": {
@@ -165,86 +167,6 @@
         },
         "docs_en": {
           "type": "boolean"
-        }
-      },
-      "additionalProperties": false
-    },
-    "evidence": {
-      "type": "object",
-      "required": [
-        "infer",
-        "pyboost",
-        "kbk",
-        "bprop",
-        "ut",
-        "st",
-        "docs_cn",
-        "docs_en"
-      ],
-      "properties": {
-        "infer": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "pyboost": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "kbk": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "bprop": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "ut": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "st": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "docs_cn": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "docs_en": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "refs": {
-      "type": "object",
-      "required": [
-        "identity_key",
-        "coverage_key"
-      ],
-      "properties": {
-        "identity_key": {
-          "type": "string"
-        },
-        "coverage_key": {
-          "type": "string"
         }
       },
       "additionalProperties": false

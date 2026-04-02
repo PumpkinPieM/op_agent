@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.ops.where::select_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.ops.where",
     "public_surface": "mindspore.ops",
     "api_name": "where",
     "op_branch": "select_op.yaml",
     "op": "select",
-    "primitive": "Select"
-  },
-  "resolver": {
-    "py_method": "tensor_where",
+    "primitive": "Select",
     "interface": "tensor, function",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "where",
+    "py_method": "tensor_where",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/where.yaml",
     "source_file": "mindspore/ops/api_def/where.yaml"
@@ -30,8 +28,7 @@
       "aclnnSWhere"
     ],
     "aclnn_source": [
-      "aclnn_config",
-      "auto_generate_source"
+      "aclnn_config"
     ],
     "infer": true,
     "pyboost": true,
@@ -41,37 +38,5 @@
     "st": true,
     "docs_cn": false,
     "docs_en": true
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_frontend_func_impl/select.cc",
-      "mindspore/ops/infer/ops_func_impl/select.cc",
-      "mindspore/ops/infer/ops_func_impl/select.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/select.h"
-    ],
-    "kbk": [
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
-    ],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
-    ],
-    "ut": [
-      "tests/ut/cpp/ops/test_ops_select.cc"
-    ],
-    "st": [
-      "tests/st/ops/ascend/test_tbe_ops/test_select.py",
-      "tests/st/ops/cpu/test_select_op.py",
-      "tests/st/ops/gpu/test_select_op.py"
-    ],
-    "docs_cn": [],
-    "docs_en": [
-      "mindspore/ops/op_def/yaml/doc/select_doc.yaml"
-    ]
-  },
-  "refs": {
-    "identity_key": "mindspore.ops.where::select_op.yaml",
-    "coverage_key": "select::Select"
   }
 }

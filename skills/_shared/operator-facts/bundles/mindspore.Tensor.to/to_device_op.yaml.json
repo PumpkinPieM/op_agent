@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.Tensor.to::to_device_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.Tensor.to",
     "public_surface": "mindspore.Tensor",
     "api_name": "to",
     "op_branch": "to_device_op.yaml",
     "op": "to_device",
-    "primitive": "ToDevice"
-  },
-  "resolver": {
-    "py_method": "tensor_to",
+    "primitive": "ToDevice",
     "interface": "tensor",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "to",
+    "py_method": "tensor_to",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/to.yaml",
     "source_file": "mindspore/ops/api_def/to.yaml"
@@ -40,28 +38,5 @@
     "st": false,
     "docs_cn": false,
     "docs_en": false
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/to_device.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/to_device.h"
-    ],
-    "kbk": [
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/to_device_aclnn_kernel.cc",
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/to_device_aclnn_kernel.h"
-    ],
-    "bprop": [],
-    "ut": [
-      "tests/ut/cpp/ops/test_ops_to_device.cc"
-    ],
-    "st": [],
-    "docs_cn": [],
-    "docs_en": []
-  },
-  "refs": {
-    "identity_key": "mindspore.Tensor.to::to_device_op.yaml",
-    "coverage_key": "to_device::ToDevice"
   }
 }

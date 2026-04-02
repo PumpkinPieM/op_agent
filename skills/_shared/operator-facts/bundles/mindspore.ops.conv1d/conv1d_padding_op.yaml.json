@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.ops.conv1d::conv1d_padding_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.ops.conv1d",
     "public_surface": "mindspore.ops",
     "api_name": "conv1d",
     "op_branch": "conv1d_padding_op.yaml",
     "op": "conv1d_padding",
-    "primitive": "Conv1DPadding"
-  },
-  "resolver": {
-    "py_method": "conv1d",
+    "primitive": "Conv1DPadding",
     "interface": "function",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "conv1d",
+    "py_method": "conv1d",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/conv1d.yaml",
     "source_file": "mindspore/ops/api_def/conv1d.yaml"
@@ -27,7 +25,9 @@
     "dispatch_kind": "customize",
     "dispatch_ascend": "Conv1DPaddingAscend",
     "aclnn": [],
-    "aclnn_source": [],
+    "aclnn_source": [
+      "customize_source"
+    ],
     "infer": true,
     "pyboost": true,
     "kbk": false,
@@ -36,25 +36,5 @@
     "st": false,
     "docs_cn": false,
     "docs_en": false
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/conv1d_padding.cc",
-      "mindspore/ops/infer/ops_func_impl/conv1d_padding.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/conv1d_padding.cc",
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/conv1d_padding.h"
-    ],
-    "kbk": [],
-    "bprop": [],
-    "ut": [],
-    "st": [],
-    "docs_cn": [],
-    "docs_en": []
-  },
-  "refs": {
-    "identity_key": "mindspore.ops.conv1d::conv1d_padding_op.yaml",
-    "coverage_key": "conv1d_padding::Conv1DPadding"
   }
 }

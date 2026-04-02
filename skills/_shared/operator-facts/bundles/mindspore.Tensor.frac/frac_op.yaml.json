@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.Tensor.frac::frac_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.Tensor.frac",
     "public_surface": "mindspore.Tensor",
     "api_name": "frac",
     "op_branch": "frac_op.yaml",
     "op": "frac",
-    "primitive": "Frac"
-  },
-  "resolver": {
-    "py_method": "tensor_frac",
+    "primitive": "Frac",
     "interface": "tensor",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "frac",
+    "py_method": "tensor_frac",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/frac.yaml",
     "source_file": "mindspore/ops/api_def/frac.yaml"
@@ -40,32 +38,5 @@
     "st": true,
     "docs_cn": false,
     "docs_en": true
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/frac.cc",
-      "mindspore/ops/infer/ops_func_impl/frac.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/frac.h"
-    ],
-    "kbk": [
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
-    ],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
-    ],
-    "ut": [],
-    "st": [
-      "tests/st/ops/test_func_frac.py"
-    ],
-    "docs_cn": [],
-    "docs_en": [
-      "mindspore/ops/op_def/yaml/doc/frac_doc.yaml"
-    ]
-  },
-  "refs": {
-    "identity_key": "mindspore.Tensor.frac::frac_op.yaml",
-    "coverage_key": "frac::Frac"
   }
 }

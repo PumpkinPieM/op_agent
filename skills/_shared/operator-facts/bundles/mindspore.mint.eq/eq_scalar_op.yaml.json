@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.mint.eq::eq_scalar_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.mint.eq",
     "public_surface": "mindspore.mint",
     "api_name": "eq",
     "op_branch": "eq_scalar_op.yaml",
     "op": "eq_scalar",
-    "primitive": "EqScalar"
-  },
-  "resolver": {
-    "py_method": "tensor_eq",
+    "primitive": "EqScalar",
     "interface": "tensor, function",
-    "target_module": "mindspore.ops.functional_overload",
     "target_symbol": "eq",
+    "py_method": "tensor_eq",
     "resolver_kind": "api_def",
     "resolver_path": "mindspore.ops.functional_overload.eq",
     "source_file": "mindspore/python/mindspore/mint/__init__.py"
@@ -30,39 +28,15 @@
       "aclnnEqScalar"
     ],
     "aclnn_source": [
-      "default_guess"
+      "auto_generate_source"
     ],
     "infer": true,
     "pyboost": true,
-    "kbk": false,
+    "kbk": true,
     "bprop": true,
     "ut": true,
     "st": false,
     "docs_cn": false,
     "docs_en": false
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_frontend_func_impl/eq_scalar.cc",
-      "mindspore/ops/infer/ops_func_impl/eq_scalar.cc",
-      "mindspore/ops/infer/ops_func_impl/eq_scalar.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/eq_scalar.h"
-    ],
-    "kbk": [],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
-    ],
-    "ut": [
-      "tests/ut/cpp/ops/test_ops_eq_scalar.cc"
-    ],
-    "st": [],
-    "docs_cn": [],
-    "docs_en": []
-  },
-  "refs": {
-    "identity_key": "mindspore.mint.eq::eq_scalar_op.yaml",
-    "coverage_key": "eq_scalar::EqScalar"
   }
 }

@@ -7,6 +7,7 @@
 - `api_identity`
 - `ms_coverage`
 - `op_bundle`
+- `pta_facts` schema（已定义，抽取脚本待实现）
 
 ## 当前主键约定
 
@@ -39,8 +40,15 @@
 - `operator-facts/data/api_identity.csv`
 - `operator-facts/data/ms_coverage.jsonl`
 - `operator-facts/data/ms_coverage.csv`
+- `operator-facts/data/pta_facts.jsonl`
+- `operator-facts/data/pta_facts.csv`
 - `operator-facts/data/op_bundles.jsonl`
 - `operator-facts/bundles/<public_api>/<op_branch>.json`
+
+PTA 最小 schema 和样例放在：
+
+- `operator-facts/schemas/pta_facts.schema.json`
+- `operator-facts/examples/pta_facts.example.json`
 
 ## 使用方式
 
@@ -53,6 +61,7 @@ python operator-facts/scripts/build_phase1.py
 ```bash
 python operator-facts/scripts/build_api_identity.py
 python operator-facts/scripts/build_ms_coverage.py
+python operator-facts/scripts/build_pta_facts.py
 ```
 
 ## 当前覆盖范围
@@ -93,6 +102,17 @@ Ascend 侧判断优先遵循 `api-knowledge/backend-lens-ascend.md` 的规则：
 - 再看 `aclnn_config.yaml`
 - customize 走源码取证
 
+其中：
+
+- `dispatch.enable: True` 且没有 `Ascend: XxxAscend`，记为 `dispatch_kind = auto_generate`
+- 这类 branch 视为 ACLNN 已接入
+- `aclnn_source` 只使用：
+  - `aclnn_config`
+  - `auto_generate_source`
+  - `customize_source`
+- `auto_generate` 场景下，`pyboost` 和 `kbk` 直接记为 `true`
+- `pyboost_evidence` 和 `kbk_evidence` 在 `auto_generate` 场景允许为空
+
 ### `op_bundle`
 
 第一版 `bundle` 只聚合 `api_identity + ms_coverage`，不包含：
@@ -108,6 +128,37 @@ Ascend 侧判断优先遵循 `api-knowledge/backend-lens-ascend.md` 的规则：
 - `coverage`
 - `evidence`
 - `refs`
+
+### `pta_facts`
+
+`pta_facts` 是 PTA 侧的最小事实包 schema，目标不是替代 `op-plugin` 源码，而是让 `bundle` 后续可以直接回答：
+
+- 走 `auto` 还是 `customize`
+- 是否需要进入组合场景 `Pre-C`
+- 是否存在 backward
+- Step 1 的 YAML 参数和返回结构如何起草
+- 写代码时应该打开哪些 PTA 文件和锚点
+
+当前字段收缩为：
+
+- `pta_key`
+- `pta_api`
+- `overload_signature`
+- `params`
+- `returns`
+- `forward_aclnn`
+- `backward_exists`
+- `backward_aclnn`
+- `composite`
+- `preprocess_needed`
+- `custom_output_needed`
+- `refs`
+
+其中：
+
+- `preprocess_needed` 表示 PTA 在调用 ACLNN 前是否存在需要手写代码处理的参数逻辑
+- `custom_output_needed` 表示输出 tensor / 中间 tensor 是否需要手工构造
+- `refs` 保存 PTA 锚点，写代码阶段只需要定点打开这些文件，不再全仓分析
 
 ## 已知限制
 

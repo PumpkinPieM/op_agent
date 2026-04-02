@@ -1,20 +1,18 @@
 {
   "bundle_key": "mindspore.Tensor.sinc::sinc_op.yaml",
+  "bundle_mode": "ms_centered",
   "schema_version": "v1",
-  "generated_at": "2026-03-31T21:45:05+08:00",
+  "generated_at": "2026-04-02T00:18:12+08:00",
   "identity": {
     "public_api": "mindspore.Tensor.sinc",
     "public_surface": "mindspore.Tensor",
     "api_name": "sinc",
     "op_branch": "sinc_op.yaml",
     "op": "sinc",
-    "primitive": "Sinc"
-  },
-  "resolver": {
-    "py_method": "tensor_sinc",
+    "primitive": "Sinc",
     "interface": "tensor",
-    "target_module": "mindspore.ops.api_def",
     "target_symbol": "sinc",
+    "py_method": "tensor_sinc",
     "resolver_kind": "api_def_interface",
     "resolver_path": "mindspore/ops/api_def/sinc.yaml",
     "source_file": "mindspore/ops/api_def/sinc.yaml"
@@ -40,35 +38,5 @@
     "st": true,
     "docs_cn": false,
     "docs_en": true
-  },
-  "evidence": {
-    "infer": [
-      "mindspore/ops/infer/ops_func_impl/sinc.cc",
-      "mindspore/ops/infer/ops_func_impl/sinc.h"
-    ],
-    "pyboost": [
-      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/sinc.h"
-    ],
-    "kbk": [
-      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
-    ],
-    "bprop": [
-      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
-    ],
-    "ut": [
-      "tests/ut/cpp/ops/test_ops_sinc.cc"
-    ],
-    "st": [
-      "tests/st/ops/gpu/test_sinc_op.py",
-      "tests/st/ops/test_ops_sinc.py"
-    ],
-    "docs_cn": [],
-    "docs_en": [
-      "mindspore/ops/op_def/yaml/doc/sinc_doc.yaml"
-    ]
-  },
-  "refs": {
-    "identity_key": "mindspore.Tensor.sinc::sinc_op.yaml",
-    "coverage_key": "sinc::Sinc"
   }
 }
