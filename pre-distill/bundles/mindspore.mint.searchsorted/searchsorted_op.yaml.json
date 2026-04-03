@@ -1,0 +1,78 @@
+{
+  "bundle_key": "mindspore.mint.searchsorted::searchsorted_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.searchsorted",
+    "public_surface": "mindspore.mint",
+    "api_name": "searchsorted",
+    "op_branch": "searchsorted_op.yaml",
+    "op": "searchsorted",
+    "primitive": "SearchSorted"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.functional",
+    "target_symbol": "searchsorted",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.functional.searchsorted",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "searchsorted::SearchSorted",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/searchsorted_op.yaml",
+    "class_name": "SearchSorted",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "SearchSortedAscend",
+    "aclnn": [
+      "aclnnSearchSorted"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/searchsorted.cc",
+      "mindspore/ops/infer/ops_func_impl/searchsorted.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/searchsorted.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/searchsorted.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/searchsorted_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/searchsorted_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_searchsorted.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_aicpu_ops/test_search_sorted.py",
+      "tests/st/ops/cpu/test_searchsorted_op.py",
+      "tests/st/ops/gpu/test_searchsorted_op.py",
+      "tests/st/ops/test_ops_searchsorted.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/searchsorted_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.searchsorted::searchsorted_op.yaml",
+    "coverage_key": "searchsorted::SearchSorted"
+  }
+}

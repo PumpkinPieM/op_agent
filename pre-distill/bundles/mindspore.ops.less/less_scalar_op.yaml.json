@@ -1,0 +1,72 @@
+{
+  "bundle_key": "mindspore.ops.less::less_scalar_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.ops.less",
+    "public_surface": "mindspore.ops",
+    "api_name": "less",
+    "op_branch": "less_scalar_op.yaml",
+    "op": "less_scalar",
+    "primitive": "LessScalar"
+  },
+  "resolver": {
+    "py_method": "tensor_less",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "less",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/less.yaml",
+    "source_file": "mindspore/ops/api_def/less.yaml"
+  },
+  "coverage": {
+    "coverage_key": "less_scalar::LessScalar",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/less_scalar_op.yaml",
+    "class_name": "LessScalar",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "LessScalarAscend",
+    "aclnn": [
+      "aclnnLtScalar"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/less_scalar.cc",
+      "mindspore/ops/infer/ops_func_impl/less_scalar.cc",
+      "mindspore/ops/infer/ops_func_impl/less_scalar.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/less_scalar.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/less_scalar.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/less_scalar_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/less_scalar_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_less_scalar.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.ops.less::less_scalar_op.yaml",
+    "coverage_key": "less_scalar::LessScalar"
+  }
+}

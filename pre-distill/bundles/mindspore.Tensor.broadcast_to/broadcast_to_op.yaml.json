@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.Tensor.broadcast_to::broadcast_to_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.broadcast_to",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "broadcast_to",
+    "op_branch": "broadcast_to_op.yaml",
+    "op": "broadcast_to",
+    "primitive": "BroadcastTo"
+  },
+  "resolver": {
+    "py_method": "tensor_broadcast_to",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "broadcast_to",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/broadcast_to.yaml",
+    "source_file": "mindspore/ops/api_def/broadcast_to.yaml"
+  },
+  "coverage": {
+    "coverage_key": "broadcast_to::BroadcastTo",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/broadcast_to_op.yaml",
+    "class_name": "BroadcastTo",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnBroadcastTo"
+    ],
+    "aclnn_source": [
+      "default_guess"
+    ],
+    "infer": true,
+    "pyboost": false,
+    "kbk": false,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/broadcast_to.cc",
+      "mindspore/ops/infer/ops_func_impl/broadcast_to.cc",
+      "mindspore/ops/infer/ops_func_impl/broadcast_to.h",
+      "mindspore/ops/infer/symbol_ops_impl/broadcast_to.cc"
+    ],
+    "pyboost": [],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/view/test_broad_cast_to.cc"
+    ],
+    "st": [
+      "tests/st/ops/cpu/test_broadcast_to_op.py",
+      "tests/st/ops/dynamic_shape/grad/test_broadcast_to.py",
+      "tests/st/ops/test_ops_broadcast_to.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/broadcast_to_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.broadcast_to::broadcast_to_op.yaml",
+    "coverage_key": "broadcast_to::BroadcastTo"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "bundle_key": "mindspore.mint.nonzero::non_zero_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.nonzero",
+    "public_surface": "mindspore.mint",
+    "api_name": "nonzero",
+    "op_branch": "non_zero_op.yaml",
+    "op": "non_zero",
+    "primitive": "NonZero"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.array_func",
+    "target_symbol": "nonzero",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.array_func.nonzero",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "non_zero::NonZero",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/non_zero_op.yaml",
+    "class_name": "NonZero",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "NonZeroAscend",
+    "aclnn": [
+      "aclnnNonzero"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/non_zero.cc",
+      "mindspore/ops/infer/ops_func_impl/non_zero.cc",
+      "mindspore/ops/infer/ops_func_impl/non_zero.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/non_zero.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/non_zero.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/non_zero_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/non_zero_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_nonzero.cc"
+    ],
+    "st": [
+      "tests/st/ops/gpu/test_non_zero_op.py",
+      "tests/st/ops/test_ops_nonzero.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/non_zero_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.nonzero::non_zero_op.yaml",
+    "coverage_key": "non_zero::NonZero"
+  }
+}

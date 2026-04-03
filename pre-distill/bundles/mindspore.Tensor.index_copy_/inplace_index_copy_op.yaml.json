@@ -1,0 +1,69 @@
+{
+  "bundle_key": "mindspore.Tensor.index_copy_::inplace_index_copy_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.index_copy_",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "index_copy_",
+    "op_branch": "inplace_index_copy_op.yaml",
+    "op": "inplace_index_copy",
+    "primitive": "InplaceIndexCopy"
+  },
+  "resolver": {
+    "py_method": "tensor_index_copy_",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "index_copy_",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/index_copy_.yaml",
+    "source_file": "mindspore/ops/api_def/index_copy_.yaml"
+  },
+  "coverage": {
+    "coverage_key": "inplace_index_copy::InplaceIndexCopy",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/inplace_index_copy_op.yaml",
+    "class_name": "InplaceIndexCopy",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "InplaceIndexCopyAscend",
+    "aclnn": [
+      "aclnnInplaceIndexCopy"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/inplace_index_copy.cc",
+      "mindspore/ops/infer/ops_func_impl/inplace_index_copy.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_index_copy.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_index_copy.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/inplace_index_copy_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/inplace_index_copy_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.index_copy_::inplace_index_copy_op.yaml",
+    "coverage_key": "inplace_index_copy::InplaceIndexCopy"
+  }
+}

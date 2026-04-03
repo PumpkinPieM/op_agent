@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.Tensor.exp_::inplace_exp_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.exp_",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "exp_",
+    "op_branch": "inplace_exp_op.yaml",
+    "op": "inplace_exp",
+    "primitive": "InplaceExp"
+  },
+  "resolver": {
+    "py_method": "tensor_exp",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "exp_",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/exp_.yaml",
+    "source_file": "mindspore/ops/api_def/exp_.yaml"
+  },
+  "coverage": {
+    "coverage_key": "inplace_exp::InplaceExp",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/inplace_exp_op.yaml",
+    "class_name": "InplaceExp",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "InplaceExpAscend",
+    "aclnn": [
+      "aclnnInplaceExp"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/inplace_exp.cc",
+      "mindspore/ops/infer/ops_func_impl/inplace_exp.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_exp.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_exp.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/inplace_exp_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/inplace_exp_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_inplace_exp.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.exp_::inplace_exp_op.yaml",
+    "coverage_key": "inplace_exp::InplaceExp"
+  }
+}

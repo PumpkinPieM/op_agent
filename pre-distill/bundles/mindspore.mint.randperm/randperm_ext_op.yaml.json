@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.mint.randperm::randperm_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.randperm",
+    "public_surface": "mindspore.mint",
+    "api_name": "randperm",
+    "op_branch": "randperm_ext_op.yaml",
+    "op": "randperm_ext",
+    "primitive": "RandpermExt"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.random_func",
+    "target_symbol": "randperm_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.random_func.randperm_ext",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "randperm_ext::RandpermExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/randperm_ext_op.yaml",
+    "class_name": "RandpermExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "RandpermExtAscend",
+    "aclnn": [
+      "aclnnRandperm"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": false,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/randperm_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/randperm_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/randperm_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/randperm_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/randperm_ext_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/randperm_ext_aclnn_kernel.h"
+    ],
+    "bprop": [],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_randperm_ext.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_randperm_ext.py"
+    ],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.randperm::randperm_ext_op.yaml",
+    "coverage_key": "randperm_ext::RandpermExt"
+  }
+}

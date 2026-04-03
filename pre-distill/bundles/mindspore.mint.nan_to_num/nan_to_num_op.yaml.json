@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.mint.nan_to_num::nan_to_num_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.nan_to_num",
+    "public_surface": "mindspore.mint",
+    "api_name": "nan_to_num",
+    "op_branch": "nan_to_num_op.yaml",
+    "op": "nan_to_num",
+    "primitive": "NanToNum"
+  },
+  "resolver": {
+    "py_method": "tensor_nan_to_num",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.function.math_func",
+    "target_symbol": "nan_to_num",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.function.math_func.nan_to_num",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "nan_to_num::NanToNum",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/nan_to_num_op.yaml",
+    "class_name": "NanToNum",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "NanToNumAscend",
+    "aclnn": [
+      "aclnnNanToNum"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/nan_to_num.cc",
+      "mindspore/ops/infer/ops_func_impl/nan_to_num.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/nan_to_num.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/nan_to_num.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/nan_to_num_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/nan_to_num_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_nantonum.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_func_nan_to_num.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/nan_to_num_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.nan_to_num::nan_to_num_op.yaml",
+    "coverage_key": "nan_to_num::NanToNum"
+  }
+}
