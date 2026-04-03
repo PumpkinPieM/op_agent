@@ -1,4 +1,4 @@
-# Workflow 6: BPROP Registration
+# Workflow 4: BPROP Registration
 
 Path convention: unless stated otherwise, `reference.md` means `../_shared/reference.md` and `aclnn_doc` means `../_shared/aclnn_doc/`.
 
@@ -118,4 +118,4 @@ You must check the following scenarios and apply the correct handling:
 1. **Directly throwing when a bprop scalar is unknown**: using `MS_EXCEPTION` when `ContainsValueAny()` is true instead of building a runtime branch.
    -> You must use `ib->Conditional(cond, true_branch, false_branch)`.
    If the value is known at graph compile time, branch in C++; if unknown, branch at runtime with `Conditional`.
-   See `ReduceStd` bprop for the pattern. Details are in Step 5 of `workflows/06-bprop.md`.
+   See `ReduceStd` bprop for the pattern. Details are in Step 5 of `workflows/04-bprop.md`.

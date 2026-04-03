@@ -18,7 +18,7 @@ Define the required YAML for the operator (`op_def` + `api_def` + `function_doc`
 
 ---
 
-## Steps
+## OP Yaml
 
 Create yaml for new primitive or modify yaml of existing primitive for aclnn dispatch. Refer to skill `yaml-helper` for yaml-related knowledge.
 
@@ -38,16 +38,22 @@ dispatch:
   Ascend: OpNameAscend    # specify the customize kernel function name
 ```
 
-### API Yaml
+## API Yaml
 
 For tensor method and overloaded interface tasks, add/modify corresponding api yaml in `mindspore/ops/api_def`.
 
+### Remove old tensor method registration
+
 For tensor method task, after registering the tensor interface in api yaml, delete the old tensor method registration in the Tensor class in `mindspore/python/mindspore/common/tensor.py`.
 
+## gen_ops.py
+
+After all yaml files are added/modified, running the python script `mindspore/python/mindspore/ops_generate/gen_ops.py` to generate python and C++ code for ops defined by yaml files.
 ---
 
 ## Success Criteria
 
 - [ ] OP YAML files have been created/modified for related ops
 - [ ] API YAML files have been created/modified for related tensor method/overloaded interface
+- [ ] `mindspore/python/mindspore/ops_generate/gen_ops.py` executed successfully
 ---

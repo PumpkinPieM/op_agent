@@ -1,4 +1,4 @@
-# Workflow 8: Testing
+# Workflow 6: Testing
 
 Path convention: unless stated otherwise, `reference.md` means `../_shared/reference.md` and `aclnn_doc` means `../_shared/aclnn_doc/`.
 
@@ -12,7 +12,7 @@ Complete the C++ UT and ensure functional and dynamic-shape coverage. This workf
 
 ## Outputs (Confirm Each Required Test Type)
 
-> **Important**: the test types below are mandatory outputs of Step 8, and each one must be marked explicitly.
+> **Important**: the test types below are mandatory outputs of Step 6, and each one must be marked explicitly.
 
 | Type | File Location | Requirement | Status |
 | --- | --- | --- | --- |
@@ -34,9 +34,9 @@ Refer to existing C++ UT files for similar operators to confirm the testing macr
 
 ---
 
-## 🔒 Mandatory Check Before Marking Step 8 Complete
+## 🔒 Mandatory Check Before Marking Step 6 Complete
 
-**Before Step 8 can be marked complete, every item below must be confirmed explicitly:**
+**Before Step 6 can be marked complete, every item below must be confirmed explicitly:**
 
 Test deliverable checklist:
 
