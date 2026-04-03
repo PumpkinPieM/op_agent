@@ -1,4 +1,4 @@
-# Workflow 3: GeneralInfer (C++ Inference)
+# Workflow 2: GeneralInfer (C++ Inference)
 
 Path convention: unless stated otherwise, `reference.md` means `../_shared/reference.md` and `aclnn_doc` means `../_shared/aclnn_doc/`.
 

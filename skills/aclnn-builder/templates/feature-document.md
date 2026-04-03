@@ -91,7 +91,7 @@ xxx:
 <!-- - **Empty Tensor**: {supported / unsupported, with explanation} -->
 
 <a id="feature-execution-modes"></a>
-## 7. Execution Modes And Adaptation `[After Step 4/5]`
+## 7. Execution Modes And Adaptation `[After Step 3]`
 
 ### Pynative (PyBoost)
 - {Implementation notes}
@@ -107,13 +107,13 @@ xxx:
 - **Differences**: {List the differences from PTA and explain the reasons}
 
 <a id="feature-dynamic-shape"></a>
-## 9. Dynamic Shape/Rank Support `[After Step 3]`
+## 9. Dynamic Shape/Rank Support `[After Step 2]`
 
 - {Dynamic-dimension / dynamic-rank inference strategy}
 - {Fallback strategy when compile-time values are unknown}
 
 <a id="feature-validation-and-errors"></a>
-## 10. Validation And Error Handling `[After Step 3/4]`
+## 10. Validation And Error Handling `[After Step 2/3]`
 
 ### Inference Phase (Infer)
 - {List checked added in inference-time}
@@ -122,13 +122,13 @@ xxx:
 - {List checks added in runtime}
 
 <a id="feature-bprop"></a>
-## 11. Backward (BPROP) `[After Step 6]`
+## 11. Backward (BPROP) `[After Step 4]`
 
 - {How BPROP is registered, backward inputs/outputs, and gradient handling}
 - If autodiff is used instead, state "no explicit bprop is required"
 
 <a id="feature-test-plan"></a>
-## 12. Test Plan `[After Step 8]`
+## 12. Test Plan `[After Step 6]`
 
 ### UT (C++ GeneralInfer)
 - {Covered scenarios}

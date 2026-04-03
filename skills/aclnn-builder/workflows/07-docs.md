@@ -1,4 +1,4 @@
-# Workflow 9: Documentation
+# Workflow 7: Documentation
 
 Path convention: unless stated otherwise, `reference.md` means `../_shared/reference.md` and `aclnn_doc` means `../_shared/aclnn_doc/`.
 
@@ -74,7 +74,7 @@ Follow the rules in `reference.md#documentation-reference`:
 
 ---
 
-## 🔒 Mandatory Check Before Marking Step 9 Complete
+## 🔒 Mandatory Check Before Marking Step 7 Complete
 
 ```text
 Documentation deliverable checklist:
