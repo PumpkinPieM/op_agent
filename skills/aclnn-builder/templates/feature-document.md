@@ -128,7 +128,7 @@ xxx:
 - If autodiff is used instead, state "no explicit bprop is required"
 
 <a id="feature-test-plan"></a>
-## 12. Test Plan `[After Step 6]`
+## 12. Test Plan `[After Step 2]`
 
 ### UT (C++ GeneralInfer)
 - {Covered scenarios}
