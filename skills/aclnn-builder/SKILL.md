@@ -33,9 +33,9 @@ When using this skill to develop an ACLNN operator, **create a TODOLIST** and ex
 - [ ] **[Step 1](workflows/01-yaml-definition.md)**: YAML definition -> backfill Feature(`feature-document.md#feature-yaml-definition`)
   - Input: PTA source review report, Feature document
   - Output: `op_def` + doc YAML files
-- [ ] **[Step 2](workflows/02-general-infer.md)**: GeneralInfer -> backfill Feature (`feature-document.md#feature-dynamic-shape`) / (`feature-document.md#feature-validation-and-errors`)
+- [ ] **[Step 2](workflows/02-general-infer.md)**: GeneralInfer + infer UT -> backfill Feature (`feature-document.md#feature-dynamic-shape`) / (`feature-document.md#feature-validation-and-errors`) / (`feature-document.md#feature-test-plan`)
   - Input: YAML, PTA output-shape logic
-  - Output: Infer implementation
+  - Output: Infer implementation, C++ Infer UT test
 - [ ] **[Step 3](workflows/03-aclnn-kernel.md)**: ACLNN kernel (PyBoost + KBK) -> backfill Feature (`feature-document.md#feature-execution-modes`)
   - **Path 1(auto)**: skip handwritten implementation and only validate the auto-generated outputs
   - **Path 2(customize)**: handwrite Customize implementation files
@@ -47,18 +47,14 @@ When using this skill to develop an ACLNN operator, **create a TODOLIST** and ex
 - [ ] **[Step 5](workflows/05-export.md)**: export python interface
   - Input: operator primitive, function interface
   - Output: exports under the `mint` namespace; if interface overloads are involved, see (`reference.md#api-overload-adaptation`)
-- [ ] **[Step 6](workflows/06-testing.md)**: testing -> backfill Feature (`feature-document.md#feature-test-plan `)
-  - Input: all implementations, PTA reference
-  - Output: C++ UT (must be newly created)
-    See Step 2 in `workflows/06-testing.md`.
-- [ ] **[Step 7](workflows/07-docs.md)**: documentation
+- [ ] **[Step 6](workflows/06-docs.md)**: documentation
   - Input: operator, yaml definition
   - Output: English `function_doc` (created in Step 1 and refined here) + **Chinese RST (required for public APIs)**
   - **Important**: English doc YAML does not mean the documentation step is complete. Chinese RST is a separate deliverable and is the most common omission.
   - **Important**: public `mint`/`ops`/`nn`/`Tensor` interfaces must not skip this step. Only internal operators may skip it; see the conditional skip table.
-- [ ] **[Step 8] Feature document finalization** `🔒 must not be skipped`: complete (`feature-document.md#feature-code-change-summary`), (`feature-document.md#feature-acceptance-report`), and update (`feature-document.md#feature-task-list`)
+- [ ] **[Step 7] Feature document finalization** `🔒 must not be skipped`: complete (`feature-document.md#feature-code-change-summary`), (`feature-document.md#feature-acceptance-report`), and update (`feature-document.md#feature-task-list`)
   - Even if intermediate steps are skipped or deferred, the Feature document must still be completed and delivered to the user.
-- [ ] **[Step 9] Compilation**: use "bash build.sh -e ascend -j128" to build MindSpore, and fix compile error.
+- [ ] **[Step 8] Compilation**: use "bash build.sh -e ascend -j128" to build MindSpore, and fix compile error.
 
 ## Validation Loop (Evidence Required At Every Step) `🔒 must not be skipped`
 
