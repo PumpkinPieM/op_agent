@@ -38,6 +38,8 @@ dispatch:
   Ascend: OpNameAscend    # specify the customize kernel function name
 ```
 
+After all yaml files are added/modified, running the python script `mindspore/python/mindspore/ops_generate/gen_ops.py` to generate python and C++ code for ops defined by yaml files.
+
 ### Remove old tensor method registration
 
 For tensor method task, after registering the tensor interface in api yaml, delete the old tensor method registration in the Tensor class in `mindspore/python/mindspore/common/tensor.py`.
@@ -47,4 +49,5 @@ For tensor method task, after registering the tensor interface in api yaml, dele
 ## Success Criteria
 
 - [ ] YAML files have been created/modified (for every operator involved)
+- [ ] Executing `mindspore/python/mindspore/ops_generate/gen_ops.py` success
 ---
