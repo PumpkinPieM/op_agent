@@ -53,7 +53,7 @@ If you do not pass `--runs-root`, outputs go under `<ms_root>/aclnn_skill_test_r
 If you do not pass `--skill-path`, the runner expects skills under `<ms_root>/.codex/skills` and will fail if that directory does not exist.
 Before invoking Codex, the runner copies the resolved skills tree into the isolated MindSpore checkout under `.codex/skills`.
 Use `--op-plugin` to pass the `op-plugin` repository path. In prompts, `{{op_plugin_dir}}` is replaced with that resolved path. `--op-plugin` is required for non-dry-run execution.
-
+Use `--executor` to choose `codex` (default), `opencode`, or `claudecode`.
 A typical run of all test cases:
 
 ```bash
@@ -76,6 +76,7 @@ Run from another working directory:
 
 ```bash
 python3 <op_agent_root>/skills/aclnn-builder/tests/run_skill_cases.py \
+  --executor codex \
   --ms-root /path/to/mindspore \
   --skill-path /path/to/mindspore/.codex/skills \
   --op-plugin /path/to/op-plugin \

@@ -640,6 +640,161 @@ class CodexExecutor:
         )
 
 
+class OpenCodeExecutor:
+    def __init__(
+        self,
+        opencode_bin: str = "opencode",
+        model: str | None = None,
+    ) -> None:
+        self.opencode_bin = opencode_bin
+        self.model = model
+
+    @staticmethod
+    def execution_cwd_for(request: ExecutionRequest) -> Path:
+        return CodexExecutor.execution_cwd_for(request)
+
+    def build_command(self, request: ExecutionRequest) -> list[str]:
+        execution_cwd = self.execution_cwd_for(request)
+        command = [
+            self.opencode_bin,
+            "run",
+            "--dir",
+            str(execution_cwd),
+            "--format",
+            "json",
+        ]
+        if self.model:
+            command.extend(["--model", self.model])
+        command.append(request.prompt)
+        return command
+
+    def run(self, request: ExecutionRequest) -> ExecutionResult:
+        stdout_path = request.case_dir / "opencode_output.jsonl"
+        stderr_path = request.case_dir / "opencode_stderr.txt"
+        last_message_path = request.case_dir / "last_message.txt"
+        execution_cwd = self.execution_cwd_for(request)
+        command = self.build_command(request)
+        log_progress(f"{request.case.case_id}: launching opencode in {execution_cwd}")
+        started_at = time.time()
+        timed_out = False
+        returncode = 1
+
+        with stdout_path.open("w", encoding="utf-8") as stdout_fp, stderr_path.open(
+            "w", encoding="utf-8"
+        ) as stderr_fp:
+            process = subprocess.Popen(
+                command,
+                cwd=execution_cwd,
+                stdout=stdout_fp,
+                stderr=stderr_fp,
+                text=True,
+            )
+            try:
+                process.communicate(timeout=request.case.timeout_sec)
+            except subprocess.TimeoutExpired:
+                timed_out = True
+                log_progress(f"{request.case.case_id}: opencode timed out after {request.case.timeout_sec}s, terminating")
+                process.kill()
+                process.communicate()
+            returncode = process.returncode if process.returncode is not None else 1
+
+        if stdout_path.exists():
+            last_message_path.write_text(stdout_path.read_text(encoding="utf-8"), encoding="utf-8")
+        finished_at = time.time()
+        log_progress(f"{request.case.case_id}: opencode finished with return code {returncode}")
+        return ExecutionResult(
+            command=tuple(command),
+            returncode=returncode,
+            started_at=started_at,
+            finished_at=finished_at,
+            timed_out=timed_out,
+            stdout_path=stdout_path,
+            stderr_path=stderr_path,
+            last_message_path=last_message_path if last_message_path.exists() else None,
+        )
+
+
+class ClaudeCodeExecutor:
+    def __init__(
+        self,
+        claudecode_bin: str = "claude",
+        model: str | None = None,
+    ) -> None:
+        self.claudecode_bin = claudecode_bin
+        self.model = model
+
+    @staticmethod
+    def execution_cwd_for(request: ExecutionRequest) -> Path:
+        return CodexExecutor.execution_cwd_for(request)
+
+    def build_command(self, request: ExecutionRequest) -> list[str]:
+        execution_cwd = self.execution_cwd_for(request)
+        command = [
+            self.claudecode_bin,
+            "-p",
+            "--output-format",
+            "json",
+            "--permission-mode",
+            "bypassPermissions",
+        ]
+        if self.model:
+            command.extend(["--model", self.model])
+        command.extend(["--add-dir", str(request.case_dir)])
+        for repo in request.prepared_repos.values():
+            command.extend(["--add-dir", str(repo.checkout_path)])
+        if request.op_plugin_dir is not None:
+            command.extend(["--add-dir", str(request.op_plugin_dir)])
+        command.append(request.prompt)
+        return command
+
+    def run(self, request: ExecutionRequest) -> ExecutionResult:
+        stdout_path = request.case_dir / "claudecode_output.json"
+        stderr_path = request.case_dir / "claudecode_stderr.txt"
+        last_message_path = request.case_dir / "last_message.txt"
+        execution_cwd = self.execution_cwd_for(request)
+        command = self.build_command(request)
+        log_progress(f"{request.case.case_id}: launching claudecode in {execution_cwd}")
+        started_at = time.time()
+        timed_out = False
+        returncode = 1
+
+        with stdout_path.open("w", encoding="utf-8") as stdout_fp, stderr_path.open(
+            "w", encoding="utf-8"
+        ) as stderr_fp:
+            process = subprocess.Popen(
+                command,
+                cwd=execution_cwd,
+                stdout=stdout_fp,
+                stderr=stderr_fp,
+                text=True,
+            )
+            try:
+                process.communicate(timeout=request.case.timeout_sec)
+            except subprocess.TimeoutExpired:
+                timed_out = True
+                log_progress(
+                    f"{request.case.case_id}: claudecode timed out after {request.case.timeout_sec}s, terminating"
+                )
+                process.kill()
+                process.communicate()
+            returncode = process.returncode if process.returncode is not None else 1
+
+        if stdout_path.exists():
+            last_message_path.write_text(stdout_path.read_text(encoding="utf-8"), encoding="utf-8")
+        finished_at = time.time()
+        log_progress(f"{request.case.case_id}: claudecode finished with return code {returncode}")
+        return ExecutionResult(
+            command=tuple(command),
+            returncode=returncode,
+            started_at=started_at,
+            finished_at=finished_at,
+            timed_out=timed_out,
+            stdout_path=stdout_path,
+            stderr_path=stderr_path,
+            last_message_path=last_message_path if last_message_path.exists() else None,
+        )
+
+
 class SkillTestRunner:
     def __init__(
         self,
@@ -765,6 +920,7 @@ class SkillTestRunner:
 def build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run isolated aclnn-builder skill test cases.")
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--executor", choices=("codex", "opencode", "claudecode"), default="codex")
     parser.add_argument("--ms-root", type=Path, default=None)
     parser.add_argument("--skill-path", type=Path, default=None)
     parser.add_argument("--op-plugin", type=Path, default=None)
@@ -775,6 +931,8 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--keep-sandboxes", action="store_true")
     parser.add_argument("--codex-bin", default="codex")
+    parser.add_argument("--opencode-bin", default="opencode")
+    parser.add_argument("--claudecode-bin", default="claude")
     parser.add_argument("--model", default="")
     parser.add_argument("--sandbox", default="workspace-write")
     parser.add_argument(
@@ -797,12 +955,23 @@ def main(argv: list[str] | None = None) -> int:
         if not args.dry_run and op_plugin_dir is None:
             raise ManifestError("--op-plugin is required when running non-dry-run cases")
         manifest = load_manifest(args.manifest)
-        executor = CodexExecutor(
-            codex_bin=args.codex_bin,
-            model=args.model or None,
-            sandbox=args.sandbox,
-            extra_args=args.extra_codex_arg,
-        )
+        if args.executor == "codex":
+            executor = CodexExecutor(
+                codex_bin=args.codex_bin,
+                model=args.model or None,
+                sandbox=args.sandbox,
+                extra_args=args.extra_codex_arg,
+            )
+        elif args.executor == "opencode":
+            executor = OpenCodeExecutor(
+                opencode_bin=args.opencode_bin,
+                model=args.model or None,
+            )
+        else:
+            executor = ClaudeCodeExecutor(
+                claudecode_bin=args.claudecode_bin,
+                model=args.model or None,
+            )
         runner = SkillTestRunner(
             manifest=manifest,
             executor=executor,

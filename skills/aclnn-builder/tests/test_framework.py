@@ -14,12 +14,14 @@ if str(TESTS_DIR) not in sys.path:
 
 from framework import (
     CaseSpec,
+    ClaudeCodeExecutor,
     CodexExecutor,
     ExecutionRequest,
     ExecutionResult,
     ExpectedChangeSet,
     Manifest,
     ManifestError,
+    OpenCodeExecutor,
     RepoSpec,
     SkillTestRunner,
     classify_repo_changes,
@@ -326,6 +328,67 @@ def test_codex_executor_builds_ephemeral_command(tmp_path: Path):
         assert "--search" in command
         assert str(prepared["mindspore"].checkout_path) in command
         assert str(op_plugin_root) in command
+    finally:
+        from framework import cleanup_prepared_repos
+
+        cleanup_prepared_repos(prepared)
+
+
+def test_opencode_executor_builds_command(tmp_path: Path):
+    repo_root = tmp_path / "repo"
+    op_plugin_root = tmp_path / "op-plugin"
+    init_repo(repo_root, {"tracked.txt": "base\n"})
+    op_plugin_root.mkdir(parents=True, exist_ok=True)
+    repo_spec = RepoSpec(name="mindspore", source=str(repo_root))
+    case = CaseSpec(case_id="cmd_case", prompt="test", repos=(repo_spec,))
+    prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
+    try:
+        executor = OpenCodeExecutor(opencode_bin="opencode", model="provider/model")
+        request = ExecutionRequest(
+            case=case,
+            prompt="hello",
+            prompt_path=tmp_path / "prompt.txt",
+            case_dir=tmp_path / "case",
+            run_dir=tmp_path / "run",
+            artifact_dir=tmp_path / "artifacts",
+            op_plugin_dir=op_plugin_root,
+            prepared_repos=prepared,
+        )
+        command = executor.build_command(request)
+        assert command[:5] == ["opencode", "run", "--dir", str(prepared["mindspore"].checkout_path), "--format"]
+        assert "--model" in command
+        assert command[-1] == "hello"
+    finally:
+        from framework import cleanup_prepared_repos
+
+        cleanup_prepared_repos(prepared)
+
+
+def test_claudecode_executor_builds_command(tmp_path: Path):
+    repo_root = tmp_path / "repo"
+    op_plugin_root = tmp_path / "op-plugin"
+    init_repo(repo_root, {"tracked.txt": "base\n"})
+    op_plugin_root.mkdir(parents=True, exist_ok=True)
+    repo_spec = RepoSpec(name="mindspore", source=str(repo_root))
+    case = CaseSpec(case_id="cmd_case", prompt="test", repos=(repo_spec,))
+    prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
+    try:
+        executor = ClaudeCodeExecutor(claudecode_bin="claude", model="sonnet")
+        request = ExecutionRequest(
+            case=case,
+            prompt="hello",
+            prompt_path=tmp_path / "prompt.txt",
+            case_dir=tmp_path / "case",
+            run_dir=tmp_path / "run",
+            artifact_dir=tmp_path / "artifacts",
+            op_plugin_dir=op_plugin_root,
+            prepared_repos=prepared,
+        )
+        command = executor.build_command(request)
+        assert command[:5] == ["claude", "-p", "--output-format", "json", "--permission-mode"]
+        assert "--model" in command
+        assert str(op_plugin_root) in command
+        assert command[-1] == "hello"
     finally:
         from framework import cleanup_prepared_repos
 
