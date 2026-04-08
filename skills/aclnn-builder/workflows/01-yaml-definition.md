@@ -38,7 +38,9 @@ dispatch:
   Ascend: OpNameAscend    # specify the customize kernel function name
 ```
 
-### Remove old tensor method registration
+### API Yaml
+
+For tensor method and overloaded interface tasks, add/modify corresponding api yaml in `mindspore/ops/api_def`.
 
 For tensor method task, after registering the tensor interface in api yaml, delete the old tensor method registration in the Tensor class in `mindspore/python/mindspore/common/tensor.py`.
 
@@ -46,5 +48,6 @@ For tensor method task, after registering the tensor interface in api yaml, dele
 
 ## Success Criteria
 
-- [ ] YAML files have been created/modified (for every operator involved)
+- [ ] OP YAML files have been created/modified for related ops
+- [ ] API YAML files have been created/modified for related tensor method/overloaded interface
 ---
