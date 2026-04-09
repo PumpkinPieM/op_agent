@@ -38,15 +38,17 @@ dispatch:
   Ascend: OpNameAscend    # specify the customize kernel function name
 ```
 
-## API Yaml
+## Tensor Method
 
-For tensor method and overloaded interface tasks, add/modify corresponding api yaml in `mindspore/ops/api_def`.
+For tensor method, it's interface should be defined in api yaml in `mindspore/ops/api_def`. Add the api yaml if it doens't exist. After registering the tensor interface in api yaml, check if there's old tensor method registration in the Tensor class in `mindspore/python/mindspore/common/tensor.py`, and delete it.
 
-### Remove old tensor method registration
+**Important: do not skip this step just because there's already a handwritten Python interface for the tensor method!!**
 
-For tensor method task, after registering the tensor interface in api yaml, delete the old tensor method registration in the Tensor class in `mindspore/python/mindspore/common/tensor.py`.
+## Overloaded interface
 
-## gen_ops.py
+For interface that have different signatures, use api yaml to implement the dispatch behaviour.
+
+## `gen_ops.py`
 
 After all yaml files are added/modified, running the python script `mindspore/python/mindspore/ops_generate/gen_ops.py` to generate python and C++ code for ops defined by yaml files.
 ---
