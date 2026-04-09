@@ -57,7 +57,7 @@ Use `--executor` to choose `codex` (default), `opencode`, or `claudecode`.
 A typical run of all test cases:
 
 ```bash
-python <op_agent_root>/skills/aclnn-builder/tests/run_skill_cases.py --keep-sandboxes --op-plugin=<op_plugin_dir>
+python <op_agent_root>/skills/aclnn-builder/tests/run_skill_cases.py --op-plugin=<op_plugin_dir>
 ```
 
 Dry-run prompt rendering and sandbox setup:
@@ -84,10 +84,10 @@ python3 <op_agent_root>/skills/aclnn-builder/tests/run_skill_cases.py \
   --include-disabled
 ```
 
-Keep isolated worktrees for manual inspection:
+By default, isolated worktrees are kept for manual inspection. Clean them up automatically with:
 
 ```bash
-python3 <op_agent_root>/skills/aclnn-builder/tests/run_skill_cases.py --keep-sandboxes
+python3 <op_agent_root>/skills/aclnn-builder/tests/run_skill_cases.py --cleanup-sandboxes
 ```
 
 ## Plan

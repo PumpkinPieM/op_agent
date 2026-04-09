@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -10,6 +11,7 @@ import sys
 import time
 import uuid
 from dataclasses import asdict, dataclass, field
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable, Protocol
 
@@ -24,6 +26,9 @@ DEFAULT_MANIFEST = TESTS_DIR / "cases.yaml"
 PROMPT_PLACEHOLDER = re.compile(r"\{\{\s*(repo:([A-Za-z0-9_.-]+)|artifact_dir|case_dir|run_dir)\s*\}\}")
 MS_ROOT_TOKENS = {"", "{{ms_root}}", "$MS_ROOT", "${MS_ROOT}"}
 PROMPT_OP_PLUGIN_TOKEN = "{{op_plugin_dir}}"
+CODEX_SESSION_MATCH_TOLERANCE_SEC = 300.0
+ACTIVITY_TIMELINE_SUMMARY_MIN_PHASES = 3
+ACTIVITY_TIMELINE_SUMMARY_MAX_PHASES = 6
 
 
 class ManifestError(ValueError):
@@ -37,6 +42,221 @@ class Executor(Protocol):
 
 def log_progress(message: str) -> None:
     print(f"[aclnn-builder-test] {message}", file=sys.stderr, flush=True)
+
+
+def _parse_iso8601_timestamp(value: str) -> datetime:
+    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def _seconds_between(start: str, end: str) -> float:
+    return max((_parse_iso8601_timestamp(end) - _parse_iso8601_timestamp(start)).total_seconds(), 0.0)
+
+
+def format_elapsed_minutes(seconds: float) -> str:
+    return f"{max(seconds, 0.0) / 60.0:.5f}min"
+
+
+def _remove_file_if_exists(path: Path) -> None:
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        return
+
+
+def resolve_codex_sessions_root() -> Path:
+    codex_home = os.environ.get("CODEX_HOME")
+    if codex_home:
+        return Path(codex_home).expanduser() / "sessions"
+    return Path.home() / ".codex" / "sessions"
+
+
+def _iter_codex_session_files(
+    sessions_root: Path,
+    started_at: float,
+    finished_at: float,
+) -> Iterable[Path]:
+    utc_days: set[tuple[int, int, int]] = set()
+    for offset in (-1, 0, 1):
+        day = datetime.fromtimestamp(started_at, tz=timezone.utc) + timedelta(days=offset)
+        utc_days.add((day.year, day.month, day.day))
+        day = datetime.fromtimestamp(finished_at, tz=timezone.utc) + timedelta(days=offset)
+        utc_days.add((day.year, day.month, day.day))
+    for year, month, day in sorted(utc_days, reverse=True):
+        day_dir = sessions_root / f"{year:04d}" / f"{month:02d}" / f"{day:02d}"
+        if not day_dir.exists():
+            continue
+        for path in sorted(day_dir.glob("rollout-*.jsonl"), key=lambda item: item.stat().st_mtime, reverse=True):
+            yield path
+
+
+def _paths_match(left: str | Path, right: str | Path) -> bool:
+    try:
+        return Path(left).resolve() == Path(right).resolve()
+    except OSError:
+        return str(left) == str(right)
+
+
+@dataclass(frozen=True)
+class SessionTaskWindow:
+    session_path: Path
+    turn_id: str
+    started_at: str
+    finished_at: str
+
+
+def find_codex_session_task_window(
+    started_at: float,
+    finished_at: float,
+    cwd: Path,
+    sessions_root: Path | None = None,
+) -> SessionTaskWindow | None:
+    root = (sessions_root or resolve_codex_sessions_root()).resolve()
+    if not root.exists():
+        return None
+
+    best_match: tuple[float, SessionTaskWindow] | None = None
+    for session_path in _iter_codex_session_files(root, started_at=started_at, finished_at=finished_at):
+        try:
+            with session_path.open("r", encoding="utf-8") as handle:
+                first_line = handle.readline()
+                if not first_line:
+                    continue
+                session_meta = json.loads(first_line)
+                session_cwd = session_meta.get("payload", {}).get("cwd", "")
+                if session_cwd and not _paths_match(session_cwd, cwd):
+                    continue
+
+                task_started: dict[str, str] = {}
+                for line in handle:
+                    if not line.strip():
+                        continue
+                    record = json.loads(line)
+                    if record.get("type") != "event_msg":
+                        continue
+                    payload = record.get("payload", {})
+                    payload_type = payload.get("type")
+                    turn_id = str(payload.get("turn_id", "")).strip()
+                    timestamp = str(record.get("timestamp", "")).strip()
+                    if not turn_id or not timestamp:
+                        continue
+                    if payload_type == "task_started":
+                        task_started[turn_id] = timestamp
+                        continue
+                    if payload_type != "task_complete" or turn_id not in task_started:
+                        continue
+                    task_start = task_started[turn_id]
+                    task_start_sec = _parse_iso8601_timestamp(task_start).timestamp()
+                    task_end_sec = _parse_iso8601_timestamp(timestamp).timestamp()
+                    overlap = min(task_end_sec, finished_at) - max(task_start_sec, started_at)
+                    if overlap < -CODEX_SESSION_MATCH_TOLERANCE_SEC:
+                        continue
+                    score = abs(task_start_sec - started_at) + abs(task_end_sec - finished_at)
+                    window = SessionTaskWindow(
+                        session_path=session_path,
+                        turn_id=turn_id,
+                        started_at=task_start,
+                        finished_at=timestamp,
+                    )
+                    if best_match is None or score < best_match[0]:
+                        best_match = (score, window)
+        except (OSError, json.JSONDecodeError, ValueError):
+            continue
+
+    return None if best_match is None else best_match[1]
+
+
+def write_task_session_slice(window: SessionTaskWindow, output_path: Path) -> Path:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with window.session_path.open("r", encoding="utf-8") as src, output_path.open("w", encoding="utf-8") as dst:
+        for line in src:
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if record.get("type") == "session_meta":
+                dst.write(line)
+                continue
+            timestamp = str(record.get("timestamp", "")).strip()
+            if window.started_at <= timestamp <= window.finished_at:
+                dst.write(line)
+    return output_path
+
+
+def build_activity_timeline_output_schema() -> dict[str, Any]:
+    return {
+        "type": "object",
+        "properties": {
+            "activity_timeline": {
+                "type": "array",
+                "minItems": ACTIVITY_TIMELINE_SUMMARY_MIN_PHASES,
+                "maxItems": ACTIVITY_TIMELINE_SUMMARY_MAX_PHASES,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "start": {"type": "string"},
+                        "end": {"type": "string"},
+                        "summary": {"type": "string"},
+                        "key_decision": {"type": ["string", "null"]},
+                    },
+                    "required": ["start", "end", "summary", "key_decision"],
+                    "additionalProperties": False,
+                },
+            }
+        },
+        "required": ["activity_timeline"],
+        "additionalProperties": False,
+    }
+
+
+def build_activity_timeline_summary_prompt(source_path: Path) -> str:
+    return f"""
+Read the completed Codex task log in `{source_path.name}` and produce a concise activity timeline.
+
+Requirements:
+- Output JSON only, matching the provided schema.
+- Produce {ACTIVITY_TIMELINE_SUMMARY_MIN_PHASES} to {ACTIVITY_TIMELINE_SUMMARY_MAX_PHASES} chronological activities.
+- Use exact `start` and `end` timestamps copied from the log.
+- Each `summary` should state what the agent was doing during that span.
+- Set `key_decision` to a short string when the span contains a concrete decision, discovery, or strategy shift. Otherwise set it to `null`.
+- Base every statement on the log. Do not invent details and do not mention activity outside this file.
+- Prefer boundaries around strategy changes, first code edits, major implementation bursts, and verification/close-out.
+""".strip()
+
+
+def normalize_activity_timeline_summary(
+    raw_summary: dict[str, Any],
+    window: SessionTaskWindow,
+    source_path: Path,
+) -> dict[str, Any]:
+    normalized_items: list[dict[str, Any]] = []
+    for item in raw_summary.get("activity_timeline", ()):
+        start = str(item["start"]).strip()
+        end = str(item["end"]).strip()
+        summary = str(item["summary"]).strip()
+        normalized: dict[str, Any] = {
+            "start": start,
+            "end": end,
+            "elapsed_time": format_elapsed_minutes(_seconds_between(start, end)),
+            "summary": summary,
+        }
+        key_decision_value = item.get("key_decision")
+        key_decision = ""
+        if key_decision_value is not None:
+            key_decision = str(key_decision_value).strip()
+        if key_decision:
+            normalized["key_decision"] = key_decision
+        normalized_items.append(normalized)
+
+    return {
+        "source_session_jsonl": str(window.session_path),
+        "source_task_turn_id": window.turn_id,
+        "source_window": {
+            "start": window.started_at,
+            "end": window.finished_at,
+            "elapsed_time": format_elapsed_minutes(_seconds_between(window.started_at, window.finished_at)),
+        },
+        "activity_timeline_source_path": str(source_path),
+        "activity_timeline": normalized_items,
+    }
 
 
 @dataclass(frozen=True)
@@ -174,6 +394,10 @@ class ExecutionResult:
     stdout_path: Path
     stderr_path: Path
     last_message_path: Path | None
+    session_log_path: Path | None = None
+    session_task_turn_id: str | None = None
+    activity_timeline_source_path: Path | None = None
+    activity_timeline_summary_path: Path | None = None
 
 
 @dataclass(frozen=True)
@@ -220,11 +444,18 @@ def execution_result_to_dict(result: ExecutionResult | None) -> dict[str, Any] |
     if result is None:
         return None
     payload = asdict(result)
-    for key in ("stdout_path", "stderr_path", "last_message_path"):
+    for key in (
+        "stdout_path",
+        "stderr_path",
+        "last_message_path",
+        "session_log_path",
+        "activity_timeline_source_path",
+        "activity_timeline_summary_path",
+    ):
         if payload[key] is not None:
             payload[key] = str(payload[key])
     payload["command"] = list(result.command)
-    payload["elapsed_time"] = round((result.finished_at - result.started_at) / 60.0, 3)
+    payload["elapsed_time"] = format_elapsed_minutes(result.finished_at - result.started_at)
     return payload
 
 
@@ -556,7 +787,8 @@ class CodexExecutor:
         model: str | None = None,
         sandbox: str = "workspace-write",
         full_auto: bool = True,
-        ephemeral: bool = True,
+        ephemeral: bool = False,
+        analyze_time: bool = False,
         extra_args: Iterable[str] = (),
     ) -> None:
         self.codex_bin = codex_bin
@@ -564,6 +796,7 @@ class CodexExecutor:
         self.sandbox = sandbox
         self.full_auto = full_auto
         self.ephemeral = ephemeral
+        self.analyze_time = analyze_time
         self.extra_args = tuple(extra_args)
 
     @staticmethod
@@ -579,7 +812,8 @@ class CodexExecutor:
         command = [self.codex_bin, "exec", "--json", "--sandbox", self.sandbox]
         if self.full_auto:
             command.append("--full-auto")
-        if self.ephemeral:
+        # Activity timeline analysis needs the main task session persisted to disk.
+        if self.ephemeral and not self.analyze_time:
             command.append("--ephemeral")
         if self.model:
             command.extend(["--model", self.model])
@@ -594,6 +828,119 @@ class CodexExecutor:
         command.extend(self.extra_args)
         command.append("-")
         return command
+
+    def build_activity_timeline_summary_command(
+        self,
+        case_dir: Path,
+        schema_path: Path,
+        last_message_path: Path,
+    ) -> list[str]:
+        command = [
+            self.codex_bin,
+            "exec",
+            "--json",
+            "--sandbox",
+            "read-only",
+            "--skip-git-repo-check",
+        ]
+        if self.full_auto:
+            command.append("--full-auto")
+        if self.ephemeral:
+            command.append("--ephemeral")
+        if self.model:
+            command.extend(["--model", self.model])
+        command.extend(["--output-schema", str(schema_path)])
+        command.extend(["--output-last-message", str(last_message_path)])
+        command.extend(["--cd", str(case_dir)])
+        command.extend(["--add-dir", str(case_dir)])
+        command.append("-")
+        return command
+
+    def maybe_generate_activity_timeline_summary(
+        self,
+        request: ExecutionRequest,
+        started_at: float,
+        finished_at: float,
+    ) -> tuple[Path | None, str | None, Path | None, Path | None]:
+        execution_cwd = self.execution_cwd_for(request)
+        session_window = find_codex_session_task_window(
+            started_at=started_at,
+            finished_at=finished_at,
+            cwd=execution_cwd,
+        )
+        if session_window is None:
+            log_progress(f"{request.case.case_id}: no matching Codex session log found for activity timeline summary")
+            return None, None, None, None
+
+        source_path = request.case_dir / "activity_timeline_source.jsonl"
+        schema_path = request.case_dir / "activity_timeline_summary_schema.json"
+        summary_last_message_path = request.case_dir / "activity_timeline_summary_raw.json"
+        summary_events_path = request.case_dir / "activity_timeline_summary_events.jsonl"
+        summary_stderr_path = request.case_dir / "activity_timeline_summary_stderr.txt"
+        summary_output_path = request.case_dir / "activity_timeline_summary.json"
+
+        write_task_session_slice(session_window, source_path)
+        schema_path.write_text(
+            json.dumps(build_activity_timeline_output_schema(), indent=2, sort_keys=True),
+            encoding="utf-8",
+        )
+        prompt = build_activity_timeline_summary_prompt(source_path)
+        command = self.build_activity_timeline_summary_command(
+            case_dir=request.case_dir,
+            schema_path=schema_path,
+            last_message_path=summary_last_message_path,
+        )
+        timeout_sec = min(max(60, request.case.timeout_sec // 6), 300)
+        log_progress(f"{request.case.case_id}: generating activity timeline summary from {session_window.session_path}")
+
+        with summary_events_path.open("w", encoding="utf-8") as stdout_fp, summary_stderr_path.open(
+            "w", encoding="utf-8"
+        ) as stderr_fp:
+            process = subprocess.Popen(
+                command,
+                cwd=request.case_dir,
+                stdin=subprocess.PIPE,
+                stdout=stdout_fp,
+                stderr=stderr_fp,
+                text=True,
+            )
+            try:
+                process.communicate(prompt, timeout=timeout_sec)
+            except subprocess.TimeoutExpired:
+                log_progress(f"{request.case.case_id}: activity timeline summary timed out after {timeout_sec}s")
+                process.kill()
+                process.communicate()
+                return session_window.session_path, session_window.turn_id, source_path, None
+
+        if process.returncode != 0:
+            log_progress(
+                f"{request.case.case_id}: activity timeline summary failed with return code {process.returncode}"
+            )
+            return session_window.session_path, session_window.turn_id, source_path, None
+        if not summary_last_message_path.exists():
+            log_progress(f"{request.case.case_id}: activity timeline summary produced no JSON payload")
+            return session_window.session_path, session_window.turn_id, source_path, None
+
+        try:
+            raw_summary = json.loads(summary_last_message_path.read_text(encoding="utf-8"))
+            normalized = normalize_activity_timeline_summary(
+                raw_summary,
+                window=session_window,
+                source_path=source_path,
+            )
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+            log_progress(f"{request.case.case_id}: failed to normalize activity timeline summary: {exc}")
+            return session_window.session_path, session_window.turn_id, source_path, None
+
+        summary_output_path.write_text(json.dumps(normalized, indent=2, sort_keys=True), encoding="utf-8")
+        for intermediate_path in (
+            schema_path,
+            summary_last_message_path,
+            summary_events_path,
+            summary_stderr_path,
+        ):
+            _remove_file_if_exists(intermediate_path)
+        return session_window.session_path, session_window.turn_id, source_path, summary_output_path
 
     def run(self, request: ExecutionRequest) -> ExecutionResult:
         stdout_path = request.case_dir / "codex_events.jsonl"
@@ -628,6 +975,18 @@ class CodexExecutor:
 
         finished_at = time.time()
         log_progress(f"{request.case.case_id}: codex finished with return code {returncode}")
+        session_log_path = None
+        session_task_turn_id = None
+        activity_timeline_source_path = None
+        activity_timeline_summary_path = None
+        if self.analyze_time:
+            session_log_path, session_task_turn_id, activity_timeline_source_path, activity_timeline_summary_path = (
+                self.maybe_generate_activity_timeline_summary(
+                    request=request,
+                    started_at=started_at,
+                    finished_at=finished_at,
+                )
+            )
         return ExecutionResult(
             command=tuple(command),
             returncode=returncode,
@@ -637,6 +996,10 @@ class CodexExecutor:
             stdout_path=stdout_path,
             stderr_path=stderr_path,
             last_message_path=last_message_path if last_message_path.exists() else None,
+            session_log_path=session_log_path,
+            session_task_turn_id=session_task_turn_id,
+            activity_timeline_source_path=activity_timeline_source_path,
+            activity_timeline_summary_path=activity_timeline_summary_path,
         )
 
 
@@ -805,7 +1168,7 @@ class SkillTestRunner:
         skill_path: Path,
         op_plugin_dir: Path | None,
         runs_root: Path,
-        keep_sandboxes: bool = False,
+        keep_sandboxes: bool = True,
     ) -> None:
         self.manifest = manifest
         self.executor = executor
@@ -902,7 +1265,7 @@ class SkillTestRunner:
 
         run_finished_at = time.time()
         run_summary = {
-            "elapsed_time": round((run_finished_at - run_started_at) / 60.0, 3),
+            "elapsed_time": format_elapsed_minutes(run_finished_at - run_started_at),
             "run_id": run_id,
             "manifest_schema_version": self.manifest.schema_version,
             "run_dir": str(run_dir),
@@ -911,7 +1274,7 @@ class SkillTestRunner:
         (run_dir / "summary.json").write_text(json.dumps(run_summary, indent=2, sort_keys=True), encoding="utf-8")
         failed_cases = [outcome.case_id for outcome in outcomes if not outcome.valid]
         log_progress(
-            f"run {run_id} finished in {run_summary['elapsed_time']} minute(s); "
+            f"run {run_id} finished in {run_summary['elapsed_time']}; "
             f"{len(outcomes) - len(failed_cases)} passed, {len(failed_cases)} failed"
         )
         return run_dir, tuple(outcomes)
@@ -929,7 +1292,19 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--case", dest="cases", action="append", default=[])
     parser.add_argument("--include-disabled", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--keep-sandboxes", action="store_true")
+    parser.set_defaults(keep_sandboxes=True)
+    parser.add_argument(
+        "--keep-sandboxes",
+        dest="keep_sandboxes",
+        action="store_true",
+        help="Keep isolated sandboxes after the run. This is the default.",
+    )
+    parser.add_argument(
+        "--cleanup-sandboxes",
+        dest="keep_sandboxes",
+        action="store_false",
+        help="Delete isolated sandboxes after the run completes.",
+    )
     parser.add_argument("--codex-bin", default="codex")
     parser.add_argument("--opencode-bin", default="opencode")
     parser.add_argument("--claudecode-bin", default="claude")
@@ -940,6 +1315,11 @@ def build_argument_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         help="Repeatable raw argument appended to the codex exec command.",
+    )
+    parser.add_argument(
+        "--analyze-time",
+        action="store_true",
+        help="After each Codex case completes, derive an activity timeline from the full session log.",
     )
     return parser
 
@@ -960,6 +1340,7 @@ def main(argv: list[str] | None = None) -> int:
                 codex_bin=args.codex_bin,
                 model=args.model or None,
                 sandbox=args.sandbox,
+                analyze_time=args.analyze_time,
                 extra_args=args.extra_codex_arg,
             )
         elif args.executor == "opencode":
