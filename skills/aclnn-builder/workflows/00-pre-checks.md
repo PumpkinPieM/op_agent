@@ -17,10 +17,6 @@ Before writing code, complete the repository inventory check, reference analysis
 - **Solution design document**: interface type, integration category, impact analysis, output as a Markdown file
 - **ACLNN call-chain inventory** (for composite scenarios): sub-operator coverage status and rollout plan
 
-## Constraints
-
-- **Local source wins**: source inspection of PTA (`op-plugin`), PyTorch, and MindSpore **must be performed by searching the local workspace**.
-
 ---
 
 ## Pre-A: Inventory Check
