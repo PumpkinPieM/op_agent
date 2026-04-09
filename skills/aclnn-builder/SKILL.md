@@ -13,7 +13,7 @@ Land an ACLNN operator on the Ascend platform in MindSpore **end to end**: forwa
 
 - When the user says things like "integrate/adapt an ACLNN operator into MindSpore", "add an xxx interface to MindSpore that matches `torch_npu`", "use the skill to add an NPU operator", "add `xxx_op.yaml`", "how should PyBoost/KBK be written", proceed directly through this skill's workflow.
 
-> Shared documents such as `reference.md` and `aclnn_doc` are stored under `../_shared/`.
+> Shared documents such as `operator-facts`, `reference.md` and `aclnn_doc` are stored under `../_shared/`.
 
 ## Execution Flow
 
@@ -23,13 +23,13 @@ When using this skill to develop an ACLNN operator, **create a TODOLIST** and ex
 **Steps marked `🔒 must not be skipped` are mandatory in every scenario.**
 **Places marked `⛔ HARD GATE` must be completed before you continue, otherwise stop and wait for user confirmation.**
 
-> the `feature-document.md` can be found under path ``
 
-- [ ] **[Pre](workflows/00-pre-checks.md)** `🔒 must not be skipped`: pre-checks (Pre-A inventory check + Pre-B solution design + Pre-C call-chain analysis)
-  - Input: operator name, PTA reference interface
-  - **Required outputs**: PTA source review report, initialized Feature document
-    > **⛔ HARD GATE**: before entering Step 1, you must confirm that these files have been generated into the workspace
-  - After each later step, backfill the corresponding section of the Feature document
+- <MUST> PRE-CHECKS FISRT: Operator-facts retrival and intergation path (auto-generate / customized)
+MUST read workflows/00-pre-checks.md. Identify the target operator name to be implemented and aclnn intergation path.
+DO NOT search MindSpore or op-plugin codebase broadly. Learn facts from `./_shared/operator-facts`.
+Simply report as Output Format in workflows/00-pre-checks.md.
+
+
 - [ ] **[Step 1](workflows/01-yaml-definition.md)**: YAML definition -> backfill Feature(`feature-document.md#feature-yaml-definition`)
   - Input: PTA source review report, Feature document
   - Output: `op_def` + doc YAML files
@@ -68,37 +68,6 @@ When using this skill to develop an ACLNN operator, **create a TODOLIST** and ex
   - Even if intermediate steps are skipped or deferred, the Feature document must still be completed and delivered to the user.
 - [ ] **[Step 11] Compilation**: use "bash build.sh -e ascend -j128" to build MindSpore, and fix compile error.
 
-## Validation Loop (Evidence Required At Every Step) `🔒 must not be skipped`
-
-After every completed step, an execution report **must** be presented to the user using the template below. It may not be omitted, merged away, or deferred.
-**This is a mandatory user-facing deliverable, not an internal note.**
-
-```text
-━━━ Step X Execution Report ━━━
-
-Execution basis (which skill requirement I followed):
-- workflow file: workflows/XX-xxx.md
-- corresponding skill requirement: (quote the relevant item from SKILL.md / the workflow)
-- success criteria for this step: (copied from the workflow success criteria)
-
-What I did (deliverables):
-- ...
-
-Key evidence (code snippets / file paths / search results):
-- ...
-- Which existing operator implementation I compared against: ...
-
-Validation result:
-- ...
-
-Item-by-item success criteria check:
-- [ ] Criterion 1: ✅/❌
-- [ ] Criterion 2: ✅/❌
-- ...
-
-Open issues / risks / next step:
-- ...
-```
 
 ## Key Constraints (Must Be Followed)
 

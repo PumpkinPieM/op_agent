@@ -4,22 +4,38 @@
 
 Before coding, retrieve the current MindSpore API / op status from `operator-facts` (especially ACLNN integration coverage), retrieve the corresponding PTA API facts, and directly conclude how the MindSpore operator should integrate ACLNN and which MindSpore files must be modified or added.
 
+## Guardrails
+
+- DO NOT search MindSpore or op-plugin codebase broadly. Learn facts from `./_shared/operator-facts`.
+- Pre-check must consume `operator-facts/bundles/` /  `operator-facts/ms_coverage/` and `operator-facts/data/pta_facts.jsonl`
+- Source files may be opened only from selected PTA `refs` or explicit MindSpore target files
+
 ## Inputs
 
-- MindSpore target API: `mindspore.xxx`, `mindspore.Tensor.xxx`, or `mindspore.mint.xxx`
-- Or MindSpore target op / primitive: `{op}` or `{primitive}`
+- MindSpore API: `mindspore.xxx`, `mindspore.Tensor.xxx`, or `mindspore.mint.xxx`
+- Or MindSpore operator / primitive
 - Local indexes under `operator-facts/`
   - `bundles/`: MS-centered single-operator bundles
   - `data/pta_facts.jsonl`: PTA facts index
 
 ## Output
 
-- Selected PTA reference
-- ACLNN integration decision for the MindSpore operator
+- Target Operator Name to be implemented in the aclnn backend.
+- ACLNN integration path for the MindSpore operator.
 - MindSpore file list to modify/add/verify
 - PTA reference anchors to open while coding
 
 ## Step 1. Retrieval target MindSpore API/OP and corresponding PTA API/OP
+
+The operator-facts structures are as follow.
+
+1. If users give mindspore api, look up bundles by `public_api` and read the operator bundle **for each op branch of the target MindSpore API** for ACLNN coverage facts. 
+
+2. If no api hits in bundle, or users give MindSpore operator or primitive, normalize the target into one or more MindSpore op branches and do facts checking in `operator-facts/data/ms_coverage.jsonl`. 
+
+3. No hits of api or operator in operator-facts means missing or unsupported for this API/ op branch in Mindspore codebase. Conclude as the implement gap in MindSpore.
+
+The operator-facts structure are as below.
 
 ```text
 operator-facts/
@@ -40,10 +56,6 @@ operator-facts/
     └── ms_coverage.schema.json     # MS coverage format, for data/ms_coverage.jsonl
 ```
 
-1. If the user starts from a MindSpore op / primitive instead of a public API, first resolve it through `operator-facts/data/ms_coverage.jsonl`, Then normalize the target into one or more MindSpore op branches and continue with coverage-based gap checking.
-
-2. If the user starts from a MindSpore public API, **for each op branch of the target MindSpore API**, lookup the MS bundle by `public_api` and read the operator bundle. `identity` tells us which MS API / op branch / primitive we are handling; `coverage` tells us the current MS implementation status and current gaps, especially ACLNN-related coverage.
-
 For example: the following bundle tell us the abs op have implement aclnn in auto_generate ptah, both kbk and pyboost support aclnn backend. Infer code / bprop code / ut / st / docs exits (just mark exits, not necessarily related to ACLNN).
 
 ```json
@@ -56,8 +68,6 @@ For example: the following bundle tell us the abs op have implement aclnn in aut
     "op_branch": "abs_op.yaml",
     "op": "abs",
     "primitive": "Abs",
-    "interface": "tensor",
-    "py_method": "tensor_abs",
     ...
   },
   "coverage": {
@@ -73,10 +83,7 @@ For example: the following bundle tell us the abs op have implement aclnn in aut
     "pyboost": true,
     "kbk": true,
     "bprop": true,
-    "ut": true,
-    "st": true,
-    "docs_cn": false,
-    "docs_en": true
+    ...
   }
 }
 ```
@@ -109,6 +116,7 @@ The current Pre conclusion is limited to what existing `operator-facts` can alre
    - If the selected PTA reference has no backward, conclude that no backward implementation is needed here
    - If PTA has backward and bundle `coverage.bprop=true`, conclude that the current bprop can be reused or verified
    - If PTA has backward and bundle `coverage.bprop=false`, conclude that bprop must be added or updated
+   <NOTE> If we has bprop added or upadted, the backward target operator should also listed as Target Operator name together with the forward.
 
 5. Build the MindSpore file list
    - Always list `yaml`
@@ -117,37 +125,31 @@ The current Pre conclusion is limited to what existing `operator-facts` can alre
    - List `pyboost`
    - List `bprop`
    - List `ut/st`
-   - For each category, state whether the action is `no change`, `modify_or_verify`, or `add_or_modify`
+   - For each category, state whether the action is `no change`, `modify`, or `new_add`
    - `auto` normally means no handwritten `kbk/pyboost`
    - `customize` means handwritten `kbk/pyboost` must be included
 
 ## Output Format
 
 ```text
-Branch: {op_branch}
-Selected PTA: {pta_key or none}
+Target Operator name: {the exact primitive name and op branch} + {backward primitive name and op branch if needed}.
 
 Conclusion:
-- Gap check: {no implementation needed / implementation required}
+- ACLNN Gap check: {no implementation needed / implementation required}
 - Primitive / interface strategy: {reuse current branch / new `_ext`-style branch / new primitive}, because {brief reason}
 - Integration path: {auto / customize}, because {brief reason}
 - Backward: {no backward / reuse or verify current bprop / add or update bprop}, because {brief reason}
 
 MindSpore modify list:
-- yaml: {path or target} | {no change / modify_or_verify / add_or_modify}
-- infer: {path or target} | {no change / modify_or_verify / add_or_modify}
-- kbk: {path or target} | {no change / modify_or_verify / add_or_modify}
-- pyboost: {path or target} | {no change / modify_or_verify / add_or_modify}
-- bprop: {path or target} | {no change / modify_or_verify / add_or_modify}
-- ut/st: {path or target} | {no change / modify_or_verify / add_or_modify}
+- yaml: {path or target} | {no change / modify / new_add}
+- infer: {path or target} | {no change / modify / new_add}
+- kbk: {path or target} | {no change / modify / new_add}
+- pyboost: {path or target} | {no change / modify / new_add}
+- bprop: {path or target} | {no change / modify / new_add}
+- ut/st: {path or target} | {no change / modify / new_add}
 
 PTA refs:
 - {role} | {path} | {pattern}
 - ...
 ```
 
-## Constraints
-
-- Do not search MindSpore or op-plugin source trees broadly in Pre
-- Pre must consume `operator-facts/bundles/` and `operator-facts/data/pta_facts.jsonl`
-- Source files may be opened only from selected PTA `refs` or explicit MindSpore target files
