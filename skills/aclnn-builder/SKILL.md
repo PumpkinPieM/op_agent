@@ -87,15 +87,3 @@ Item-by-item success criteria check:
 Open issues / risks / next step:
 - ...
 ```
-
-## Key Constraints (Must Be Followed)
-
-**Trust the repository's real code, not the workflow docs blindly.**
-This skill's flow, templates, and naming conventions may become outdated as MindSpore evolves.
-When the documentation disagrees with the repository state, **the repository state wins**.
-
-## Additional Materials (Read As Needed)
-
-- **Knowledge reference and code skeletons**: `../_shared/reference.md`
-- **Trigger examples**: `examples.md`
-- **PTA probing script template**: `scripts/probe_pta_sparse_flash_attention.py`
