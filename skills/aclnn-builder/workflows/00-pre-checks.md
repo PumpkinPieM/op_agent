@@ -25,13 +25,7 @@ When the user asks you to "add" or "adapt" an operator, **search first** to conf
 
 ### Steps
 
-1. **Search YAML**: search for the operator name under `mindspore/ops/op_def/yaml/` and `mindspore/ops/api_def/yaml/`
-2. **Search Infer**: search the corresponding Infer registration under `ops_func_impl` / `ops/infer`
-3. **Search PyBoost**: search for `class OPS_ASCEND_API {OpName}`
-4. **Search KBK**: search for `MS_ACLNN_KERNEL_FACTORY_REG({OpName}, ...)` and `MS_ACLNN_COMMON_KERNEL_FACTORY_REG({OpName}, ...)`
-5. **Search BPROP**: search for `REG_BPROP_BUILDER("{OpName}")`
-6. **Search tests**: search under `tests/st/ops` and `test/ut/cpp/ops`
-7. **Search documentation**: search under `docs/api/`
+**Search YAML**: search for the operator name under `mindspore/ops/op_def/yaml/` and `mindspore/ops/api_def/yaml/`
 
 ### Output Template
 
@@ -42,16 +36,7 @@ Operator inventory check: {OpName}
 | ---- | ---- | -------- | ---- |
 | YAML (op_def) | ✅/❌ | ... | |
 | YAML (api_def) | ✅/❌ | ... | |
-| Infer | ✅/❌ | ... | |
-| PyBoost | ✅/❌ | ... | |
-| KBK kernel | ✅/❌ | ... | |
-| BPROP | ✅/❌ | ... | |
-| Tests (UT) | ✅/❌ | ... | |
-| Tests (ST) | ✅/❌ | ... | |
-| Docs (EN) | ✅/❌ | ... | |
-| Docs (CN) | ✅/❌ | ... | |
 
-Conclusion: {brand-new development / only xxx parts need to be added}
 ```
 
 ---
@@ -101,12 +86,11 @@ Analyze the differences between the MindSpore, PTA, and ACLNN interfaces, decide
 
 1. Copy `templates/feature-document.md` and name it `{operator_name}_Feature.md`
 2. Fill the following sections based on the Pre-B analysis results:
-   - [1. Background](../templates/feature-document.md#feature-background)
-   - [2. Benchmark And APIs](../templates/feature-document.md#feature-benchmark-api)
-   - [3. Task List](../templates/feature-document.md#feature-task-list) (initialize the standard 13-category table)
-   - [4. Functional And API Specification](../templates/feature-document.md#feature-functional-spec) (interface signature and parameter descriptions)
-   - [6. Constraints And Types](../templates/feature-document.md#feature-constraints) (device, dtype, and shape constraints)
-   - [8. Differences From PTA And Alignment Status](../templates/feature-document.md#feature-pta-alignment) (initial version)
+   - [1. APIs and Benchmarks](../templates/feature-document.md#feature-benchmark-api)
+   - [2. Task List](../templates/feature-document.md#feature-task-list)
+   - [3. Functional And API Specification](../templates/feature-document.md#feature-functional-spec) (interface signature and parameter descriptions)
+   - [5. Constraints And Types](../templates/feature-document.md#feature-constraints) (device, dtype, and shape constraints)
+   - [7. Differences From PTA And Alignment Status](../templates/feature-document.md#feature-pta-alignment) (initial version)
 
 ---
 
