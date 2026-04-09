@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
 import subprocess
 
@@ -11,6 +12,8 @@ import pytest
 TESTS_DIR = Path(__file__).resolve().parent
 if str(TESTS_DIR) not in sys.path:
     sys.path.insert(0, str(TESTS_DIR))
+
+import framework
 
 from framework import (
     CaseSpec,
@@ -23,15 +26,22 @@ from framework import (
     ManifestError,
     OpenCodeExecutor,
     RepoSpec,
+    SessionTaskWindow,
     SkillTestRunner,
+    build_argument_parser,
+    build_activity_timeline_output_schema,
+    find_codex_session_task_window,
+    format_elapsed_minutes,
     classify_repo_changes,
     load_manifest,
+    normalize_activity_timeline_summary,
     prepare_repos,
     render_prompt,
     resolve_op_plugin_path,
     resolve_skill_path,
     resolve_repo_source,
     stage_skills_for_case,
+    write_task_session_slice,
 )
 
 
@@ -273,10 +283,11 @@ def test_runner_executes_multiple_cases_with_isolation(tmp_path: Path):
     assert outcomes[1].repo_outcomes[0].source_changes.added == ("beta.txt",)
     summary = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
     assert summary["run_id"]
-    assert isinstance(summary["elapsed_time"], float)
+    assert isinstance(summary["elapsed_time"], str)
+    assert summary["elapsed_time"].endswith("min")
     assert [item["case_id"] for item in summary["case_outcomes"]] == ["case_one", "case_two"]
     assert summary["case_outcomes"][0]["repo_outcomes"][0]["expected_changes"]["added"] == ["alpha.txt"]
-    assert isinstance(summary["case_outcomes"][0]["execution_result"]["elapsed_time"], float)
+    assert summary["case_outcomes"][0]["execution_result"]["elapsed_time"] == format_elapsed_minutes(1.0)
 
 
 def test_manifest_rejects_overlapping_expected_paths(tmp_path: Path):
@@ -310,7 +321,7 @@ def test_codex_executor_builds_ephemeral_command(tmp_path: Path):
     case = CaseSpec(case_id="cmd_case", prompt="test", repos=(repo_spec,))
     prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
     try:
-        executor = CodexExecutor(codex_bin="codex", model="gpt-5.4", extra_args=("--search",))
+        executor = CodexExecutor(codex_bin="codex", model="gpt-5.4", ephemeral=True, extra_args=("--search",))
         request = ExecutionRequest(
             case=case,
             prompt="hello",
@@ -332,6 +343,54 @@ def test_codex_executor_builds_ephemeral_command(tmp_path: Path):
         from framework import cleanup_prepared_repos
 
         cleanup_prepared_repos(prepared)
+
+
+def test_codex_executor_omits_ephemeral_when_analyze_time_is_enabled(tmp_path: Path):
+    repo_root = tmp_path / "repo"
+    op_plugin_root = tmp_path / "op-plugin"
+    init_repo(repo_root, {"tracked.txt": "base\n"})
+    op_plugin_root.mkdir(parents=True, exist_ok=True)
+    repo_spec = RepoSpec(name="mindspore", source=str(repo_root))
+    case = CaseSpec(case_id="cmd_case", prompt="test", repos=(repo_spec,))
+    prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
+    try:
+        executor = CodexExecutor(codex_bin="codex", analyze_time=True)
+        request = ExecutionRequest(
+            case=case,
+            prompt="hello",
+            prompt_path=tmp_path / "prompt.txt",
+            case_dir=tmp_path / "case",
+            run_dir=tmp_path / "run",
+            artifact_dir=tmp_path / "artifacts",
+            op_plugin_dir=op_plugin_root,
+            prepared_repos=prepared,
+        )
+        command = executor.build_command(request)
+        assert "--ephemeral" not in command
+    finally:
+        from framework import cleanup_prepared_repos
+
+        cleanup_prepared_repos(prepared)
+
+
+def test_cli_analyze_time_flag_defaults_off_and_can_be_enabled():
+    parser = build_argument_parser()
+    default_args = parser.parse_args([])
+    assert default_args.analyze_time is False
+    enabled_args = parser.parse_args(["--analyze-time"])
+    assert enabled_args.analyze_time is True
+
+
+def test_cli_keep_sandboxes_defaults_on_and_cleanup_flag_disables_it():
+    parser = build_argument_parser()
+    default_args = parser.parse_args([])
+    assert default_args.keep_sandboxes is True
+
+    explicit_keep_args = parser.parse_args(["--keep-sandboxes"])
+    assert explicit_keep_args.keep_sandboxes is True
+
+    cleanup_args = parser.parse_args(["--cleanup-sandboxes"])
+    assert cleanup_args.keep_sandboxes is False
 
 
 def test_opencode_executor_builds_command(tmp_path: Path):
@@ -462,6 +521,283 @@ def test_render_prompt_requires_op_plugin_when_placeholder_is_used(tmp_path: Pat
                 op_plugin_dir=None,
             )
     finally:
+        from framework import cleanup_prepared_repos
+
+        cleanup_prepared_repos(prepared)
+
+
+def test_find_codex_session_task_window_matches_by_cwd_and_time(tmp_path: Path):
+    sessions_root = tmp_path / "sessions" / "2026" / "04" / "09"
+    sessions_root.mkdir(parents=True, exist_ok=True)
+    session_path = sessions_root / "rollout-2026-04-09T10-48-17-example.jsonl"
+    session_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:48:17.368Z",
+                        "type": "session_meta",
+                        "payload": {"cwd": "/tmp/workspace/repo"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:49:25.908Z",
+                        "type": "event_msg",
+                        "payload": {"type": "task_started", "turn_id": "turn-1"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T03:13:01.827Z",
+                        "type": "event_msg",
+                        "payload": {"type": "task_complete", "turn_id": "turn-1"},
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    started_at = datetime.fromisoformat("2026-04-09T02:49:25.908+00:00").timestamp()
+    finished_at = datetime.fromisoformat("2026-04-09T03:13:01.827+00:00").timestamp()
+    window = find_codex_session_task_window(
+        started_at=started_at,
+        finished_at=finished_at,
+        cwd=Path("/tmp/workspace/repo"),
+        sessions_root=tmp_path / "sessions",
+    )
+
+    assert window is not None
+    assert window.session_path == session_path
+    assert window.turn_id == "turn-1"
+
+
+def test_write_task_session_slice_and_normalize_activity_summary(tmp_path: Path):
+    session_path = tmp_path / "rollout.jsonl"
+    session_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:48:17.368Z",
+                        "type": "session_meta",
+                        "payload": {"cwd": "/tmp/workspace/repo"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:49:25.908Z",
+                        "type": "event_msg",
+                        "payload": {"type": "task_started", "turn_id": "turn-1"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:50:00.000Z",
+                        "type": "event_msg",
+                        "payload": {"type": "agent_message", "message": "phase one"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T03:13:01.827Z",
+                        "type": "event_msg",
+                        "payload": {"type": "task_complete", "turn_id": "turn-1"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T03:20:00.000Z",
+                        "type": "event_msg",
+                        "payload": {"type": "agent_message", "message": "outside window"},
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    window = SessionTaskWindow(
+        session_path=session_path,
+        turn_id="turn-1",
+        started_at="2026-04-09T02:49:25.908Z",
+        finished_at="2026-04-09T03:13:01.827Z",
+    )
+    slice_path = write_task_session_slice(window, tmp_path / "activity_timeline_source.jsonl")
+    sliced = slice_path.read_text(encoding="utf-8")
+    assert "session_meta" in sliced
+    assert "phase one" in sliced
+    assert "outside window" not in sliced
+
+    normalized = normalize_activity_timeline_summary(
+        {
+            "activity_timeline": [
+                {
+                    "start": "2026-04-09T02:49:25.908Z",
+                    "end": "2026-04-09T02:56:42.046Z",
+                    "summary": "Pre-checks and strategy selection.",
+                    "key_decision": "Use a customize path.",
+                }
+            ]
+        },
+        window=window,
+        source_path=slice_path,
+    )
+    assert normalized["source_task_turn_id"] == "turn-1"
+    assert normalized["source_window"]["elapsed_time"] == format_elapsed_minutes(1415.919)
+    assert normalized["activity_timeline"][0]["elapsed_time"] == format_elapsed_minutes(436.138)
+    assert normalized["activity_timeline"][0]["key_decision"] == "Use a customize path."
+
+
+def test_activity_timeline_schema_requires_nullable_key_decision():
+    schema = build_activity_timeline_output_schema()
+    items = schema["properties"]["activity_timeline"]["items"]
+
+    assert "key_decision" in items["required"]
+    assert items["properties"]["key_decision"]["type"] == ["string", "null"]
+
+
+def test_normalize_activity_summary_omits_null_key_decision(tmp_path: Path):
+    session_path = tmp_path / "rollout.jsonl"
+    session_path.write_text("", encoding="utf-8")
+    window = SessionTaskWindow(
+        session_path=session_path,
+        turn_id="turn-1",
+        started_at="2026-04-09T02:49:25.908Z",
+        finished_at="2026-04-09T03:13:01.827Z",
+    )
+
+    normalized = normalize_activity_timeline_summary(
+        {
+            "activity_timeline": [
+                {
+                    "start": "2026-04-09T02:49:25.908Z",
+                    "end": "2026-04-09T02:56:42.046Z",
+                    "summary": "Pre-checks and strategy selection.",
+                    "key_decision": None,
+                }
+            ]
+        },
+        window=window,
+        source_path=tmp_path / "activity_timeline_source.jsonl",
+    )
+
+    assert "key_decision" not in normalized["activity_timeline"][0]
+
+
+def test_activity_timeline_success_cleans_intermediate_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    repo_root = tmp_path / "repo"
+    op_plugin_root = tmp_path / "op-plugin"
+    init_repo(repo_root, {"tracked.txt": "base\n"})
+    op_plugin_root.mkdir(parents=True, exist_ok=True)
+    repo_spec = RepoSpec(name="mindspore", source=str(repo_root))
+    case = CaseSpec(case_id="cmd_case", prompt="test", repos=(repo_spec,))
+    prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
+    session_path = tmp_path / "rollout.jsonl"
+    session_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:48:17.368Z",
+                        "type": "session_meta",
+                        "payload": {"cwd": str(prepared["mindspore"].checkout_path)},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:49:25.908Z",
+                        "type": "event_msg",
+                        "payload": {"type": "task_started", "turn_id": "turn-1"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T03:13:01.827Z",
+                        "type": "event_msg",
+                        "payload": {"type": "task_complete", "turn_id": "turn-1"},
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    window = SessionTaskWindow(
+        session_path=session_path,
+        turn_id="turn-1",
+        started_at="2026-04-09T02:49:25.908Z",
+        finished_at="2026-04-09T03:13:01.827Z",
+    )
+    monkeypatch.setattr(framework, "find_codex_session_task_window", lambda **_: window)
+
+    class FakePopen:
+        def __init__(self, *args, **kwargs) -> None:
+            self.returncode = 0
+
+        def communicate(self, prompt: str, timeout: int | None = None) -> tuple[str, str]:
+            raw_path = tmp_path / "case" / "activity_timeline_summary_raw.json"
+            raw_path.parent.mkdir(parents=True, exist_ok=True)
+            raw_path.write_text(
+                json.dumps(
+                    {
+                        "activity_timeline": [
+                            {
+                                "start": "2026-04-09T02:49:25.908Z",
+                                "end": "2026-04-09T02:56:42.046Z",
+                                "summary": "Pre-checks and strategy selection.",
+                                "key_decision": None,
+                            },
+                            {
+                                "start": "2026-04-09T02:56:42.046Z",
+                                "end": "2026-04-09T03:10:24.000Z",
+                                "summary": "Implementation work.",
+                                "key_decision": "Use the generated primitive path.",
+                            },
+                            {
+                                "start": "2026-04-09T03:10:24.000Z",
+                                "end": "2026-04-09T03:13:01.827Z",
+                                "summary": "Verification and close-out.",
+                                "key_decision": None,
+                            },
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            return "", ""
+
+    monkeypatch.setattr(framework.subprocess, "Popen", FakePopen)
+
+    try:
+        executor = CodexExecutor(codex_bin="codex", analyze_time=True)
+        request = ExecutionRequest(
+            case=case,
+            prompt="hello",
+            prompt_path=tmp_path / "prompt.txt",
+            case_dir=tmp_path / "case",
+            run_dir=tmp_path / "run",
+            artifact_dir=tmp_path / "artifacts",
+            op_plugin_dir=op_plugin_root,
+            prepared_repos=prepared,
+        )
+        session_log_path, turn_id, source_path, summary_path = executor.maybe_generate_activity_timeline_summary(
+            request=request,
+            started_at=0.0,
+            finished_at=1.0,
+        )
+        assert session_log_path == session_path
+        assert turn_id == "turn-1"
+        assert source_path is not None and source_path.exists()
+        assert summary_path is not None and summary_path.exists()
+        assert not (request.case_dir / "activity_timeline_summary_schema.json").exists()
+        assert not (request.case_dir / "activity_timeline_summary_raw.json").exists()
+        assert not (request.case_dir / "activity_timeline_summary_events.jsonl").exists()
+        assert not (request.case_dir / "activity_timeline_summary_stderr.txt").exists()
+    finally:
+        monkeypatch.undo()
         from framework import cleanup_prepared_repos
 
         cleanup_prepared_repos(prepared)

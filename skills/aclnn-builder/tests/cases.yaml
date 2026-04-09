@@ -48,7 +48,6 @@ cases:
             - "docs/api/api_python/mint/mindspore.mint.nn.functional.celu.rst"
           modified:
             - "mindspore/ops/op_def/yaml/celu_op.yaml"
-            - "mindspore/python/mindspore/mint/nn/__init__.py"
             - "mindspore/python/mindspore/mint/nn/functional.py"
           deleted: []
   - id: "range"
