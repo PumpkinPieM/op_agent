@@ -18,50 +18,44 @@ Define the required YAML for the operator (`op_def` + `api_def` + `function_doc`
 
 ---
 
-## Steps
+## OP Yaml
 
-### Step 1: Determine The YAML Structure
+Create yaml for new primitive or modify yaml of existing primitive for aclnn dispatch. Refer to skill `yaml-helper` for yaml-related knowledge.
 
-YAML definitions are documented in `mindspore/ops/op_def/yaml/README.md`.
+**This is where the path decision lands in YAML**
 
-Core fields:
-- `op_name`: Primitive name (usually PascalCase, optionally with a Customize suffix)
-- `args`: each parameter's `name` / `type` / `default` / `desc`
-- `outputs`: each output's `name` / `type` / `desc`
-- `dispatch`: backend integration mode. `enable: True` alone means auto-generated; adding `Ascend: "XxxAscend"` points to a Customize kernel
-- `api`: Python exposure fields such as `py_method` / `module`
-
-### Step 2: Configure `dispatch` According To The Integration Path
-
-**This is where the path decision lands in YAML** (`reference.md#dispatch-path-selection`):
-
-**Path 1 (auto-generated)** - direct argument passthrough, no Customize needed:
+**Path 1 (auto-generate)** - direct argument passthrough, no Customize needed:
 ```yaml
 dispatch:
   enable: True
   # omit the Ascend field -> build will auto-generate PyBoost/KBK code
 ```
 
-**Path 2 (Customize)** - arguments require preprocessing:
+**Path 2 (Customize)**:
 ```yaml
 dispatch:
   enable: True
-  Ascend: OpNameAscend    # explicitly names the Customize class
+  Ascend: OpNameAscend    # specify the customize kernel function name
 ```
 
-Decision rules:
-- Parameter count, order, and types match ACLNN exactly -> Path 1
-- `tuple -> vector`, `None` handling, `str -> enum`, scalar extraction, argument reordering, or manual output allocation is required -> Path 2
-- If uncertain, start with Path 2 and simplify to Path 1 later if possible
+## Tensor Method
 
-### Step 3: Use A Code Skeleton Reference
+For tensor method, it's interface should be defined in api yaml in `mindspore/ops/api_def`. Add the api yaml if it doens't exist. After registering the tensor interface in api yaml, check if there's old tensor method registration in the Tensor class in `mindspore/python/mindspore/common/tensor.py`, and delete it.
 
-The minimum YAML skeleton is documented in `reference.md#yaml-skeleton`.
+**Important: do not skip this step just because there's already a handwritten Python interface for the tensor method!!**
 
+## Overloaded interface
+
+For interface that have different signatures, use api yaml to implement the dispatch behaviour.
+
+## `gen_ops.py`
+
+After all yaml files are added/modified, running the python script `mindspore/python/mindspore/ops_generate/gen_ops.py` to generate python and C++ code for ops defined by yaml files.
 ---
 
 ## Success Criteria
 
-- [ ] YAML files have been created (for every operator involved)
-- [ ] Parameter names, types, and defaults are consistent with the PTA source review conclusions
+- [ ] OP YAML files have been created/modified for related ops
+- [ ] API YAML files have been created/modified for related tensor method/overloaded interface
+- [ ] `mindspore/python/mindspore/ops_generate/gen_ops.py` executed successfully
 ---

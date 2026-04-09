@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bprop Helper"
+  short_description: "Guide MindSpore expander bprop definitions"
+  default_prompt: "Use $bprop-helper to inspect, explain, or implement expander bprop logic in MindSpore."

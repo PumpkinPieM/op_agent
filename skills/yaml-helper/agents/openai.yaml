@@ -1,0 +1,4 @@
+interface:
+  display_name: "YAML Helper"
+  short_description: "Explain MindSpore op YAML fields."
+  default_prompt: "Use $yaml-helper to answer questions about MindSpore op-definition YAML files and fields."

@@ -152,4 +152,3 @@ PTA refs:
 - {role} | {path} | {pattern}
 - ...
 ```
-
