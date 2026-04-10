@@ -30,6 +30,7 @@ from framework import (
     SkillTestRunner,
     build_argument_parser,
     build_activity_timeline_output_schema,
+    collect_context_usage_from_session_slice,
     find_codex_session_task_window,
     format_elapsed_minutes,
     classify_repo_changes,
@@ -647,8 +648,216 @@ def test_write_task_session_slice_and_normalize_activity_summary(tmp_path: Path)
     )
     assert normalized["source_task_turn_id"] == "turn-1"
     assert normalized["source_window"]["elapsed_time"] == format_elapsed_minutes(1415.919)
+    assert normalized["source_window"]["context_usage"]["model_calls"] == 0
     assert normalized["activity_timeline"][0]["elapsed_time"] == format_elapsed_minutes(436.138)
+    assert normalized["activity_timeline"][0]["context_usage"]["model_calls"] == 0
     assert normalized["activity_timeline"][0]["key_decision"] == "Use a customize path."
+
+
+def test_activity_timeline_context_usage_is_measured_from_token_count_events(tmp_path: Path):
+    source_path = tmp_path / "activity_timeline_source.jsonl"
+    source_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:49:25.908Z",
+                        "type": "session_meta",
+                        "payload": {"cwd": "/tmp/workspace/repo"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:50:00.000Z",
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "token_count",
+                            "info": {
+                                "last_token_usage": {
+                                    "input_tokens": 10000,
+                                    "cached_input_tokens": 1000,
+                                    "output_tokens": 100,
+                                    "reasoning_output_tokens": 20,
+                                    "total_tokens": 10100,
+                                },
+                                "total_token_usage": {
+                                    "input_tokens": 10000,
+                                    "cached_input_tokens": 1000,
+                                    "output_tokens": 100,
+                                    "reasoning_output_tokens": 20,
+                                    "total_tokens": 10100,
+                                },
+                                "model_context_window": 100000,
+                            },
+                        },
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:57:00.000Z",
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "token_count",
+                            "info": {
+                                "last_token_usage": {
+                                    "input_tokens": 30000,
+                                    "cached_input_tokens": 15000,
+                                    "output_tokens": 200,
+                                    "reasoning_output_tokens": 40,
+                                    "total_tokens": 30200,
+                                },
+                                "total_token_usage": {
+                                    "input_tokens": 40000,
+                                    "cached_input_tokens": 16000,
+                                    "output_tokens": 300,
+                                    "reasoning_output_tokens": 60,
+                                    "total_tokens": 40300,
+                                },
+                                "model_context_window": 100000,
+                            },
+                        },
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:58:00.000Z",
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "token_count",
+                            "info": {
+                                "last_token_usage": {
+                                    "input_tokens": 80000,
+                                    "cached_input_tokens": 30000,
+                                    "output_tokens": 300,
+                                    "reasoning_output_tokens": 50,
+                                    "total_tokens": 80300,
+                                },
+                                "total_token_usage": {
+                                    "input_tokens": 120000,
+                                    "cached_input_tokens": 46000,
+                                    "output_tokens": 600,
+                                    "reasoning_output_tokens": 110,
+                                    "total_tokens": 120600,
+                                },
+                                "model_context_window": 100000,
+                            },
+                        },
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:58:59.999Z",
+                        "type": "event_msg",
+                        "payload": {"type": "compacted"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:59:00.000Z",
+                        "type": "event_msg",
+                        "payload": {"type": "context_compacted"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T03:00:00.000Z",
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "token_count",
+                            "info": {
+                                "last_token_usage": {
+                                    "input_tokens": 30000,
+                                    "cached_input_tokens": 10000,
+                                    "output_tokens": 400,
+                                    "reasoning_output_tokens": 60,
+                                    "total_tokens": 30400,
+                                },
+                                "total_token_usage": {
+                                    "input_tokens": 150000,
+                                    "cached_input_tokens": 56000,
+                                    "output_tokens": 1000,
+                                    "reasoning_output_tokens": 170,
+                                    "total_tokens": 151000,
+                                },
+                                "model_context_window": 100000,
+                            },
+                        },
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    window = SessionTaskWindow(
+        session_path=tmp_path / "rollout.jsonl",
+        turn_id="turn-1",
+        started_at="2026-04-09T02:49:25.908Z",
+        finished_at="2026-04-09T03:13:01.827Z",
+    )
+
+    normalized = normalize_activity_timeline_summary(
+        {
+            "activity_timeline": [
+                {
+                    "start": "2026-04-09T02:49:25.908Z",
+                    "end": "2026-04-09T02:56:42.046Z",
+                    "summary": "Pre-checks and strategy selection.",
+                    "key_decision": None,
+                },
+                {
+                    "start": "2026-04-09T02:56:42.046Z",
+                    "end": "2026-04-09T03:13:01.827Z",
+                    "summary": "Implementation and verification.",
+                    "key_decision": None,
+                },
+            ]
+        },
+        window=window,
+        source_path=source_path,
+    )
+
+    first_usage = normalized["activity_timeline"][0]["context_usage"]
+    second_usage = normalized["activity_timeline"][1]["context_usage"]
+    assert first_usage["model_calls"] == 1
+    assert first_usage["input_tokens"] == 10000
+    assert first_usage["max_context_window_used_percent"] == 10.0
+    assert second_usage["model_calls"] == 3
+    assert second_usage["input_tokens"] == 140000
+    assert second_usage["max_single_call_input_tokens"] == 80000
+    assert second_usage["max_context_window_used_percent"] == 80.0
+    assert normalized["source_window"]["context_usage"]["input_tokens"] == 150000
+    assert [event["type"] for event in normalized["context_events"]] == [
+        "detected_compaction",
+        "suspected_compaction",
+    ]
+    assert normalized["context_events"][0]["source_event_type"] == "context_compacted"
+    assert second_usage["model_calls"] == 3
+    assert normalized["activity_timeline"][1]["context_labels"] == ["compacted", "suspected_compaction"]
+    assert [event["type"] for event in normalized["activity_timeline"][1]["context_events"]] == [
+        "detected_compaction",
+        "suspected_compaction",
+    ]
+
+
+def test_collect_context_usage_ignores_missing_token_info(tmp_path: Path):
+    source_path = tmp_path / "activity_timeline_source.jsonl"
+    source_path.write_text(
+        json.dumps(
+            {
+                "timestamp": "2026-04-09T02:50:00.000Z",
+                "type": "event_msg",
+                "payload": {"type": "token_count", "info": None},
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    token_events, context_events = collect_context_usage_from_session_slice(source_path)
+
+    assert token_events == []
+    assert context_events == []
 
 
 def test_activity_timeline_schema_requires_nullable_key_decision():
@@ -711,6 +920,32 @@ def test_activity_timeline_success_cleans_intermediate_files(tmp_path: Path, mon
                         "timestamp": "2026-04-09T02:49:25.908Z",
                         "type": "event_msg",
                         "payload": {"type": "task_started", "turn_id": "turn-1"},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "timestamp": "2026-04-09T02:55:00.000Z",
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "token_count",
+                            "info": {
+                                "last_token_usage": {
+                                    "input_tokens": 20000,
+                                    "cached_input_tokens": 5000,
+                                    "output_tokens": 500,
+                                    "reasoning_output_tokens": 100,
+                                    "total_tokens": 20500,
+                                },
+                                "total_token_usage": {
+                                    "input_tokens": 20000,
+                                    "cached_input_tokens": 5000,
+                                    "output_tokens": 500,
+                                    "reasoning_output_tokens": 100,
+                                    "total_tokens": 20500,
+                                },
+                                "model_context_window": 100000,
+                            },
+                        },
                     }
                 ),
                 json.dumps(
@@ -792,6 +1027,9 @@ def test_activity_timeline_success_cleans_intermediate_files(tmp_path: Path, mon
         assert turn_id == "turn-1"
         assert source_path is not None and source_path.exists()
         assert summary_path is not None and summary_path.exists()
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        assert summary["activity_timeline"][0]["context_usage"]["input_tokens"] == 20000
+        assert summary["source_window"]["context_usage"]["model_calls"] == 1
         assert not (request.case_dir / "activity_timeline_summary_schema.json").exists()
         assert not (request.case_dir / "activity_timeline_summary_raw.json").exists()
         assert not (request.case_dir / "activity_timeline_summary_events.jsonl").exists()

@@ -29,6 +29,14 @@ PROMPT_OP_PLUGIN_TOKEN = "{{op_plugin_dir}}"
 CODEX_SESSION_MATCH_TOLERANCE_SEC = 300.0
 ACTIVITY_TIMELINE_SUMMARY_MIN_PHASES = 3
 ACTIVITY_TIMELINE_SUMMARY_MAX_PHASES = 6
+TOKEN_USAGE_FIELDS = (
+    "input_tokens",
+    "cached_input_tokens",
+    "output_tokens",
+    "reasoning_output_tokens",
+    "total_tokens",
+)
+COMPACTION_EVENT_PATTERN = re.compile(r"compact|compaction", re.IGNORECASE)
 
 
 class ManifestError(ValueError):
@@ -61,6 +69,190 @@ def _remove_file_if_exists(path: Path) -> None:
         path.unlink()
     except FileNotFoundError:
         return
+
+
+def _coerce_nonnegative_int(value: Any) -> int:
+    if isinstance(value, bool):
+        return 0
+    if isinstance(value, int):
+        return max(value, 0)
+    if isinstance(value, float):
+        return max(int(value), 0)
+    return 0
+
+
+def _normalize_token_usage(value: Any) -> dict[str, int]:
+    source = value if isinstance(value, dict) else {}
+    return {field: _coerce_nonnegative_int(source.get(field)) for field in TOKEN_USAGE_FIELDS}
+
+
+def _summarize_token_events(token_events: Iterable[dict[str, Any]]) -> dict[str, Any]:
+    events = list(token_events)
+    usage = {field: 0 for field in TOKEN_USAGE_FIELDS}
+    model_context_window = 0
+    max_single_call_input_tokens = 0
+    max_single_call_total_tokens = 0
+    max_context_window_used_percent = 0.0
+    ending_total_token_usage: dict[str, int] | None = None
+
+    for event in events:
+        last_token_usage = _normalize_token_usage(event.get("last_token_usage"))
+        total_token_usage = _normalize_token_usage(event.get("total_token_usage"))
+        for field in TOKEN_USAGE_FIELDS:
+            usage[field] += last_token_usage[field]
+        input_tokens = last_token_usage["input_tokens"]
+        total_tokens = last_token_usage["total_tokens"]
+        max_single_call_input_tokens = max(max_single_call_input_tokens, input_tokens)
+        max_single_call_total_tokens = max(max_single_call_total_tokens, total_tokens)
+        window = _coerce_nonnegative_int(event.get("model_context_window"))
+        if window:
+            model_context_window = max(model_context_window, window)
+            max_context_window_used_percent = max(max_context_window_used_percent, input_tokens * 100.0 / window)
+        ending_total_token_usage = total_token_usage
+
+    summary: dict[str, Any] = {
+        "model_calls": len(events),
+        **usage,
+        "max_single_call_input_tokens": max_single_call_input_tokens,
+        "max_single_call_total_tokens": max_single_call_total_tokens,
+    }
+    if model_context_window:
+        summary["model_context_window"] = model_context_window
+        summary["max_context_window_used_percent"] = round(max_context_window_used_percent, 2)
+    if ending_total_token_usage is not None:
+        summary["ending_total_token_usage"] = ending_total_token_usage
+    return summary
+
+
+def collect_context_usage_from_session_slice(source_path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    token_events: list[dict[str, Any]] = []
+    context_events: list[dict[str, Any]] = []
+    previous_token_event: dict[str, Any] | None = None
+
+    try:
+        lines = source_path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return token_events, context_events
+
+    for line in lines:
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        timestamp = str(record.get("timestamp", "")).strip()
+        record_type = str(record.get("type", "")).strip()
+        payload = record.get("payload", {})
+        payload = payload if isinstance(payload, dict) else {}
+        payload_type = str(payload.get("type", "")).strip()
+
+        compact_source_type = payload_type or record_type
+        if timestamp and COMPACTION_EVENT_PATTERN.search(compact_source_type):
+            context_events.append(
+                {
+                    "type": "detected_compaction",
+                    "timestamp": timestamp,
+                    "source_event_type": compact_source_type,
+                }
+            )
+
+        if record_type != "event_msg" or payload_type != "token_count":
+            continue
+        info = payload.get("info")
+        if not isinstance(info, dict):
+            continue
+
+        token_event = {
+            "timestamp": timestamp,
+            "last_token_usage": _normalize_token_usage(info.get("last_token_usage")),
+            "total_token_usage": _normalize_token_usage(info.get("total_token_usage")),
+            "model_context_window": _coerce_nonnegative_int(info.get("model_context_window")),
+        }
+        token_events.append(token_event)
+
+        previous_usage = previous_token_event.get("last_token_usage", {}) if previous_token_event else {}
+        previous_input_tokens = _coerce_nonnegative_int(previous_usage.get("input_tokens"))
+        current_input_tokens = token_event["last_token_usage"]["input_tokens"]
+        previous_window = _coerce_nonnegative_int(
+            previous_token_event.get("model_context_window") if previous_token_event else 0
+        )
+        current_window = token_event["model_context_window"]
+        context_window = previous_window or current_window
+        input_drop = previous_input_tokens - current_input_tokens
+        if (
+            timestamp
+            and previous_input_tokens
+            and current_input_tokens
+            and input_drop >= 20000
+            and current_input_tokens <= previous_input_tokens * 0.6
+            and (previous_input_tokens >= 50000 or (context_window and previous_input_tokens >= context_window * 0.3))
+        ):
+            context_events.append(
+                {
+                    "type": "suspected_compaction",
+                    "timestamp": timestamp,
+                    "reason": "last input token count dropped after sustained context growth",
+                    "before_input_tokens": previous_input_tokens,
+                    "after_input_tokens": current_input_tokens,
+                }
+            )
+        previous_token_event = token_event
+
+    return token_events, _dedupe_context_events(context_events)
+
+
+def _timestamp_distance_seconds(left: str, right: str) -> float | None:
+    try:
+        return abs((_parse_iso8601_timestamp(left) - _parse_iso8601_timestamp(right)).total_seconds())
+    except ValueError:
+        return None
+
+
+def _prefer_context_event(left: dict[str, Any], right: dict[str, Any]) -> dict[str, Any]:
+    source_priority = {
+        "context_compacted": 2,
+        "compacted": 1,
+    }
+    left_source = str(left.get("source_event_type", ""))
+    right_source = str(right.get("source_event_type", ""))
+    if source_priority.get(right_source, 0) > source_priority.get(left_source, 0):
+        return right
+    return left
+
+
+def _dedupe_context_events(context_events: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    deduped: list[dict[str, Any]] = []
+    for event in context_events:
+        if event.get("type") != "detected_compaction":
+            deduped.append(event)
+            continue
+        timestamp = str(event.get("timestamp", ""))
+        duplicate_index = None
+        for index, existing in enumerate(deduped):
+            if existing.get("type") != "detected_compaction":
+                continue
+            distance = _timestamp_distance_seconds(str(existing.get("timestamp", "")), timestamp)
+            if distance is not None and distance <= 1.0:
+                duplicate_index = index
+                break
+        if duplicate_index is None:
+            deduped.append(event)
+        else:
+            deduped[duplicate_index] = _prefer_context_event(deduped[duplicate_index], event)
+    return deduped
+
+
+def _context_event_label(event: dict[str, Any]) -> str:
+    if event.get("type") == "detected_compaction":
+        return "compacted"
+    return str(event.get("type", "")).strip()
+
+
+def _timestamp_in_activity_span(timestamp: str, start: str, end: str, include_end: bool) -> bool:
+    if include_end:
+        return start <= timestamp <= end
+    return start <= timestamp < end
 
 
 def resolve_codex_sessions_root() -> Path:
@@ -228,16 +420,42 @@ def normalize_activity_timeline_summary(
     source_path: Path,
 ) -> dict[str, Any]:
     normalized_items: list[dict[str, Any]] = []
-    for item in raw_summary.get("activity_timeline", ()):
+    token_events, context_events = collect_context_usage_from_session_slice(source_path)
+    raw_items = list(raw_summary.get("activity_timeline", ()))
+    for index, item in enumerate(raw_items):
         start = str(item["start"]).strip()
         end = str(item["end"]).strip()
         summary = str(item["summary"]).strip()
+        activity_token_events = [
+            event
+            for event in token_events
+            if _timestamp_in_activity_span(
+                str(event.get("timestamp", "")),
+                start,
+                end,
+                include_end=index == len(raw_items) - 1,
+            )
+        ]
+        activity_context_events = [
+            event
+            for event in context_events
+            if _timestamp_in_activity_span(
+                str(event.get("timestamp", "")),
+                start,
+                end,
+                include_end=index == len(raw_items) - 1,
+            )
+        ]
         normalized: dict[str, Any] = {
             "start": start,
             "end": end,
             "elapsed_time": format_elapsed_minutes(_seconds_between(start, end)),
             "summary": summary,
+            "context_usage": _summarize_token_events(activity_token_events),
         }
+        if activity_context_events:
+            normalized["context_labels"] = sorted({_context_event_label(event) for event in activity_context_events})
+            normalized["context_events"] = activity_context_events
         key_decision_value = item.get("key_decision")
         key_decision = ""
         if key_decision_value is not None:
@@ -253,8 +471,10 @@ def normalize_activity_timeline_summary(
             "start": window.started_at,
             "end": window.finished_at,
             "elapsed_time": format_elapsed_minutes(_seconds_between(window.started_at, window.finished_at)),
+            "context_usage": _summarize_token_events(token_events),
         },
         "activity_timeline_source_path": str(source_path),
+        "context_events": context_events,
         "activity_timeline": normalized_items,
     }
 
