@@ -54,7 +54,6 @@ When using this skill to develop an ACLNN operator, **create a TODOLIST** and ex
   - **Important**: public `mint`/`ops`/`nn`/`Tensor` interfaces must not skip this step. Only internal operators may skip it; see the conditional skip table.
 - [ ] **[Step 7] Feature document finalization** `🔒 must not be skipped`: complete (`feature-document.md#feature-code-change-summary`) and update (`feature-document.md#feature-task-list`)
   - Even if intermediate steps are skipped or deferred, the Feature document must still be completed and delivered to the user.
-- [ ] **[Step 8] Compilation**: use "bash build.sh -e ascend -j128" to build MindSpore, and fix compile error.
 
 ## Validation Loop (Evidence Required At Every Step) `🔒 must not be skipped`
 
