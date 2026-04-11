@@ -1,6 +1,6 @@
 ---
 name: yaml-helper
-description: "Reference for MindSpore operator-definition YAML files and field meanings. Use when reliable context are needed about files under `mindspore/ops/op_def/yaml`, the meaning of YAML keys, or what code is auto-generated from these YAML definitions. Keywords: yaml, op definition, auto generation, primitive class, function, dispatch, aclnn."
+description: "Reference for MindSpore operator-definition YAML files and field meanings, contains yaml and field explanation, use cases and examples. Use when op/api/doc yaml files needs to be modified or created. Use when reliable context are needed for MindSpore op/api/doc yaml, the meaning of YAML keys, or what code is auto-generated from these YAML definitions. Keywords: yaml, op definition, auto generation, primitive class, function, dispatch, aclnn."
 ---
 
 # YAML Helper

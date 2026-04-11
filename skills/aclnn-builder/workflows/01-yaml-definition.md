@@ -20,7 +20,7 @@ Define the required YAML for the operator (`op_def` + `api_def` + `function_doc`
 
 ## OP Yaml
 
-Create yaml for new primitive or modify yaml of existing primitive for aclnn dispatch. Refer to skill `yaml-helper` for yaml-related knowledge.
+**Must** load skill `yaml-helper` for yaml knowledge. Create yaml for new primitive or modify yaml of existing primitive for aclnn dispatch. 
 
 **This is where the path decision lands in YAML**
 
