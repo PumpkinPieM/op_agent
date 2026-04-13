@@ -32,7 +32,7 @@ When using this skill to develop an ACLNN operator, **create a TODOLIST** and ex
   - After each later step, backfill the corresponding section of the Feature document
 - [ ] **[Step 1](workflows/01-yaml-definition.md)**: YAML definition -> backfill Feature(`feature-document.md#feature-yaml-definition`)
   - Input: PTA source review report, Feature document
-  - Output: `op_def` + doc YAML files
+  - Output: `op_def` for Primitive and  `api_def` for Tensor method or overloaded interface
 - [ ] **[Step 2](workflows/02-general-infer.md)**: GeneralInfer + infer UT -> backfill Feature (`feature-document.md#feature-dynamic-shape`) / (`feature-document.md#feature-validation-and-errors`) / (`feature-document.md#feature-test-plan`)
   - Input: YAML, PTA output-shape logic
   - Output: Infer implementation, C++ Infer UT test

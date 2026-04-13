@@ -58,6 +58,7 @@ mindspore.mint.xxx(
 <a id="feature-yaml-definition"></a>
 ## 4. OP Yaml And API Yaml Definition (Reference) `[After Step 1]`
 
+op_def yaml:
 ```yaml
 # operator xxx
 xxx:
@@ -68,6 +69,17 @@ xxx:
     dispatch:
         enable: True
         Ascend: XxxAscend
+```
+
+api_def yaml(for tensor method and/or overloaded interface):
+```yaml
+xxx:
+  op_yaml: xxx_op.yaml
+  py_method: tensor_xxx
+  Ascend: pyboost
+  CPU: py_method
+  GPU: py_method
+  interface: tensor, function
 ```
 
 <a id="feature-constraints"></a>

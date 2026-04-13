@@ -126,6 +126,10 @@ If the operator supports `op_extra_reference_inputs_func` (extra accuracy scenar
 - PTA: `torch_npu.npu.max_memory_allocated()`
 - Measure at the same stage. -->
 
+### Extra Setting
+
+- For function that doesn't have gradient, set `is_differentiable=False` in the OpInfo.
+
 ---
 
 <a id="op-info-generation-gate"></a>
