@@ -6,52 +6,52 @@ Path convention: unless stated otherwise, `reference.md` means `../_shared/refer
 
 Complete the English `function_doc` (YAML) and the **Chinese RST documentation**, keeping the two strictly aligned.
 
-> **Common omission**: the English `function_doc` is usually already created in the Step 1 YAML,
-> so the agent may wrongly think "the documentation step is already done" and **skip the Chinese RST**.
-> **English doc YAML does not mean the documentation step is complete**. Chinese RST is a separate deliverable and must be confirmed independently.
-
 **What EN/CN consistency means**: parameter names, default values, required/optional status, semantics, and examples must match.
 Each language should still follow its own documentation conventions; literal sentence-by-sentence identity is not required.
 
 ## Inputs
 
-- **YAML definition**: the `function_doc` section created in Step 1
-- **Operator interface implementation**: parameters, defaults, and examples
+- **OP and API(optional) YAML definition**
 
 ## Outputs (Two Documentation Types + Interface Lists, Confirmed One By One)
 
-| Type | File Location | Requirement | Status |
+| Type | File Location |
 | --- | --- | --- | --- |
-| **English `function_doc`** | `ops/op_def/yaml/doc/{op}_doc.yaml` | `[MUST]` | ✅ created in Step 1 / needs refinement |
-| **Chinese RST** | `docs/api/api_python/ops/*.rst` (or the matching `mint` / `nn` directory) | `[MUST]` required for public APIs | ✅ written / ✅ already exists / ❌ not written |
-| **Interface list** | matching `mindspore.xxx.rst` index file | `[MUST]` | both English and Chinese lists must be updated in alphabetical order |
+| **English `function_doc`** | `ops/op_def/yaml/doc/{op}_doc.yaml` |
+| **Chinese RST** | `docs/api/api_python/ops/*.rst` (or the matching `mint` / `nn` directory) |
+| **Interface Registration List** | `docs/api/api_python/mindspore.xxx.rst`, `docs/api/api_python_en/mindspore.xxx.rst` |
 
 ---
 
 ## Steps
 
-### Step 1: Refine The English `function_doc`
+### Step 1: Public Interface Registration
 
-Make sure the YAML `function_doc` created in Step 1 is complete:
+For functional interface, register public functional interface in `docs/api/api_python/mindspore.mint.rst` for Chinese, and `docs/api/api_python_en/mindspore.mint.rst` for English.
+
+Only public interfaces should be registered. The internal implementation, e.g. interfaces with suffix `_ext`, or interfaces like `xxx_tensor` and `xxx_scalar` that are used in `xxx` to deal with different inputs, should never be registered. Only functional interface should be registered here, don't register for Primitive.
+
+Tensor method should be registered in `docs/api/api_python/mindspore/mindspore.Tensor.rst` for Chinese and `docs/api/api_python_en/mindspore/mindspore.Tensor.rst` for English.
+
+
+### Step 2: Add The English Doc
+For newly added `xxx.yaml` in `mindspore/ops/api_def`, add docs in `mindspore/ops/api_def/function_doc` and `mindspore/ops/api_def/method_doc`, according to the interface type.
+
+If there's no corresonding `api_def` defined for the op, for each newly added `xxx_op.yaml` in `mindspore/ops/op_def`, add the corresponding doc in `mindspore/ops/op_def/yaml/doc`. 
+
+Make sure the doc contains following sections:
 - `desc`: short description of the operator; for public APIs, include principles, formulas, paper references, or other necessary background when appropriate
 - `args`: description for each parameter
 - `returns`: return-value description
 - `examples`: a complete runnable example including imports
 
-### Step 2: Chinese RST (Required For Public APIs)
+### Step 2: Chinese RST (`docs/api/api_python`)
 
-> ⚠️ **This is the step most likely to be missed.** Search the repository first to see whether a matching Chinese RST already exists.
-
-Follow the rules in `reference.md#documentation-reference`:
-- file location: under `docs/api/api_python/ops/` or the corresponding `mint` / `nn` directory
+- file location: under `docs/api/api_python/mint/`
 - **first inspect existing Chinese RST files for similar operators** to confirm the format and directory structure
 - **filename, in-file title, and interface definition must match exactly** (for functional interfaces, usually only the filename has the extra `func_` prefix)
 - the underline of `=` below the title must be at least as long as the title itself
 - update interface index files in alphabetical order
-
-**If an older Chinese RST already exists** (for example `acos` exists but `acos_ext` does not), confirm:
-- whether the old document needs to be updated to point to the new interface
-- whether the new interface, such as `mint.acos`, needs its own standalone Chinese RST
 
 ### Step 3: Consistency Check (`reference.md#documentation-general-principles`)
 
@@ -62,16 +62,6 @@ Follow the rules in `reference.md#documentation-reference`:
 | Required/optional status | ✅ consistent | ✅ consistent |
 | Examples | ✅ runnable | ✅ runnable |
 
-### Step 4: Confirm The Target Location (`reference.md#documentation-output-mapping`)
-
-| Interface Type | English Location | Chinese Location |
-| --- | --- | --- |
-| functional | implementation `.py` | `docs/api/.../ops/func_*.rst` |
-| mint | mint interface implementation / list | `docs/api/.../mint/*.rst` |
-| nn | `nn/*.py` | `docs/api/.../nn/*.rst` |
-| Tensor method | `tensor.py` | `docs/api/.../Tensor/` |
-| `ops` Primitive | Primitive implementation / list | `docs/api/.../ops/mindspore.ops.*.rst` |
-
 ---
 
 ## 🔒 Mandatory Check Before Marking Step 6 Complete
@@ -80,8 +70,8 @@ Follow the rules in `reference.md#documentation-reference`:
 Documentation deliverable checklist:
 
 English function_doc (YAML):
-  - File path: ops/op_def/yaml/doc/{op}_doc.yaml
-  - Status: ✅ created in Step 1 and complete / needs refinement (missing fields: ___)
+  - File path: mindspore/ops/api_def/function_doc/{op}_doc.yaml, mindspore/ops/api_def/tensor_doc/{op}_doc.yaml, ops/op_def/yaml/doc/{op}_doc.yaml
+  - Status: ✅ created / ❌ not written (reason: ___)
 
 Chinese RST:
   - File path: docs/api/api_python/ops/mindspore.ops.func_{op}.rst (or the matching mint/Tensor directory)
