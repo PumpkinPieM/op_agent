@@ -38,15 +38,31 @@ dispatch:
   Ascend: OpNameAscend    # specify the customize kernel function name
 ```
 
-## Tensor Method
+## API Yaml
 
-For tensor method, it's interface should be defined in api yaml in `mindspore/ops/api_def`. Add the api yaml if it doens't exist. After registering the tensor interface in api yaml, check if there's old tensor method registration in the Tensor class in `mindspore/python/mindspore/common/tensor.py`, and delete it.
+### Tensor Method
+
+For tensor method, it's interface should be defined in api yaml in `mindspore/ops/api_def`. Add the api yaml if it doens't exist. The `py_method` field requires a python fallback for the interface. Register it in `mindspore/python/mindspore/ops/tensor_method.py`. If no special reason, just call the op of the `op_yaml` field in the python method.
+
+After registering the tensor interface in api yaml, check if there's old tensor method registration in the Tensor class in `mindspore/python/mindspore/common/tensor.py`, delete it.
 
 **Important: do not skip this step just because there's already a handwritten Python interface for the tensor method!!**
 
-## Overloaded interface
+### Overloaded interface
 
 For interface that have different signatures, use api yaml to implement the dispatch behaviour.
+
+### API Doc
+
+For newly added `xxx.yaml` in `mindspore/ops/api_def`, corresponding docs are required in `mindspore/ops/api_def/function_doc` and `mindspore/ops/api_def/method_doc`, according to the interface type. Otherwise running `gen_ops.py` throws error. For now, just add placeholder files to pass the check. 
+
+```yaml
+xxx:
+  description: |
+    placeholder
+```
+
+Real docs are to be added in later step.
 
 ## `gen_ops.py`
 
