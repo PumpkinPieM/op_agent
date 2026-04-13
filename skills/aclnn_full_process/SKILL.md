@@ -1,6 +1,6 @@
 ---
 name: aclnn_full_process
-description: invoke this skill only when it's mentioned directly.
+description: Use this skill only when the user mention it directly. Auto-invocation is disabled.
 ---
 
 Execute aclnn adaptation-task end-to-end. Finish the whole process, don't ask unless there's vital problem or key information missing.
