@@ -447,8 +447,67 @@ def test_claudecode_executor_builds_command(tmp_path: Path):
         assert command[:5] == ["claude", "-p", "--output-format", "json", "--permission-mode"]
         assert "--model" in command
         assert str(op_plugin_root) in command
-        assert command[-1] == "hello"
+        assert "hello" not in command
     finally:
+        from framework import cleanup_prepared_repos
+
+        cleanup_prepared_repos(prepared)
+
+
+def test_claudecode_executor_passes_prompt_on_stdin(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    repo_root = tmp_path / "repo"
+    op_plugin_root = tmp_path / "op-plugin"
+    init_repo(repo_root, {"tracked.txt": "base\n"})
+    op_plugin_root.mkdir(parents=True, exist_ok=True)
+    repo_spec = RepoSpec(name="mindspore", source=str(repo_root))
+    case = CaseSpec(case_id="cmd_case", prompt="test", repos=(repo_spec,))
+    prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
+    captured: dict[str, object] = {}
+
+    class FakePopen:
+        def __init__(self, command: list[str], **kwargs) -> None:
+            captured["command"] = command
+            captured["env"] = kwargs.get("env")
+            captured["stdin"] = kwargs.get("stdin")
+            self.stdout = kwargs["stdout"]
+            self.returncode = 0
+
+        def communicate(self, prompt: str | None = None, timeout: int | None = None) -> tuple[str, str]:
+            captured["prompt"] = prompt
+            captured["timeout"] = timeout
+            self.stdout.write('{"result":"ok"}\n')
+            self.stdout.flush()
+            return "", ""
+
+    monkeypatch.setattr(framework.subprocess, "Popen", FakePopen)
+    monkeypatch.setenv("CODEX_SANDBOX_NETWORK_DISABLED", "1")
+
+    try:
+        executor = ClaudeCodeExecutor(claudecode_bin="claude")
+        request = ExecutionRequest(
+            case=case,
+            prompt="hello",
+            prompt_path=tmp_path / "prompt.txt",
+            case_dir=tmp_path / "case",
+            run_dir=tmp_path / "run",
+            artifact_dir=tmp_path / "artifacts",
+            op_plugin_dir=op_plugin_root,
+            prepared_repos=prepared,
+        )
+        request.case_dir.mkdir(parents=True, exist_ok=True)
+        result = executor.run(request)
+
+        assert result.returncode == 0
+        assert isinstance(captured["env"], dict)
+        assert "CODEX_SANDBOX_NETWORK_DISABLED" not in captured["env"]
+        assert captured["stdin"] == subprocess.PIPE
+        assert captured["prompt"] == "hello"
+        assert captured["timeout"] == case.timeout_sec
+        assert "hello" not in captured["command"]
+        assert result.last_message_path is not None
+        assert result.last_message_path.read_text(encoding="utf-8") == '{"result":"ok"}\n'
+    finally:
+        monkeypatch.undo()
         from framework import cleanup_prepared_repos
 
         cleanup_prepared_repos(prepared)

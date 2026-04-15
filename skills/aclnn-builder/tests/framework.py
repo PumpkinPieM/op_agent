@@ -578,6 +578,12 @@ def _run_command(args: list[str], cwd: Path, check: bool = True) -> subprocess.C
     )
 
 
+def _external_agent_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env.pop("CODEX_SANDBOX_NETWORK_DISABLED", None)
+    return env
+
+
 def _is_git_repo(path: Path) -> bool:
     if not path.exists():
         return False
@@ -1048,6 +1054,7 @@ class OpenCodeExecutor:
             process = subprocess.Popen(
                 command,
                 cwd=execution_cwd,
+                env=_external_agent_env(),
                 stdout=stdout_fp,
                 stderr=stderr_fp,
                 text=True,
@@ -1107,7 +1114,6 @@ class ClaudeCodeExecutor:
             command.extend(["--add-dir", str(repo.checkout_path)])
         if request.op_plugin_dir is not None:
             command.extend(["--add-dir", str(request.op_plugin_dir)])
-        command.append(request.prompt)
         return command
 
     def run(self, request: ExecutionRequest) -> ExecutionResult:
@@ -1127,12 +1133,14 @@ class ClaudeCodeExecutor:
             process = subprocess.Popen(
                 command,
                 cwd=execution_cwd,
+                env=_external_agent_env(),
+                stdin=subprocess.PIPE,
                 stdout=stdout_fp,
                 stderr=stderr_fp,
                 text=True,
             )
             try:
-                process.communicate(timeout=request.case.timeout_sec)
+                process.communicate(request.prompt, timeout=request.case.timeout_sec)
             except subprocess.TimeoutExpired:
                 timed_out = True
                 log_progress(
