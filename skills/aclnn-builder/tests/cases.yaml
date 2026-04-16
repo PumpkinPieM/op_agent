@@ -10,7 +10,7 @@ cases:
     description: "Template case showing the contract for a real aclnn-builder skill run."
     timeout_sec: 1800
     prompt: |
-      Use $aclnn_builder to adapt `mindspore.mint.abs` end to end. Just code generation, don't compile.
+      Use {{skill:aclnn_builder}} to adapt `mindspore.mint.abs` end to end. Just code generation, don't compile.
 
       Operate only on the isolated MindSpore checkout prepared for this task:
       - target repo: {{repo:mindspore}}
@@ -32,7 +32,7 @@ cases:
     description: "celu, no mint, have primitive; auto dispatch to be added."
     timeout_sec: 1800
     prompt: |
-      Use $aclnn_builder to adapt `mindspore.mint.nn.functional.celu` end to end. Just code generation, don't compile.
+      Use {{skill:aclnn_builder}} to adapt `mindspore.mint.nn.functional.celu` end to end. Just code generation, don't compile.
 
       Operate only on the isolated MindSpore checkout prepared for this task:
       - target repo: {{repo:mindspore}}
@@ -57,7 +57,7 @@ cases:
     description: "range, have primitive that doesn't match aclnn; _ext op to be added with customized kernel"
     timeout_sec: 1800
     prompt: |
-      Use $aclnn_builder to adapt `mindspore.mint.range` end to end. Just code generation, don't compile.
+      Use {{skill:aclnn_builder}} to adapt `mindspore.mint.range` end to end. Just code generation, don't compile.
 
       Operate only on the isolated MindSpore checkout prepared for this task:
       - target repo: {{repo:mindspore}}
@@ -90,7 +90,7 @@ cases:
       Difficult case.
     timeout_sec: 1800
     prompt: |
-      Use $aclnn_builder to adapt `Tensor.aminmax` for aclnn kernel end to end. Just code generation, don't compile.
+      Use {{skill:aclnn_builder}} to adapt `Tensor.aminmax` for aclnn kernel end to end. Just code generation, don't compile.
 
       Operate only on the isolated MindSpore checkout prepared for this task:
       - target repo: {{repo:mindspore}}

@@ -24,8 +24,11 @@ except ModuleNotFoundError:
 TESTS_DIR = Path(__file__).resolve().parent
 DEFAULT_MANIFEST = TESTS_DIR / "cases.yaml"
 PROMPT_PLACEHOLDER = re.compile(r"\{\{\s*(repo:([A-Za-z0-9_.-]+)|artifact_dir|case_dir|run_dir)\s*\}\}")
+SKILL_PLACEHOLDER = re.compile(r"\{\{\s*skill:([A-Za-z0-9_.-]+)\s*\}\}")
 MS_ROOT_TOKENS = {"", "{{ms_root}}", "$MS_ROOT", "${MS_ROOT}"}
 PROMPT_OP_PLUGIN_TOKEN = "{{op_plugin_dir}}"
+CODEX_SKILL_TRIGGER_PREFIX = "$"
+SLASH_SKILL_TRIGGER_PREFIX = "/"
 CODEX_SESSION_MATCH_TOLERANCE_SEC = 300.0
 ACTIVITY_TIMELINE_SUMMARY_MIN_PHASES = 3
 ACTIVITY_TIMELINE_SUMMARY_MAX_PHASES = 6
@@ -36,6 +39,8 @@ class ManifestError(ValueError):
 
 
 class Executor(Protocol):
+    skill_trigger_prefix: str
+
     def run(self, request: "ExecutionRequest") -> "ExecutionResult":
         ...
 
@@ -542,6 +547,7 @@ def render_prompt(
     case_dir: Path,
     run_dir: Path,
     op_plugin_dir: Path | None,
+    skill_trigger_prefix: str = CODEX_SKILL_TRIGGER_PREFIX,
 ) -> str:
     if PROMPT_OP_PLUGIN_TOKEN in template:
         if op_plugin_dir is None:
@@ -565,7 +571,16 @@ def render_prompt(
             return str(run_dir)
         raise ManifestError(f"Unsupported prompt placeholder: {token}")
 
-    return PROMPT_PLACEHOLDER.sub(replace, template)
+    rendered = PROMPT_PLACEHOLDER.sub(replace, template)
+    return render_skill_placeholders(rendered, skill_trigger_prefix=skill_trigger_prefix)
+
+
+def render_skill_placeholders(template: str, skill_trigger_prefix: str) -> str:
+    prefix = skill_trigger_prefix.strip()
+    if prefix not in {CODEX_SKILL_TRIGGER_PREFIX, SLASH_SKILL_TRIGGER_PREFIX}:
+        raise ManifestError(f"Unsupported skill trigger prefix: {skill_trigger_prefix!r}")
+
+    return SKILL_PLACEHOLDER.sub(lambda match: f"{prefix}{match.group(1)}", template)
 
 
 def _run_command(args: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -787,6 +802,8 @@ def compare_expected_changes(expected: ExpectedChangeSet, actual: ExpectedChange
 
 
 class CodexExecutor:
+    skill_trigger_prefix = CODEX_SKILL_TRIGGER_PREFIX
+
     def __init__(
         self,
         codex_bin: str = "codex",
@@ -1010,6 +1027,8 @@ class CodexExecutor:
 
 
 class OpenCodeExecutor:
+    skill_trigger_prefix = SLASH_SKILL_TRIGGER_PREFIX
+
     def __init__(
         self,
         opencode_bin: str = "opencode",
@@ -1085,6 +1104,8 @@ class OpenCodeExecutor:
 
 
 class ClaudeCodeExecutor:
+    skill_trigger_prefix = SLASH_SKILL_TRIGGER_PREFIX
+
     def __init__(
         self,
         claudecode_bin: str = "claude",
@@ -1229,6 +1250,7 @@ class SkillTestRunner:
                     case_dir=case_dir,
                     run_dir=run_dir,
                     op_plugin_dir=self.op_plugin_dir,
+                    skill_trigger_prefix=getattr(self.executor, "skill_trigger_prefix", CODEX_SKILL_TRIGGER_PREFIX),
                 )
                 prompt_path = case_dir / "prompt.txt"
                 prompt_path.parent.mkdir(parents=True, exist_ok=True)

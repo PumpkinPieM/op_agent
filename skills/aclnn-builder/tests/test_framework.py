@@ -126,7 +126,7 @@ def test_render_prompt_replaces_repo_and_artifact_placeholders(tmp_path: Path):
     repo_spec = RepoSpec(name="mindspore", source=str(repo_root))
     case = CaseSpec(
         case_id="prompt_case",
-        prompt="repo={{repo:mindspore}} artifact={{artifact_dir}} op={{op_plugin_dir}}",
+        prompt="skill={{skill:aclnn_builder}} repo={{repo:mindspore}} artifact={{artifact_dir}} op={{op_plugin_dir}}",
         repos=(repo_spec,),
     )
     prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
@@ -142,6 +142,36 @@ def test_render_prompt_replaces_repo_and_artifact_placeholders(tmp_path: Path):
         assert str(prepared["mindspore"].checkout_path) in prompt
         assert str(tmp_path / "artifacts") in prompt
         assert str(op_plugin_root) in prompt
+        assert "skill=$aclnn_builder" in prompt
+    finally:
+        from framework import cleanup_prepared_repos
+
+        cleanup_prepared_repos(prepared)
+
+
+def test_render_prompt_uses_slash_skill_marker_for_slash_agents(tmp_path: Path):
+    repo_root = tmp_path / "repo"
+    op_plugin_root = tmp_path / "op-plugin"
+    init_repo(repo_root, {"tracked.txt": "base\n"})
+    op_plugin_root.mkdir(parents=True, exist_ok=True)
+    repo_spec = RepoSpec(name="mindspore", source=str(repo_root))
+    case = CaseSpec(
+        case_id="prompt_case",
+        prompt="Use {{skill:aclnn_builder}} and {{skill:other.skill-name}}",
+        repos=(repo_spec,),
+    )
+    prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
+    try:
+        prompt = render_prompt(
+            case.prompt,
+            prepared_repos=prepared,
+            artifact_dir=tmp_path / "artifacts",
+            case_dir=tmp_path / "case",
+            run_dir=tmp_path / "run",
+            op_plugin_dir=op_plugin_root,
+            skill_trigger_prefix="/",
+        )
+        assert "Use /aclnn_builder and /other.skill-name" == prompt
     finally:
         from framework import cleanup_prepared_repos
 

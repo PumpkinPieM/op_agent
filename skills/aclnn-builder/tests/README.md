@@ -26,7 +26,7 @@ Per case, the runner:
 
 1. creates a new case directory under `aclnn_skill_test_runs/<run_id>/<case_id>/`
 2. prepares isolated checkouts for each declared repo
-3. renders the case prompt with placeholders such as `{{repo:mindspore}}` and `{{artifact_dir}}`
+3. renders the case prompt with placeholders such as `{{repo:mindspore}}`, `{{artifact_dir}}`, and `{{skill:aclnn_builder}}`
 4. invokes `codex exec` in an ephemeral session
 5. collects the git diff for each isolated repo
 6. validates the actual `added/modified/deleted` source files against the case contract
@@ -41,6 +41,7 @@ The manifest lives in `cases.yaml`.
 Important fields:
 
 - `prompt`: the exact task prompt
+- `{{skill:<name>}}`: skill invocation placeholder; renders as `$<name>` for Codex and `/<name>` for OpenCode/Claude Code
 - `repos[*].source`: source repo path; for the primary `mindspore` repo this may be omitted and will default to the invocation cwd or `--ms-root`
 - `repos[*].expected_changes`: required source file contract; every listed path must appear in the matching add/modify/delete bucket, while extra diff entries are allowed
 - `artifact_globs`: files that may appear but should not count as source changes
