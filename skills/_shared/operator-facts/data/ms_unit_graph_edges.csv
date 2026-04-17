@@ -4,8 +4,6 @@ aminmax::public_api::max::1,composite::ops/function/array_func.py::aminmax,publi
 aminmax::unit::reshape::2,composite::ops/function/array_func.py::aminmax,unit,branch::reshape_op.yaml::Reshape,2,axis is None and keepdims is True,reshape,mindspore/python/mindspore/ops/function/array_func.py
 aminmax::unit::argmin_with_value_op::3,composite::ops/function/array_func.py::aminmax,unit,branch::argmin_with_value_op.yaml::ArgMinWithValue,3,axis is not None,argmin_with_value_op,mindspore/python/mindspore/ops/function/array_func.py
 aminmax::unit::argmax_with_value_op::4,composite::ops/function/array_func.py::aminmax,unit,branch::argmax_with_value_op.yaml::ArgMaxWithValue,4,axis is not None,argmax_with_value_op,mindspore/python/mindspore/ops/function/array_func.py
-arange::unit::_get_max_type::0,composite::ops/function/array_func.py::arange,unit,composite::ops/function/array_func.py::_get_max_type,0,,_get_max_type,mindspore/python/mindspore/ops/function/array_func.py
-arange::unit::_cast_type::1,composite::ops/function/array_func.py::arange,unit,composite::ops/function/array_func.py::_cast_type,1,,_cast_type,mindspore/python/mindspore/ops/function/array_func.py
 diagflat::unit::diag::0,composite::ops/function/array_func.py::diagflat,unit,branch::diag_ext_op.yaml::DiagExt,0,not (input.size == 0),diag,mindspore/python/mindspore/ops/function/array_func.py
 diagflat::unit::zeros::1,composite::ops/function/array_func.py::diagflat,unit,branch::zeros_op.yaml::Zeros,1,not (input.size == 0) and offset != 0,zeros,mindspore/python/mindspore/ops/function/array_func.py
 diagflat::unit::cat::2,composite::ops/function/array_func.py::diagflat,unit,branch::concat_op.yaml::Concat,2,not (input.size == 0) and offset != 0 and offset < 0,cat,mindspore/python/mindspore/ops/function/array_func.py
@@ -117,8 +115,10 @@ gumbel_softmax::unit::_check_positive_float::4,composite::ops/function/math_func
 gumbel_softmax::unit::_check_int_range::5,composite::ops/function/math_func.py::gumbel_softmax,unit,composite::ops/function/math_func.py::_check_int_range,5,hard,_check_int_range,mindspore/python/mindspore/ops/function/math_func.py
 gumbel_softmax::unit::_check_int_range::6,composite::ops/function/math_func.py::gumbel_softmax,unit,composite::ops/function/math_func.py::_check_int_range,6,not (hard),_check_int_range,mindspore/python/mindspore/ops/function/math_func.py
 gumbel_softmax::unit::neg::7,composite::ops/function/math_func.py::gumbel_softmax,unit,branch::neg_op.yaml::Neg,7,,neg,mindspore/python/mindspore/ops/function/math_func.py
+hann_window::unit::arange::0,composite::ops/function/math_func.py::hann_window,unit,branch::arange_op.yaml::Arange,0,not (window_length <= 1),arange,mindspore/python/mindspore/ops/function/math_func.py
 isposinf::unit::_check_is_tensor::0,composite::ops/function/math_func.py::isposinf,unit,composite::ops/function/math_func.py::_check_is_tensor,0,,_check_is_tensor,mindspore/python/mindspore/ops/function/math_func.py
 isreal::unit::_check_is_tensor::0,composite::ops/function/math_func.py::isreal,unit,composite::ops/function/math_func.py::_check_is_tensor,0,,_check_is_tensor,mindspore/python/mindspore/ops/function/math_func.py
+kaiser_window::unit::arange::0,composite::ops/function/math_func.py::kaiser_window,unit,branch::arange_op.yaml::Arange,0,not (window_length <= 1),arange,mindspore/python/mindspore/ops/function/math_func.py
 logdet::unit::det::0,composite::ops/function/math_func.py::logdet,unit,composite::ops/function/math_func.py::det,0,,det,mindspore/python/mindspore/ops/function/math_func.py
 logspace::unit::cast::0,composite::ops/function/math_func.py::logspace,unit,branch::cast_op.yaml::Cast,0,"isinstance(start, float)",cast,mindspore/python/mindspore/ops/function/math_func.py
 logspace::unit::cast::1,composite::ops/function/math_func.py::logspace,unit,branch::cast_op.yaml::Cast,1,"isinstance(end, float)",cast,mindspore/python/mindspore/ops/function/math_func.py

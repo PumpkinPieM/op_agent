@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.ops.kaiser_window",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-17T17:08:56+08:00",
+  "generated_at": "2026-04-17T18:27:04+08:00",
   "entry": {
     "public_api": "mindspore.ops.kaiser_window",
     "public_surface": "mindspore.ops",
@@ -15,6 +15,28 @@
     "resolver_type": "alias",
     "target_symbol": "kaiser_window",
     "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
-    "components": []
+    "components": [
+      {
+        "component_type": "unit",
+        "condition": "not (window_length <= 1)",
+        "via_symbol": "arange",
+        "unit_id": "branch::arange_op.yaml::Arange",
+        "unit_name": "Arange",
+        "unit_type": "branch",
+        "op": "arange",
+        "primitive": "Arange",
+        "yaml_path": "mindspore/ops/op_def/yaml/arange_op.yaml",
+        "coverage": {
+          "aclnn": [
+            "aclnnArange"
+          ],
+          "infer": true,
+          "kbk": true,
+          "pyboost": true,
+          "bprop": true,
+          "bprop_units": []
+        }
+      }
+    ]
   }
 }

@@ -2,21 +2,42 @@
   "bundle_id": "mindspore.Tensor.add",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-17T17:08:56+08:00",
+  "generated_at": "2026-04-17T18:27:04+08:00",
   "entry": {
     "public_api": "mindspore.Tensor.add",
     "public_surface": "mindspore.Tensor",
     "public_name": "add",
-    "entry_type": "single",
+    "entry_type": "overload",
     "source_type": "api_def",
     "source_path": "mindspore/ops/api_def/add.yaml"
   },
   "branches": [
     {
-      "route_type": "direct",
+      "route_type": "overload",
       "resolver_type": "py_method",
       "target_symbol": "tensor_add_ext",
       "dispatch_order": 0,
+      "unit_id": "branch::add_scalar_op.yaml::AddScalar",
+      "unit_name": "AddScalar",
+      "op": "add_scalar",
+      "primitive": "AddScalar",
+      "yaml_path": "mindspore/ops/op_def/yaml/add_scalar_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnAdds"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": []
+      }
+    },
+    {
+      "route_type": "overload",
+      "resolver_type": "py_method",
+      "target_symbol": "tensor_add_ext",
+      "dispatch_order": 1,
       "unit_id": "branch::add_ext_op.yaml::AddExt",
       "unit_name": "AddExt",
       "op": "add_ext",
