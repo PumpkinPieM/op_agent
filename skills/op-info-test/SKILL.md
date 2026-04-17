@@ -1,38 +1,57 @@
 ---
 name: op-info-test
-description: Generate, isolate, and validate MindSpore Python ST op_info tests end-to-end. Use when asked to add, repair, or verify op_info-based ST coverage for one or more operators, run an op_info smoketest, execute the remote deploy-and-test loop for op_info cases, or produce remote test evidence and coverage summaries for op_info work.
+description: Generate and locally validate MindSpore Python ST op_info tests. Use when asked to add, repair, or verify op_info-based ST coverage for one or more operators, or run an op_info smoketest on a local Ascend environment.
 ---
 
-Execute the op_info ST workflow end to end. Prefer direct execution. Ask questions only when permissions block execution or critical information is genuinely missing.
+Execute the op_info ST workflow end to end. Prefer direct execution. Ask
+questions only when permissions block execution or critical information is
+genuinely missing.
 
-Read only the workflow file needed for the current step. Use shared reference material only when the workflow explicitly needs it.
+Read only the workflow needed for the current step. Load guardrails or
+references only when the route below explicitly asks for them.
 
-<a id="op-info-test-end-to-end-flow"></a>
-## Full End-to-End Workflow
+## Requirement Overview
 
-1. Generate or update the target OpInfo cases by following [workflow/op_info_generation.md](workflow/op_info_generation.md).
-2. Commit the case changes with message `op_info_test: add xxx`.
-3. If remote validation is required, isolate the new cases by following [workflow/patch_out_old_tests.md](workflow/patch_out_old_tests.md).
-4. Push the branch.
-5. Run the remote validation loop by following [workflow/remote_deploy_and_test.md](workflow/remote_deploy_and_test.md).
-6. If the functional round succeeds, run the required stability round with `--count=50`.
-7. If the operator has a PTA benchmark interface or the task explicitly requires parity evidence, run [workflow/ms_pta_consistency_validation.md](workflow/ms_pta_consistency_validation.md) for generic MS/PTA consistency validation. When the operator has a PTA benchmark interface, treat consistency validation as the default behavior even when the user did not separately request parity evidence. If no PTA benchmark interface exists, skip consistency validation even if parity evidence was requested, and record that blocker in the final summary. Unless the task explicitly narrows the scope, default to one validation driver that covers both PyNative mode and Graph mode by switching `set_context` between runs. In the Graph-mode branch, prefer a named `nn.Cell` wrapper for the target operator. Use `jit` only when a standalone Python function is genuinely a better fit.
-8. If any round fails with `error_type=testcase`, fix the cases and repeat the remote validation step. If it fails with `error_type=infra`, stop changing cases and record the environment blocker.
-9. After remote validation passes, remove the temporary isolation patch so the retained history contains only the clean case commit.
-10. Write `op_info_test_{op_name}_summary.md` in the working directory and do not add it to git. Include covered scenarios, uncovered scenarios, blocking reasons, remote job evidence, and MS/PTA consistency evidence when applicable.
+- Use this skill to add, repair, or verify op_info-based ST coverage.
+- Treat the user-requested API form as the default scope.
+- Default to local Ascend validation. Do not silently switch to remote
+  validation.
+- Default to PTA-first dtype probing for new aclnn operators.
+- Treat the probe-supported forward dtype set as the candidate writeback set,
+  not the final answer.
 
-<a id="op-info-test-constraints"></a>
+## Full End-to-End Flow
+
+1. Start with [workflow/dtype_support_discovery.md](workflow/dtype_support_discovery.md) to run the applicability gate and determine dtype support.
+2. Continue with [workflow/op_info_generation.md](workflow/op_info_generation.md) to backfill the candidate dtype set, author or update the OpInfo registration, and run the required validation matrix.
+3. If the operator has a PTA benchmark interface or the task explicitly requires parity evidence, run [workflow/ms_pta_consistency_validation.md](workflow/ms_pta_consistency_validation.md). If no PTA benchmark interface exists, skip consistency validation and record that blocker in the final summary.
+4. If the task explicitly requires stability evidence, or if the new case looks flaky, rerun the passing command with `--count=50` as an optional post-pass stability round.
+5. If the required matrix fails, follow the failure-triage order in `op_info_generation.md` before changing dtype declarations.
+6. If you need fast iteration on one newly added operator, use [workflow/patch_out_old_tests.md](workflow/patch_out_old_tests.md) as a temporary isolation tactic and remove that patch before final full validation.
+7. Write the final summary and finish only after the required matrix and any required consistency step pass, or after the blocking reason is explicitly classified.
+
+## Route Notes
+
+- Load [workflow/other_family_guardrails.md](workflow/other_family_guardrails.md) only for parameter-rich `other` operators such as `conv*`, `linear`, `interpolate`, pooling, normalization, and loss/module-wrapper APIs.
+- Use the workflow files for execution details; do not restate their full logic in ad hoc notes or temporary scripts.
+
 ## Execution Constraints
 
 - Reuse the bundled workflows, scripts, and templates. Do not rewrite the process from scratch.
-- Do not change tests unrelated to the target API.
-- Before every rerun, confirm the temporary isolation patch and commit history are in the expected state.
-- Treat [remote_deploy_and_test_dev.md](remote_deploy_and_test_dev.md) as implementation reference only, not as execution input.
-- When a PTA benchmark exists, follow [workflow/ms_pta_consistency_validation.md](workflow/ms_pta_consistency_validation.md) and keep its generated driver, `.npy` artifacts, `case_spec` files, and comparator summaries as local-only validation assets.
-- For MS/PTA consistency Graph-mode validation, treat `context.set_context(mode=ms.GRAPH_MODE)` as a mode switch only. Do not assume it graph-compiles arbitrary Python helpers on its own. Graph paths should be authored as named `nn.Cell` or named `@jit` callables, and Graph-mode probes should be run from a real `.py` file rather than temporary stdin source.
-- Mark the workflow complete only when required coverage is present, the functional round succeeds, the `--count=50` stability round succeeds, the final successful `summary.json` has no failed cases, and the required MS/PTA consistency strategy passes when applicable.
+- Do not force non-op_info-style APIs into this skill. If the applicability gate fails, record the blocker and use a more appropriate validation path.
+- For current aclnn OpInfo tasks, default writeback is `dtypes_ascend910b` and, when needed, `dtypes_backward_ascend910b`. Leave other platform dtype fields empty unless the task explicitly requires them.
+- Do not assume `not_support_dtypes` is the complement of `dtypes_ascend910b`.
+- Confirm the current machine is a usable Ascend validation machine before running local validation.
+- A run with missing `op_error_inputs_func` or `op_dynamic_inputs_func` cannot be reported as `fully_validated`.
 
-## Summary Requirement
-- Write the summary with explicit `covered`, `not covered`, and `blocking reason` status. Include error log for failed cases.
-- When MS/PTA consistency validation is required, include the evidence required by [workflow/ms_pta_consistency_validation.md](workflow/ms_pta_consistency_validation.md#ms-pta-consistency-reporting).
+## Final Output
 
+- Write `op_info_test_{op_name}_summary.md` in the working directory and do not add it to git. Include covered scenarios, uncovered scenarios, blocking reasons, validation evidence, and MS/PTA consistency evidence when applicable.
+- Include error snippets or log paths for failed cases.
+- Report coverage gaps separately for `op_error_inputs_func is not set` and `op_dynamic_inputs_func is not set`.
+- Include whether dtype support came from `probe_verified`, `doc_derived`, or `probe_vs_doc_conflict`.
+- End with one final conclusion category:
+  - `fully_validated`
+  - `validated_with_coverage_gaps`
+  - `blocked_by_testcase_tool_framework`
+  - `blocked_by_operator_environment`
