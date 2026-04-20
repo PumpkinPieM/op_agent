@@ -28,7 +28,11 @@
           "infer": true,
           "pyboost": true,
           "kbk": true,
-          "bprop": true
+          "bprop": true,
+          "bprop_units": [
+            "Mul",
+            "Sign"
+          ]
         }
       ]
     },
@@ -225,6 +229,59 @@
           "child_ref": "branch::argmax_with_value_op.yaml::ArgMaxWithValue",
           "condition": "axis is not None",
           "via_symbol": "argmax_with_value_op"
+        }
+      ]
+    },
+    {
+      "name": "ops_softmax_bprop_units",
+      "entry_id": "mindspore.ops.softmax",
+      "entry_identity": {
+        "entry_type": "single",
+        "source_type": "wrapper",
+        "source_path": "mindspore/python/mindspore/ops/function/__init__.py"
+      },
+      "entry_edge_count": 1,
+      "entry_edges": [
+        {
+          "unit_id": "branch::softmax_op.yaml::Softmax",
+          "edge_type": "direct"
+        }
+      ],
+      "unit_rows": [
+        {
+          "unit_id": "branch::softmax_op.yaml::Softmax",
+          "unit_type": "branch",
+          "bprop": true,
+          "bprop_units": [
+            "SoftmaxBackward"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ops_cumsum_bprop_units",
+      "entry_id": "mindspore.ops.cumsum",
+      "entry_identity": {
+        "entry_type": "single",
+        "source_type": "wrapper",
+        "source_path": "mindspore/python/mindspore/ops/function/__init__.py"
+      },
+      "entry_edge_count": 1,
+      "entry_edges": [
+        {
+          "unit_id": "branch::cumsum_ext_op.yaml::CumsumExt",
+          "edge_type": "direct"
+        }
+      ],
+      "unit_rows": [
+        {
+          "unit_id": "branch::cumsum_ext_op.yaml::CumsumExt",
+          "unit_type": "branch",
+          "bprop": true,
+          "bprop_units": [
+            "Add",
+            "Sub"
+          ]
         }
       ]
     }

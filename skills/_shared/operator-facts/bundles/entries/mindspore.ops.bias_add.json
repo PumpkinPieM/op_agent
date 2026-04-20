@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.ops.bias_add",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-17T18:27:04+08:00",
+  "generated_at": "2026-04-20T15:15:54+08:00",
   "entry": {
     "public_api": "mindspore.ops.bias_add",
     "public_surface": "mindspore.ops",
@@ -28,7 +28,11 @@
         "kbk": false,
         "pyboost": false,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "BiasAddGrad",
+          "Equal",
+          "Mul"
+        ]
       }
     }
   ]

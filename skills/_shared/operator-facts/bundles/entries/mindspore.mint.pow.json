@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.mint.pow",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-17T18:27:04+08:00",
+  "generated_at": "2026-04-20T15:15:54+08:00",
   "entry": {
     "public_api": "mindspore.mint.pow",
     "public_surface": "mindspore.mint",
@@ -30,7 +30,19 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Equal",
+          "GreaterEqual",
+          "Log",
+          "LogicalAnd",
+          "Mul",
+          "Pow",
+          "Select",
+          "Shape",
+          "Sub",
+          "SubScalar",
+          "Zeros"
+        ]
       }
     },
     {
@@ -51,7 +63,18 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Equal",
+          "GreaterEqualScalar",
+          "Mul",
+          "Muls",
+          "ScalarCast",
+          "ScalarLog",
+          "Select",
+          "Shape",
+          "Sub",
+          "Zeros"
+        ]
       }
     },
     {
@@ -72,7 +95,17 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Equal",
+          "Mul",
+          "Muls",
+          "PowTensorScalar",
+          "ScalarCast",
+          "ScalarSub",
+          "Shape",
+          "Sub",
+          "Zeros"
+        ]
       }
     }
   ]

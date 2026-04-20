@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.ops.xlogy",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-17T18:27:04+08:00",
+  "generated_at": "2026-04-20T15:15:54+08:00",
   "entry": {
     "public_api": "mindspore.ops.xlogy",
     "public_surface": "mindspore.ops",
@@ -30,7 +30,15 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "BitwiseAndTensor",
+          "Div",
+          "Equal",
+          "LessEqual",
+          "MaskedFill",
+          "Mul",
+          "Xlogy"
+        ]
       }
     },
     {
@@ -51,7 +59,12 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Cast",
+          "Mul",
+          "NotEqual",
+          "XLogYScalarOther"
+        ]
       }
     },
     {
@@ -72,7 +85,11 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Div",
+          "Mul",
+          "ScalarToTensor"
+        ]
       }
     },
     {
@@ -93,7 +110,12 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Cast",
+          "Mul",
+          "NotEqual",
+          "XLogYScalarOther"
+        ]
       }
     },
     {
@@ -114,7 +136,11 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Div",
+          "Mul",
+          "ScalarToTensor"
+        ]
       }
     }
   ]

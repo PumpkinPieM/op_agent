@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.Tensor.sinc",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-17T18:27:04+08:00",
+  "generated_at": "2026-04-20T15:15:54+08:00",
   "entry": {
     "public_api": "mindspore.Tensor.sinc",
     "public_surface": "mindspore.Tensor",
@@ -30,7 +30,18 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Conj",
+          "Cos",
+          "Div",
+          "Equal",
+          "Mul",
+          "Muls",
+          "Select",
+          "Shape",
+          "Sub",
+          "Zeros"
+        ]
       }
     }
   ]

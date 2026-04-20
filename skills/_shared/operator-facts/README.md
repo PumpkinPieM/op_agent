@@ -93,6 +93,8 @@ branch unit 覆盖字段统一为：
 - `bprop`
 - `bprop_units`
 
+其中 `bprop_units` 记录 bprop builder 中实际涉及到的算子单元短名；显式 `Emit("AcoshGrad")` 这类 backward unit 会直接记录，内联公式则按参与计算的算子分解，例如 `Mul / Neg / Rsqrt / Sub / Square`。
+
 ### `ms_entry_unit_edges`
 
 描述 `entry -> unit` 路由关系。

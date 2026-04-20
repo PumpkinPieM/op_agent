@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.Tensor.flip",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-17T18:27:04+08:00",
+  "generated_at": "2026-04-20T15:15:54+08:00",
   "entry": {
     "public_api": "mindspore.Tensor.flip",
     "public_surface": "mindspore.Tensor",
@@ -34,7 +34,9 @@
           "kbk": true,
           "pyboost": true,
           "bprop": true,
-          "bprop_units": []
+          "bprop_units": [
+            "ReverseV2"
+          ]
         }
       }
     ]

@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.Tensor.div_",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-17T18:27:04+08:00",
+  "generated_at": "2026-04-20T15:15:54+08:00",
   "entry": {
     "public_api": "mindspore.Tensor.div_",
     "public_surface": "mindspore.Tensor",
@@ -30,7 +30,12 @@
         "kbk": false,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Cast",
+          "Conj",
+          "Div",
+          "Mul"
+        ]
       }
     },
     {
@@ -51,7 +56,11 @@
         "kbk": true,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Cast",
+          "Conj",
+          "Divs"
+        ]
       }
     },
     {
@@ -72,7 +81,10 @@
         "kbk": false,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Shape",
+          "Zeros"
+        ]
       }
     },
     {
@@ -93,7 +105,10 @@
         "kbk": false,
         "pyboost": true,
         "bprop": true,
-        "bprop_units": []
+        "bprop_units": [
+          "Shape",
+          "Zeros"
+        ]
       }
     }
   ]

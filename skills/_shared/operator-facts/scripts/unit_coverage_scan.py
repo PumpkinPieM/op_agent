@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Dict, Iterable, List, Set, Tuple
+from typing import Dict, Iterable, List, Optional, Set, Tuple
 
-from common import OpDefEntry, build_alias_keys, load_yaml_obj
+from common import OpDefEntry, build_alias_keys, load_yaml_obj, normalize_token
 
 
 ACLNN_API_RE = re.compile(r"\baclnn[A-Z][A-Za-z0-9_]*\b")
@@ -23,7 +23,14 @@ WS_ACLNN_RE = re.compile(r"\bDEFINE_GET_WORKSPACE_FOR_OPS\s*\(\s*(aclnn[A-Z][A-Z
 CLASS_DEF_RE = re.compile(r"\bclass\s+([A-Za-z_][A-Za-z0-9_]*)\b")
 INFER_REG_RE = re.compile(r"REGISTER_PRIMITIVE_OP_INFER_IMPL\(\s*([A-Za-z0-9_]+)\s*,")
 BPROP_RE = re.compile(r'REG_BPROP_BUILDER\("([A-Za-z0-9_]+)"\)')
+EMIT_SYMBOL_RE = re.compile(r'\bEmit\s*\(\s*"([A-Za-z0-9_]+)"')
+EMIT_IDENT_RE = re.compile(r'\bEmit\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)')
+BUILDER_METHOD_RE = re.compile(r'\bib->([A-Za-z_][A-Za-z0-9_]*)\s*\(')
+MUL_OP_RE = re.compile(r'(?<![/*<>=!+\-])\*(?![/*=])')
 PYBOOST_CUSTOMIZE_RE = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)AscendCustomize\b")
+
+LEFT_OPERAND_CHARS = set(")]}_\"'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+RIGHT_OPERAND_CHARS = set("([{\"'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 
 
 def short_rel(path: Path, ms_root: Path) -> str:
@@ -253,6 +260,151 @@ def scan_bprop(ms_root: Path) -> Dict[str, Set[str]]:
         for primitive in BPROP_RE.findall(text):
             add_file(primitive_to_files, build_alias_keys(primitive), rel)
     return primitive_to_files
+
+
+def trim_bprop_symbol(name: str) -> Optional[str]:
+    if not name:
+        return None
+    trimmed = name
+    if trimmed.startswith("k") and len(trimmed) > 1 and trimmed[1].isupper():
+        trimmed = trimmed[1:]
+    for suffix in ("OpName", "Primitive", "Prim"):
+        if trimmed.endswith(suffix):
+            trimmed = trimmed[: -len(suffix)]
+    return trimmed or None
+
+
+def find_builder_body(text: str, start: int) -> Optional[Tuple[str, int]]:
+    set_body_pos = text.find("SetBody", start)
+    search_start = set_body_pos if set_body_pos >= 0 else start
+    brace_pos = text.find("{", search_start)
+    if brace_pos < 0:
+        return None
+    depth = 0
+    for idx in range(brace_pos, len(text)):
+        char = text[idx]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return text[brace_pos + 1 : idx], idx + 1
+    return None
+
+
+def collect_bprop_symbols(body: str) -> Set[str]:
+    symbols = set(EMIT_SYMBOL_RE.findall(body))
+    symbols.update(EMIT_IDENT_RE.findall(body))
+    symbols.update(BUILDER_METHOD_RE.findall(body))
+    # `a * b` does not surface as `ib->Mul(...)`, but for bprop purposes we still
+    # want to record that a `Mul` unit participates in the formula.
+    if MUL_OP_RE.search(body):
+        symbols.add("Mul")
+    if contains_binary_operator(body, "+"):
+        symbols.add("Add")
+    if contains_binary_operator(body, "-"):
+        symbols.add("Sub")
+    return symbols
+
+
+def contains_binary_operator(text: str, operator: str) -> bool:
+    for index, char in enumerate(text):
+        if char != operator:
+            continue
+        prev_char = previous_non_space_char(text, index)
+        next_char = next_non_space_char(text, index)
+        if prev_char is None or next_char is None:
+            continue
+        if operator == "+" and next_char == "+":
+            continue
+        if operator == "-" and next_char == "-":
+            continue
+        if next_char == "=":
+            continue
+        if prev_char not in LEFT_OPERAND_CHARS:
+            continue
+        if next_char not in RIGHT_OPERAND_CHARS:
+            continue
+        return True
+    return False
+
+
+def previous_non_space_char(text: str, index: int) -> Optional[str]:
+    pos = index - 1
+    while pos >= 0:
+        char = text[pos]
+        if not char.isspace():
+            return char
+        pos -= 1
+    return None
+
+
+def next_non_space_char(text: str, index: int) -> Optional[str]:
+    pos = index + 1
+    while pos < len(text):
+        char = text[pos]
+        if not char.isspace():
+            return char
+        pos += 1
+    return None
+
+
+def resolve_bprop_unit_names(symbols: Iterable[str], op_by_symbol: Dict[str, List[OpDefEntry]]) -> List[str]:
+    unit_names: Set[str] = set()
+    for symbol in symbols:
+        candidate_names = [symbol]
+        trimmed = trim_bprop_symbol(symbol)
+        if trimmed and trimmed != symbol:
+            candidate_names.append(trimmed)
+        seen_keys: Set[str] = set()
+        for candidate in candidate_names:
+            exact_matches: List[OpDefEntry] = []
+            fallback_matches: List[OpDefEntry] = []
+            candidate_token = normalize_token(candidate)
+            for key in build_alias_keys(candidate):
+                if key in seen_keys:
+                    continue
+                seen_keys.add(key)
+                fallback_matches.extend(op_by_symbol.get(key, []))
+            for entry in fallback_matches:
+                exact_fields = {
+                    normalize_token(entry.op),
+                    normalize_token(entry.primitive),
+                    normalize_token(entry.class_name),
+                    normalize_token(Path(entry.op_branch).stem),
+                    normalize_token(Path(entry.op_branch).stem.removesuffix("_op")),
+                }
+                if candidate_token in exact_fields:
+                    exact_matches.append(entry)
+            selected = exact_matches or fallback_matches
+            for entry in selected:
+                unit_names.add(entry.primitive)
+    return sorted(unit_names)
+
+
+def scan_bprop_units(ms_root: Path, op_by_symbol: Dict[str, List[OpDefEntry]]) -> Dict[str, Set[str]]:
+    root = ms_root / "ccsrc" / "frontend" / "expander" / "grad"
+    primitive_to_units: Dict[str, Set[str]] = {}
+    for path in collect_text_files([root], (".cc", ".h", ".hpp")):
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        pos = 0
+        while True:
+            match = BPROP_RE.search(text, pos)
+            if match is None:
+                break
+            primitive = match.group(1)
+            body_info = find_builder_body(text, match.end())
+            if body_info is None:
+                pos = match.end()
+                continue
+            body, end_pos = body_info
+            symbols = collect_bprop_symbols(body)
+            unit_names = resolve_bprop_unit_names(symbols, op_by_symbol)
+            if unit_names:
+                for key in build_alias_keys(primitive):
+                    primitive_to_units.setdefault(key, set()).update(unit_names)
+            pos = end_pos
+    return primitive_to_units
 
 
 def build_candidate_keys(entry: OpDefEntry) -> Set[str]:

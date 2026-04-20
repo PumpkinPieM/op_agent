@@ -12,6 +12,7 @@ from unit_coverage_scan import (
     match_named_files,
     resolve_dispatch_kind,
     scan_bprop,
+    scan_bprop_units,
     scan_infer,
     scan_kernel_auto_generate,
     scan_kernel_customize,
@@ -66,7 +67,7 @@ def json_cell(value) -> str:
 
 
 def build_branch_rows(ms_root: Path) -> List[dict]:
-    op_by_branch, _ = build_op_catalog(ms_root)
+    op_by_branch, op_by_symbol = build_op_catalog(ms_root)
     aclnn_config = load_aclnn_config(ms_root)
     customize_kernel_map, customize_kernel_files = scan_kernel_customize(ms_root)
     _, auto_kernel_files = scan_kernel_auto_generate(ms_root)
@@ -74,6 +75,7 @@ def build_branch_rows(ms_root: Path) -> List[dict]:
     auto_pyboost_files = scan_pyboost_auto_generate(ms_root)
     infer_primitives, infer_files = scan_infer(ms_root)
     bprop_files = scan_bprop(ms_root)
+    bprop_units_map = scan_bprop_units(ms_root, op_by_symbol)
 
     rows: List[dict] = []
     for entry in sorted(op_by_branch.values(), key=lambda item: (item.op, item.primitive)):
@@ -102,6 +104,9 @@ def build_branch_rows(ms_root: Path) -> List[dict]:
         infer_evidence = match_named_files(candidate_keys, infer_files)
         infer_present = entry.primitive in infer_primitives or bool(infer_evidence)
         bprop_evidence = match_named_files(candidate_keys, bprop_files)
+        bprop_units: Set[str] = set()
+        for key in candidate_keys:
+            bprop_units.update(bprop_units_map.get(key, set()))
 
         rows.append(
             {
@@ -120,7 +125,7 @@ def build_branch_rows(ms_root: Path) -> List[dict]:
                 "pyboost": dispatch_type == "auto_generate" or bool(pyboost_evidence),
                 "kbk": dispatch_type == "auto_generate" or bool(kbk_evidence),
                 "bprop": bool(bprop_evidence),
-                "bprop_units": [],
+                "bprop_units": sorted(bprop_units),
             }
         )
     return rows
