@@ -56,6 +56,12 @@ When the target operator is implemented as a composition of multiple smaller ope
 - optional `None` inputs -> define the `None` semantics and handle them consistently in PyBoost / Infer / KBK
 - scalar parameters -> extract using the project's scalar wrapper pattern
 
+##### Inplace Op
+
+For inplace operator, its input tensor is used as the output tensor, so there's no need for calling infer and allocating output tensor.
+
+Check `mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_add_ext.cc` as an example for inplace operator pyboost kernel.
+
 #### Aclnn Kernelmode(KBK mode)
 
 - The aclnn interface name is passed to base Class(`AclnnKernelMod`)'s constructor.

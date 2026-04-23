@@ -45,6 +45,38 @@ The primitive class ties to the op's c++ operator. All c++ implementation includ
 
 The `dispatch` field controls kernel-related code generation. It can have an `enable` key to turn on auto-generation, and device-specific keys (like `CPU`, `GPU`, `Ascend`) that specify customized function names to use instead of auto-generated ones for those targets. By default, `enable` is False, meaning no kernel code will be generated.
 
+### Inplace Op
+
+For inplace op, add fields `rw_write`, `side_effect_mem` and `inplace` for the output correspondingly.
+
+Example `inplace_add_ext`, whose output tensor is actually the `input` tensor.
+
+```yaml
+inplace_add_ext:
+  args:
+    input:
+      dtype: tensor
+    other:
+      dtype: tensor
+    alpha:
+      dtype: number
+      default: 1
+  args_signature:
+    rw_write: input
+  returns:
+    output:
+      dtype: tensor
+      inplace: input
+  labels:
+    side_effect_mem: True
+  class:
+    name: InplaceAddExt
+  dispatch:
+    enable: True
+    Ascend: InplaceAddExtAscend
+    GPU: None
+```
+
 #### Ascend
 
 Ascend backend dispatches kernel calculation to aclnn operator interface. Pyboost kernel(`mindspore/ops/kernel/ascend/aclnn/pyboost_impl`) for the pynative mode and aclnn kernelmod(`mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl`) for the graph mode(KBK mode) are generated for the op, in which aclnn interfaces are invoked.

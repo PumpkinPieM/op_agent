@@ -42,7 +42,7 @@ dispatch:
 
 ### Tensor Method
 
-For tensor method, it's interface should be defined in api yaml in `mindspore/ops/api_def`. Add the api yaml if it doens't exist. The `py_method` field requires a python fallback for the interface. Register it in `mindspore/python/mindspore/ops/tensor_method.py`. If no special reason, just call the op of the `op_yaml` field in the python method.
+For tensor method, i.e. Tensor.xxx, it's interface should be defined in api yaml in `mindspore/ops/api_def`. Add the api yaml if it doens't exist. The `py_method` field requires a python fallback for the interface. Register it in `mindspore/python/mindspore/ops/tensor_method.py`. If no special reason, just call the op of the `op_yaml` field in the python method.
 
 After registering the tensor interface in api yaml, check if there's old tensor method registration in the Tensor class in `mindspore/python/mindspore/common/tensor.py`, delete it.
 
