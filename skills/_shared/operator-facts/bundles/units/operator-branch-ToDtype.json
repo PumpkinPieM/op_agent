@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::to_dtype_op.yaml::ToDtype",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::to_dtype_op.yaml::ToDtype",
+    "unit_name": "ToDtype",
+    "unit_type": "branch",
+    "op": "to_dtype",
+    "primitive": "ToDtype",
+    "yaml_path": "mindspore/ops/op_def/yaml/to_dtype_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnToDtype"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.to"
+  ]
+}

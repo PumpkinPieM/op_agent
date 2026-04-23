@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::logsigmoid_op.yaml::LogSigmoid",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::logsigmoid_op.yaml::LogSigmoid",
+    "unit_name": "LogSigmoid",
+    "unit_type": "branch",
+    "op": "logsigmoid",
+    "primitive": "LogSigmoid",
+    "yaml_path": "mindspore/ops/op_def/yaml/logsigmoid_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLogSigmoidForward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "LogSigmoidGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.logsigmoid"
+  ]
+}

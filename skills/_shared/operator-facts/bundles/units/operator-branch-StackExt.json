@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::stack_ext_op.yaml::StackExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::stack_ext_op.yaml::StackExt",
+    "unit_name": "StackExt",
+    "unit_type": "branch",
+    "op": "stack_ext",
+    "primitive": "StackExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/stack_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnStack"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "UnstackExtView"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.stack"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::adam_weight_decay_op.yaml::AdamWeightDecay",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::adam_weight_decay_op.yaml::AdamWeightDecay",
+    "unit_name": "AdamWeightDecay",
+    "unit_type": "branch",
+    "op": "adam_weight_decay",
+    "primitive": "AdamWeightDecay",
+    "yaml_path": "mindspore/ops/op_def/yaml/adam_weight_decay_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

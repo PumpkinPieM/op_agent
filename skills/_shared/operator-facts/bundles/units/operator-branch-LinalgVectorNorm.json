@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::linalg_vector_norm_op.yaml::LinalgVectorNorm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::linalg_vector_norm_op.yaml::LinalgVectorNorm",
+    "unit_name": "LinalgVectorNorm",
+    "unit_type": "branch",
+    "op": "linalg_vector_norm",
+    "primitive": "LinalgVectorNorm",
+    "yaml_path": "mindspore/ops/op_def/yaml/linalg_vector_norm_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLinalgVectorNorm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.norm"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "bundle_id": "branch::flash_attention_score_grad_op.yaml::FlashAttentionScoreGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::flash_attention_score_grad_op.yaml::FlashAttentionScoreGrad",
+    "unit_name": "FlashAttentionScoreGrad",
+    "unit_type": "branch",
+    "op": "flash_attention_score_grad",
+    "primitive": "FlashAttentionScoreGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/flash_attention_score_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnFlashAttentionScoreGrad",
+        "aclnnFlashAttentionUnpaddingScoreGrad"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

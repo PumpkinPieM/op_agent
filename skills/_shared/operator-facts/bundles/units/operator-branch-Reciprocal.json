@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::reciprocal_op.yaml::Reciprocal",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::reciprocal_op.yaml::Reciprocal",
+    "unit_name": "Reciprocal",
+    "unit_type": "branch",
+    "op": "reciprocal",
+    "primitive": "Reciprocal",
+    "yaml_path": "mindspore/ops/op_def/yaml/reciprocal_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnReciprocal"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.reciprocal",
+    "mindspore.mint.reciprocal",
+    "mindspore.ops.reciprocal"
+  ]
+}

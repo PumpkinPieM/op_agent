@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::inplace_log_op.yaml::InplaceLog",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_log_op.yaml::InplaceLog",
+    "unit_name": "InplaceLog",
+    "unit_type": "branch",
+    "op": "inplace_log",
+    "primitive": "InplaceLog",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_log_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceLog"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Div"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.log_",
+    "mindspore.ops.logdet"
+  ]
+}

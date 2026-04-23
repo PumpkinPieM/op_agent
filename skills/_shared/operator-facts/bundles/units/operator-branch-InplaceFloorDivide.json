@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::inplace_floor_divide_op.yaml::InplaceFloorDivide",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_floor_divide_op.yaml::InplaceFloorDivide",
+    "unit_name": "InplaceFloorDivide",
+    "unit_type": "branch",
+    "op": "inplace_floor_divide",
+    "primitive": "InplaceFloorDivide",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_floor_divide_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceFloorDivide"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.floor_divide_"
+  ]
+}

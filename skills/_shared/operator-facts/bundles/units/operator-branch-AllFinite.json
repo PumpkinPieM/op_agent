@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::allfinite_op.yaml::AllFinite",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::allfinite_op.yaml::AllFinite",
+    "unit_name": "AllFinite",
+    "unit_type": "branch",
+    "op": "all_finite",
+    "primitive": "AllFinite",
+    "yaml_path": "mindspore/ops/op_def/yaml/allfinite_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAllFinite"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

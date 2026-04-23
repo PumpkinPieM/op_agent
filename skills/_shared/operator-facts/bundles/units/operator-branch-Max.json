@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::max_op.yaml::Max",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::max_op.yaml::Max",
+    "unit_name": "Max",
+    "unit_type": "branch",
+    "op": "max",
+    "primitive": "Max",
+    "yaml_path": "mindspore/ops/op_def/yaml/max_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMax"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.max",
+    "mindspore.mint.max",
+    "mindspore.ops.max"
+  ]
+}

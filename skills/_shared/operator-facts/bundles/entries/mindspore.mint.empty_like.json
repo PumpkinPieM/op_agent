@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.mint.empty_like",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-20T15:15:54+08:00",
+  "generated_at": "2026-04-20T17:24:10+08:00",
   "entry": {
     "public_api": "mindspore.mint.empty_like",
     "public_surface": "mindspore.mint",

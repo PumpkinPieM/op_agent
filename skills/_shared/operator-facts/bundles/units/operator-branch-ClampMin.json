@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::clamp_min_op.yaml::ClampMin",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::clamp_min_op.yaml::ClampMin",
+    "unit_name": "ClampMin",
+    "unit_type": "branch",
+    "op": "clamp_min",
+    "primitive": "ClampMin",
+    "yaml_path": "mindspore/ops/op_def/yaml/clamp_min_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnClampMin"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "GreaterEqual",
+        "ScalarToTensor",
+        "Select"
+      ]
+    }
+  },
+  "entries": []
+}

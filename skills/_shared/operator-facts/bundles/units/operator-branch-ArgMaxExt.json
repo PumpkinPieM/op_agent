@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::argmax_ext_op.yaml::ArgMaxExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::argmax_ext_op.yaml::ArgMaxExt",
+    "unit_name": "ArgMaxExt",
+    "unit_type": "branch",
+    "op": "argmax_ext",
+    "primitive": "ArgMaxExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/argmax_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnArgMax"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.argmax",
+    "mindspore.mint.argmax",
+    "mindspore.ops.argmax"
+  ]
+}

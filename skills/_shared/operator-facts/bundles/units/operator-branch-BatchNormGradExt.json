@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::batch_norm_grad_ext_op.yaml::BatchNormGradExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::batch_norm_grad_ext_op.yaml::BatchNormGradExt",
+    "unit_name": "BatchNormGradExt",
+    "unit_type": "branch",
+    "op": "batch_norm_grad_ext",
+    "primitive": "BatchNormGradExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/batch_norm_grad_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBatchNormBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BatchNormGradGrad",
+        "Mul"
+      ]
+    }
+  },
+  "entries": []
+}

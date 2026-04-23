@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/nn_func.py::pad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/nn_func.py::pad",
+    "unit_name": "pad",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py",
+    "impl_symbol": "pad"
+  },
+  "entries": [
+    "mindspore.ops.pad"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "not (isinstance(padding, (tuple, list)) and (not padding) or (isinstance(padding, Tensor) and padding.shape == (0,))) and not isinstance(padding, Tensor)",
+      "via_symbol": "_check_pad_inputs",
+      "unit_id": "composite::ops/function/nn_func.py::_check_pad_inputs",
+      "unit_name": "_check_pad_inputs",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    }
+  ]
+}

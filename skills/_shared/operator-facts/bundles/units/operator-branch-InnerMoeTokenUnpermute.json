@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::inner_moe_token_unpermute_op.yaml::InnerMoeTokenUnpermute",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inner_moe_token_unpermute_op.yaml::InnerMoeTokenUnpermute",
+    "unit_name": "InnerMoeTokenUnpermute",
+    "unit_type": "branch",
+    "op": "inner_moe_token_unpermute",
+    "primitive": "InnerMoeTokenUnpermute",
+    "yaml_path": "mindspore/ops/op_def/yaml/inner_moe_token_unpermute_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMoeTokenUnpermute"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "MoeTokenUnpermuteGrad"
+      ]
+    }
+  },
+  "entries": []
+}

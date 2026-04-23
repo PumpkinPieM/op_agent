@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::greater_op.yaml::Greater",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::greater_op.yaml::Greater",
+    "unit_name": "Greater",
+    "unit_type": "branch",
+    "op": "greater",
+    "primitive": "Greater",
+    "yaml_path": "mindspore/ops/op_def/yaml/greater_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnGtTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.greater",
+    "mindspore.mint.greater",
+    "mindspore.ops.greater"
+  ]
+}

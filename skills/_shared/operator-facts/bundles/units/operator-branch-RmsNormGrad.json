@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::rms_norm_grad_op.yaml::RmsNormGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::rms_norm_grad_op.yaml::RmsNormGrad",
+    "unit_name": "RmsNormGrad",
+    "unit_type": "branch",
+    "op": "rms_norm_grad",
+    "primitive": "RmsNormGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/rms_norm_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRmsNormGrad"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

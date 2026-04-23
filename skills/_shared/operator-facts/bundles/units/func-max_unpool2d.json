@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/nn_func.py::max_unpool2d",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/nn_func.py::max_unpool2d",
+    "unit_name": "max_unpool2d",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py",
+    "impl_symbol": "max_unpool2d"
+  },
+  "entries": [
+    "mindspore.ops.max_unpool2d"
+  ],
+  "components": []
+}

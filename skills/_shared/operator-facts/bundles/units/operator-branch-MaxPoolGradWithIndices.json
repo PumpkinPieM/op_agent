@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::max_pool_grad_with_indices_op.yaml::MaxPoolGradWithIndices",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::max_pool_grad_with_indices_op.yaml::MaxPoolGradWithIndices",
+    "unit_name": "MaxPoolGradWithIndices",
+    "unit_type": "branch",
+    "op": "max_pool_grad_with_indices",
+    "primitive": "MaxPoolGradWithIndices",
+    "yaml_path": "mindspore/ops/op_def/yaml/max_pool_grad_with_indices_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMaxPool2dWithIndicesBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

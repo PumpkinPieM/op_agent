@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::inplace_mul_op.yaml::InplaceMul",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_mul_op.yaml::InplaceMul",
+    "unit_name": "InplaceMul",
+    "unit_type": "branch",
+    "op": "inplace_mul",
+    "primitive": "InplaceMul",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_mul_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceMul"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.mul_"
+  ]
+}

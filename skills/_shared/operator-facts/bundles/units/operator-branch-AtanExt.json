@@ -1,0 +1,34 @@
+{
+  "bundle_id": "branch::atan_ext_op.yaml::AtanExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::atan_ext_op.yaml::AtanExt",
+    "unit_name": "AtanExt",
+    "unit_type": "branch",
+    "op": "atan_ext",
+    "primitive": "AtanExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/atan_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAtan"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AddScalar",
+        "Div",
+        "Square"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.atan",
+    "mindspore.mint.arctan",
+    "mindspore.mint.atan",
+    "mindspore.ops.atan"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::cosh_op.yaml::Cosh",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::cosh_op.yaml::Cosh",
+    "unit_name": "Cosh",
+    "unit_type": "branch",
+    "op": "cosh",
+    "primitive": "Cosh",
+    "yaml_path": "mindspore/ops/op_def/yaml/cosh_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnCosh"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "Mul",
+        "Sinh"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.cosh",
+    "mindspore.mint.cosh",
+    "mindspore.ops.cosh"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "bundle_id": "branch::linalg_qr_op.yaml::LinalgQr",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::linalg_qr_op.yaml::LinalgQr",
+    "unit_name": "LinalgQr",
+    "unit_type": "branch",
+    "op": "linalg_qr",
+    "primitive": "LinalgQr",
+    "yaml_path": "mindspore/ops/op_def/yaml/linalg_qr_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLinalgQr"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Add",
+        "Concat",
+        "MatMulExt",
+        "Mul",
+        "Narrow",
+        "Neg",
+        "ScalarGe",
+        "Sub",
+        "TransposeExtView",
+        "TriangularSolve",
+        "Triu",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": []
+}

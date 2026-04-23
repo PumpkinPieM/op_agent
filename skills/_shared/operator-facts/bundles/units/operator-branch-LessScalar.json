@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::less_scalar_op.yaml::LessScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::less_scalar_op.yaml::LessScalar",
+    "unit_name": "LessScalar",
+    "unit_type": "branch",
+    "op": "less_scalar",
+    "primitive": "LessScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/less_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLtScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.less",
+    "mindspore.mint.less",
+    "mindspore.ops.less"
+  ]
+}

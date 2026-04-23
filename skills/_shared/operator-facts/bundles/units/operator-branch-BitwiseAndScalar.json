@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::bitwise_and_scalar_op.yaml::BitwiseAndScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::bitwise_and_scalar_op.yaml::BitwiseAndScalar",
+    "unit_name": "BitwiseAndScalar",
+    "unit_type": "branch",
+    "op": "bitwise_and_scalar",
+    "primitive": "BitwiseAndScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/bitwise_and_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBitwiseAndScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.bitwise_and",
+    "mindspore.mint.bitwise_and",
+    "mindspore.ops.bitwise_and"
+  ]
+}

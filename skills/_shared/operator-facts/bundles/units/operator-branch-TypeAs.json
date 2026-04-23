@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::type_as_op.yaml::TypeAs",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::type_as_op.yaml::TypeAs",
+    "unit_name": "TypeAs",
+    "unit_type": "branch",
+    "op": "type_as",
+    "primitive": "TypeAs",
+    "yaml_path": "mindspore/ops/op_def/yaml/type_as_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceCopy"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "TypeAs"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.type_as",
+    "mindspore.ops.type_as"
+  ]
+}

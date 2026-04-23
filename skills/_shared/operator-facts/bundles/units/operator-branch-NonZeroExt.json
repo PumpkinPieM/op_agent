@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::non_zero_ext_op.yaml::NonZeroExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::non_zero_ext_op.yaml::NonZeroExt",
+    "unit_name": "NonZeroExt",
+    "unit_type": "branch",
+    "op": "non_zero_ext",
+    "primitive": "NonZeroExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/non_zero_ext_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.where",
+    "mindspore.mint.where",
+    "mindspore.ops.where"
+  ]
+}

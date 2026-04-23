@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::moe_distribute_combine_op.yaml::MoeDistributeCombine",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::moe_distribute_combine_op.yaml::MoeDistributeCombine",
+    "unit_name": "MoeDistributeCombine",
+    "unit_type": "branch",
+    "op": "moe_distribute_combine",
+    "primitive": "MoeDistributeCombine",
+    "yaml_path": "mindspore/ops/op_def/yaml/moe_distribute_combine_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMoeDistributeCombine"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.moe_distribute_combine"
+  ]
+}

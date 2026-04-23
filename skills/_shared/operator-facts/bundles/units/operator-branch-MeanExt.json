@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::mean_ext_op.yaml::MeanExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::mean_ext_op.yaml::MeanExt",
+    "unit_name": "MeanExt",
+    "unit_type": "branch",
+    "op": "mean_ext",
+    "primitive": "MeanExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/mean_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMean"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.mean",
+    "mindspore.mint.mean",
+    "mindspore.ops.mean"
+  ]
+}

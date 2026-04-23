@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::inplace_scatter_src_op.yaml::InplaceScatterSrc",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_scatter_src_op.yaml::InplaceScatterSrc",
+    "unit_name": "InplaceScatterSrc",
+    "unit_type": "branch",
+    "op": "inplace_scatter_src",
+    "primitive": "InplaceScatterSrc",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_scatter_src_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceScatter"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "GatherD",
+        "ScatterValue"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.scatter_"
+  ]
+}

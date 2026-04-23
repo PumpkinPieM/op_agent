@@ -1,0 +1,57 @@
+{
+  "bundle_id": "composite::ops/function/grad/grad_func.py::derivative",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/grad/grad_func.py::derivative",
+    "unit_name": "derivative",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py",
+    "impl_symbol": "derivative"
+  },
+  "entries": [
+    "mindspore.ops.derivative"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_derivative_order",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_check_derivative_order",
+      "unit_name": "_check_derivative_order",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (isinstance(primals, tuple))",
+      "via_symbol": "_trans_derivative_inputs",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_trans_derivative_inputs",
+      "unit_name": "_trans_derivative_inputs",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (isinstance(primals, tuple))",
+      "via_symbol": "zeros",
+      "unit_id": "branch::zeros_op.yaml::Zeros",
+      "unit_name": "Zeros",
+      "unit_type": "branch",
+      "op": "zeros",
+      "primitive": "Zeros",
+      "yaml_path": "mindspore/ops/op_def/yaml/zeros_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnInplaceZero"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": []
+      }
+    }
+  ]
+}

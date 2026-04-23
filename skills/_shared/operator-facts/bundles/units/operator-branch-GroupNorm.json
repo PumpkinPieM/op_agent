@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::group_norm_op.yaml::GroupNorm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::group_norm_op.yaml::GroupNorm",
+    "unit_name": "GroupNorm",
+    "unit_type": "branch",
+    "op": "group_norm",
+    "primitive": "GroupNorm",
+    "yaml_path": "mindspore/ops/op_def/yaml/group_norm_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnGroupNorm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "GroupNormGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.group_norm"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::acosh_grad_op.yaml::AcoshGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::acosh_grad_op.yaml::AcoshGrad",
+    "unit_name": "AcoshGrad",
+    "unit_type": "branch",
+    "op": "acosh_grad",
+    "primitive": "AcoshGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/acosh_grad_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "AcoshGrad",
+        "Mul",
+        "Muls",
+        "RealDiv",
+        "Tanh"
+      ]
+    }
+  },
+  "entries": []
+}

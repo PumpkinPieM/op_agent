@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::neg_op.yaml::Neg",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::neg_op.yaml::Neg",
+    "unit_name": "Neg",
+    "unit_type": "branch",
+    "op": "neg",
+    "primitive": "Neg",
+    "yaml_path": "mindspore/ops/op_def/yaml/neg_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNeg"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.neg",
+    "mindspore.mint.neg",
+    "mindspore.ops.neg",
+    "mindspore.ops.negative"
+  ]
+}

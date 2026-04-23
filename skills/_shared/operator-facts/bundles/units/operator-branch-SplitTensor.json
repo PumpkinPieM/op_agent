@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::split_tensor_op.yaml::SplitTensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::split_tensor_op.yaml::SplitTensor",
+    "unit_name": "SplitTensor",
+    "unit_type": "branch",
+    "op": "split_tensor",
+    "primitive": "SplitTensor",
+    "yaml_path": "mindspore/ops/op_def/yaml/split_tensor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSplitTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Concat"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.split",
+    "mindspore.ops.split"
+  ]
+}

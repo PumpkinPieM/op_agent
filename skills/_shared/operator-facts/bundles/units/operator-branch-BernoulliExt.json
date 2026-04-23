@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::bernoulli_ext_op.yaml::BernoulliExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::bernoulli_ext_op.yaml::BernoulliExt",
+    "unit_name": "BernoulliExt",
+    "unit_type": "branch",
+    "op": "bernoulli_ext",
+    "primitive": "BernoulliExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/bernoulli_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceBernoulliTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.bernoulli"
+  ]
+}

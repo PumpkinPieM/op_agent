@@ -1,0 +1,61 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::vander",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::vander",
+    "unit_name": "vander",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "vander"
+  },
+  "entries": [
+    "mindspore.ops.vander"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "range",
+      "unit_id": "branch::range_op.yaml::Range",
+      "unit_name": "Range",
+      "unit_type": "branch",
+      "op": "range",
+      "primitive": "Range",
+      "yaml_path": "mindspore/ops/op_def/yaml/range_op.yaml",
+      "coverage": {
+        "aclnn": [],
+        "infer": true,
+        "kbk": false,
+        "pyboost": false,
+        "bprop": true,
+        "bprop_units": []
+      }
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "expand_dims",
+      "unit_id": "branch::expand_dims_op.yaml::ExpandDims",
+      "unit_name": "ExpandDims",
+      "unit_type": "branch",
+      "op": "expand_dims",
+      "primitive": "ExpandDims",
+      "yaml_path": "mindspore/ops/op_def/yaml/expand_dims_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnExpandDims"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Reshape",
+          "Shape"
+        ]
+      }
+    }
+  ]
+}

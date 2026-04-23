@@ -1,0 +1,37 @@
+{
+  "bundle_id": "branch::polar_op.yaml::Polar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::polar_op.yaml::Polar",
+    "unit_name": "Polar",
+    "unit_type": "branch",
+    "op": "polar",
+    "primitive": "Polar",
+    "yaml_path": "mindspore/ops/op_def/yaml/polar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnPolar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Complex",
+        "Conj",
+        "Mul",
+        "Real",
+        "ReduceSum",
+        "Reshape",
+        "Shape",
+        "Sign"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.polar",
+    "mindspore.ops.polar"
+  ]
+}

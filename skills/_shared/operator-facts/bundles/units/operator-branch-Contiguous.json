@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::contiguous_op.yaml::Contiguous",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::contiguous_op.yaml::Contiguous",
+    "unit_name": "Contiguous",
+    "unit_type": "branch",
+    "op": "contiguous",
+    "primitive": "Contiguous",
+    "yaml_path": "mindspore/ops/op_def/yaml/contiguous_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceCopy"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.contiguous"
+  ]
+}

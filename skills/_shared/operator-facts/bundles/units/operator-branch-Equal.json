@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::equal_op.yaml::Equal",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::equal_op.yaml::Equal",
+    "unit_name": "Equal",
+    "unit_type": "branch",
+    "op": "equal",
+    "primitive": "Equal",
+    "yaml_path": "mindspore/ops/op_def/yaml/equal_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnEqTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.eq",
+    "mindspore.Tensor.equal",
+    "mindspore.mint.eq",
+    "mindspore.mint.equal",
+    "mindspore.ops.eq",
+    "mindspore.ops.equal"
+  ]
+}

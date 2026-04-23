@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::xlogy_scalar_self_op.yaml::XLogYScalarSelf",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::xlogy_scalar_self_op.yaml::XLogYScalarSelf",
+    "unit_name": "XLogYScalarSelf",
+    "unit_type": "branch",
+    "op": "xlogy_scalar_self",
+    "primitive": "XLogYScalarSelf",
+    "yaml_path": "mindspore/ops/op_def/yaml/xlogy_scalar_self_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnXLogYScalarSelf"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Div",
+        "Mul",
+        "ScalarToTensor"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.xlogy",
+    "mindspore.mint.xlogy",
+    "mindspore.ops.xlogy"
+  ]
+}

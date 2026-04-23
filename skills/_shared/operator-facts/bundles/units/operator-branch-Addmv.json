@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::addmv_op.yaml::Addmv",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::addmv_op.yaml::Addmv",
+    "unit_name": "Addmv",
+    "unit_type": "branch",
+    "op": "addmv",
+    "primitive": "Addmv",
+    "yaml_path": "mindspore/ops/op_def/yaml/addmv_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAddmv"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mv",
+        "Outer",
+        "Transpose"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.addmv",
+    "mindspore.mint.addmv",
+    "mindspore.ops.addmv"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::argmax_with_value_op.yaml::ArgMaxWithValue",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::argmax_with_value_op.yaml::ArgMaxWithValue",
+    "unit_name": "ArgMaxWithValue",
+    "unit_type": "branch",
+    "op": "argmax_with_value",
+    "primitive": "ArgMaxWithValue",
+    "yaml_path": "mindspore/ops/op_def/yaml/argmax_with_value_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMaxDim"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

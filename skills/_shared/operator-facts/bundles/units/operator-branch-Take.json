@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::take_op.yaml::Take",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::take_op.yaml::Take",
+    "unit_name": "Take",
+    "unit_type": "branch",
+    "op": "take",
+    "primitive": "Take",
+    "yaml_path": "mindspore/ops/op_def/yaml/take_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnTake"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "InplacePut",
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.take",
+    "mindspore.mint.take",
+    "mindspore.ops.take"
+  ]
+}

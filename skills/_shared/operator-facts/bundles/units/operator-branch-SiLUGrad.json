@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::silu_grad_op.yaml::SiLUGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::silu_grad_op.yaml::SiLUGrad",
+    "unit_name": "SiLUGrad",
+    "unit_type": "branch",
+    "op": "silu_grad",
+    "primitive": "SiLUGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/silu_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSiluBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Add",
+        "Mul",
+        "Muls",
+        "Sigmoid",
+        "SigmoidGrad",
+        "Sub"
+      ]
+    }
+  },
+  "entries": []
+}

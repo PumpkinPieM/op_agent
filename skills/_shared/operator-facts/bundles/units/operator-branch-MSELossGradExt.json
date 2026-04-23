@@ -1,0 +1,26 @@
+{
+  "bundle_id": "branch::mse_loss_grad_ext_op.yaml::MSELossGradExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::mse_loss_grad_ext_op.yaml::MSELossGradExt",
+    "unit_name": "MSELossGradExt",
+    "unit_type": "branch",
+    "op": "mse_loss_grad_ext",
+    "primitive": "MSELossGradExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/mse_loss_grad_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnExpand",
+        "aclnnMseLossBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

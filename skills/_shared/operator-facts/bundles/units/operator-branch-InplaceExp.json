@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::inplace_exp_op.yaml::InplaceExp",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_exp_op.yaml::InplaceExp",
+    "unit_name": "InplaceExp",
+    "unit_type": "branch",
+    "op": "inplace_exp",
+    "primitive": "InplaceExp",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_exp_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceExp"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.exp_"
+  ]
+}

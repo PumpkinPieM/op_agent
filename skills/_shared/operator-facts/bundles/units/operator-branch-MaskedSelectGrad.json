@@ -1,0 +1,26 @@
+{
+  "bundle_id": "branch::masked_select_grad_op.yaml::MaskedSelectGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::masked_select_grad_op.yaml::MaskedSelectGrad",
+    "unit_name": "MaskedSelectGrad",
+    "unit_type": "branch",
+    "op": "masked_select_grad",
+    "primitive": "MaskedSelectGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/masked_select_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceMaskedScatter",
+        "aclnnInplaceZero"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

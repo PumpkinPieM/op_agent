@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::matmul_op.yaml::MatMul",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::matmul_op.yaml::MatMul",
+    "unit_name": "MatMul",
+    "unit_type": "branch",
+    "op": "matmul",
+    "primitive": "MatMul",
+    "yaml_path": "mindspore/ops/op_def/yaml/matmul_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMatmul",
+        "aclnnMm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "MatMul",
+        "Mul"
+      ]
+    }
+  },
+  "entries": []
+}

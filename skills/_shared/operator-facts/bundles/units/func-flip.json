@@ -1,0 +1,42 @@
+{
+  "bundle_id": "composite::ops/function/nn_func.py::flip",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/nn_func.py::flip",
+    "unit_name": "flip",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py",
+    "impl_symbol": "flip"
+  },
+  "entries": [
+    "mindspore.Tensor.flip",
+    "mindspore.Tensor.reverse"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "reverse_v2_impl",
+      "unit_id": "branch::reverse_v2_op.yaml::ReverseV2",
+      "unit_name": "ReverseV2",
+      "unit_type": "branch",
+      "op": "reverse_v2",
+      "primitive": "ReverseV2",
+      "yaml_path": "mindspore/ops/op_def/yaml/reverse_v2_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnFlip"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "ReverseV2"
+        ]
+      }
+    }
+  ]
+}

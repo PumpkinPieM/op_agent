@@ -1,0 +1,26 @@
+{
+  "bundle_id": "branch::shape_op.yaml::Shape",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::shape_op.yaml::Shape",
+    "unit_name": "Shape",
+    "unit_type": "branch",
+    "op": "shape",
+    "primitive": "Shape",
+    "yaml_path": "mindspore/ops/op_def/yaml/shape_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.shape",
+    "mindspore.ops.shape_"
+  ]
+}

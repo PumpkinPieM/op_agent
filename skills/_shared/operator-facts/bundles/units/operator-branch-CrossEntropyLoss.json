@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::cross_entropy_loss_op.yaml::CrossEntropyLoss",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::cross_entropy_loss_op.yaml::CrossEntropyLoss",
+    "unit_name": "CrossEntropyLoss",
+    "unit_type": "branch",
+    "op": "cross_entropy_loss",
+    "primitive": "CrossEntropyLoss",
+    "yaml_path": "mindspore/ops/op_def/yaml/cross_entropy_loss_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnCrossEntropyLoss"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "CrossEntropyLossGrad"
+      ]
+    }
+  },
+  "entries": []
+}

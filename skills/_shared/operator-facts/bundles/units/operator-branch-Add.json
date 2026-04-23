@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::add_op.yaml::Add",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::add_op.yaml::Add",
+    "unit_name": "Add",
+    "unit_type": "branch",
+    "op": "add",
+    "primitive": "Add",
+    "yaml_path": "mindspore/ops/op_def/yaml/add_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAdd"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

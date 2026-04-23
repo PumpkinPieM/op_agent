@@ -1,0 +1,39 @@
+{
+  "bundle_id": "branch::prod_ext_op.yaml::ProdExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::prod_ext_op.yaml::ProdExt",
+    "unit_name": "ProdExt",
+    "unit_type": "branch",
+    "op": "prod_ext",
+    "primitive": "ProdExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/prod_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnProd",
+        "aclnnProdDim"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Equal",
+        "Greater",
+        "Mul",
+        "Reshape",
+        "Shape",
+        "SumExt",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.prod",
+    "mindspore.mint.prod",
+    "mindspore.ops.prod"
+  ]
+}

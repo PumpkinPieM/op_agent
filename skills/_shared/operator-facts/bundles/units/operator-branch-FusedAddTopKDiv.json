@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::fused_add_topk_div_op.yaml::FusedAddTopKDiv",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::fused_add_topk_div_op.yaml::FusedAddTopKDiv",
+    "unit_name": "FusedAddTopKDiv",
+    "unit_type": "branch",
+    "op": "fused_add_topk_div",
+    "primitive": "FusedAddTopKDiv",
+    "yaml_path": "mindspore/ops/op_def/yaml/fused_add_topk_div_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

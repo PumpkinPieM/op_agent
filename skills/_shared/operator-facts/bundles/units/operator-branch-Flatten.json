@@ -1,0 +1,26 @@
+{
+  "bundle_id": "branch::flatten_op.yaml::Flatten",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::flatten_op.yaml::Flatten",
+    "unit_name": "Flatten",
+    "unit_type": "branch",
+    "op": "flatten",
+    "primitive": "Flatten",
+    "yaml_path": "mindspore/ops/op_def/yaml/flatten_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Reshape",
+        "Shape"
+      ]
+    }
+  },
+  "entries": []
+}

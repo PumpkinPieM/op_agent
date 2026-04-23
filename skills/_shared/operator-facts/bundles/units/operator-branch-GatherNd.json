@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::gather_nd_op.yaml::GatherNd",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::gather_nd_op.yaml::GatherNd",
+    "unit_name": "GatherNd",
+    "unit_type": "branch",
+    "op": "gather_nd",
+    "primitive": "GatherNd",
+    "yaml_path": "mindspore/ops/op_def/yaml/gather_nd_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "ScatterNd",
+        "Shape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.gather_nd",
+    "mindspore.ops.gather_nd"
+  ]
+}

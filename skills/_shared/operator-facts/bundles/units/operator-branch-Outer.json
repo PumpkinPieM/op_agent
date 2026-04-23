@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::outer_op.yaml::Outer",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::outer_op.yaml::Outer",
+    "unit_name": "Outer",
+    "unit_type": "branch",
+    "op": "outer",
+    "primitive": "Outer",
+    "yaml_path": "mindspore/ops/op_def/yaml/outer_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMul"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mul",
+        "Reshape",
+        "Shape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.outer",
+    "mindspore.mint.outer",
+    "mindspore.ops.outer"
+  ]
+}

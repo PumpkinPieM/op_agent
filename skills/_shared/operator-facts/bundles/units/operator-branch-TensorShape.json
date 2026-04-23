@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::tensor_shape_op.yaml::TensorShape",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::tensor_shape_op.yaml::TensorShape",
+    "unit_name": "TensorShape",
+    "unit_type": "branch",
+    "op": "tensor_shape",
+    "primitive": "TensorShape",
+    "yaml_path": "mindspore/ops/op_def/yaml/tensor_shape_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.dyn_shape"
+  ]
+}

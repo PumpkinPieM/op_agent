@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/clip_func.py::clip_by_global_norm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/clip_func.py::clip_by_global_norm",
+    "unit_name": "clip_by_global_norm",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/clip_func.py",
+    "impl_symbol": "clip_by_global_norm"
+  },
+  "entries": [
+    "mindspore.ops.clip_by_global_norm"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_value",
+      "unit_id": "composite::ops/function/clip_func.py::_check_value",
+      "unit_name": "_check_value",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/clip_func.py"
+    }
+  ]
+}

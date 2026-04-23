@@ -1,0 +1,36 @@
+{
+  "bundle_id": "composite::ops/function/sparse_func.py::csr_div",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/sparse_func.py::csr_div",
+    "unit_name": "csr_div",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/sparse_func.py",
+    "impl_symbol": "csr_div"
+  },
+  "entries": [
+    "mindspore.ops.csr_div"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "isinstance(y, (int, float, bool))",
+      "via_symbol": "_make_tensor",
+      "unit_id": "composite::ops/function/sparse_func.py::_make_tensor",
+      "unit_name": "_make_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/sparse_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (is_scalar(y))",
+      "via_symbol": "promote_tensor",
+      "unit_id": "composite::ops/function/sparse_func.py::promote_tensor",
+      "unit_name": "promote_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/sparse_func.py"
+    }
+  ]
+}

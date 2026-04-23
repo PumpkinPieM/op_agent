@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::inplace_erfinv_op.yaml::InplaceErfinv",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_erfinv_op.yaml::InplaceErfinv",
+    "unit_name": "InplaceErfinv",
+    "unit_type": "branch",
+    "op": "inplace_erfinv",
+    "primitive": "InplaceErfinv",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_erfinv_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceErfinv"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Exp",
+        "Mul",
+        "Muls",
+        "PowTensorScalar"
+      ]
+    }
+  },
+  "entries": []
+}

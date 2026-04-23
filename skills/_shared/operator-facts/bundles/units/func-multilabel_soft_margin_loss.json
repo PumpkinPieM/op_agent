@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/nn_func.py::multilabel_soft_margin_loss",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/nn_func.py::multilabel_soft_margin_loss",
+    "unit_name": "multilabel_soft_margin_loss",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py",
+    "impl_symbol": "multilabel_soft_margin_loss"
+  },
+  "entries": [
+    "mindspore.ops.multilabel_soft_margin_loss"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_is_tensor",
+      "unit_id": "composite::ops/function/nn_func.py::_check_is_tensor",
+      "unit_name": "_check_is_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    }
+  ]
+}

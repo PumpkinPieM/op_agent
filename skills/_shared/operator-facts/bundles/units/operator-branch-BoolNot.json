@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::bool_not_op.yaml::BoolNot",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::bool_not_op.yaml::BoolNot",
+    "unit_name": "BoolNot",
+    "unit_type": "branch",
+    "op": "bool_not",
+    "primitive": "BoolNot",
+    "yaml_path": "mindspore/ops/op_def/yaml/bool_not_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

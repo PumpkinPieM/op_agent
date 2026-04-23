@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::inner_non_zero_op.yaml::InnerNonZero",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inner_non_zero_op.yaml::InnerNonZero",
+    "unit_name": "InnerNonZero",
+    "unit_type": "branch",
+    "op": "inner_non_zero",
+    "primitive": "InnerNonZero",
+    "yaml_path": "mindspore/ops/op_def/yaml/inner_non_zero_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNonzeroV2"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::view_as_op.yaml::ViewAs",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::view_as_op.yaml::ViewAs",
+    "unit_name": "ViewAs",
+    "unit_type": "branch",
+    "op": "view_as",
+    "primitive": "ViewAs",
+    "yaml_path": "mindspore/ops/op_def/yaml/view_as_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnViewAs"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Reshape",
+        "Shape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.view_as",
+    "mindspore.ops.view_as"
+  ]
+}

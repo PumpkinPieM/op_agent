@@ -1,0 +1,64 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::logspace",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::logspace",
+    "unit_name": "logspace",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "logspace"
+  },
+  "entries": [
+    "mindspore.ops.logspace"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "isinstance(start, float)",
+      "via_symbol": "cast",
+      "unit_id": "branch::cast_op.yaml::Cast",
+      "unit_name": "Cast",
+      "unit_type": "branch",
+      "op": "cast",
+      "primitive": "Cast",
+      "yaml_path": "mindspore/ops/op_def/yaml/cast_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnCast"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Cast"
+        ]
+      }
+    },
+    {
+      "component_type": "unit",
+      "condition": "isinstance(end, float)",
+      "via_symbol": "cast",
+      "unit_id": "branch::cast_op.yaml::Cast",
+      "unit_name": "Cast",
+      "unit_type": "branch",
+      "op": "cast",
+      "primitive": "Cast",
+      "yaml_path": "mindspore/ops/op_def/yaml/cast_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnCast"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Cast"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::triu_op.yaml::Triu",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::triu_op.yaml::Triu",
+    "unit_name": "Triu",
+    "unit_type": "branch",
+    "op": "triu",
+    "primitive": "Triu",
+    "yaml_path": "mindspore/ops/op_def/yaml/triu_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnTriu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Triu"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.triu",
+    "mindspore.mint.triu",
+    "mindspore.ops.triu"
+  ]
+}

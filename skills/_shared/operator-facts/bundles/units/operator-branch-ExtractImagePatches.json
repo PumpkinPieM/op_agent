@@ -1,0 +1,37 @@
+{
+  "bundle_id": "branch::extract_image_patches_op.yaml::ExtractImagePatches",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::extract_image_patches_op.yaml::ExtractImagePatches",
+    "unit_name": "ExtractImagePatches",
+    "unit_type": "branch",
+    "op": "extract_image_patches",
+    "primitive": "ExtractImagePatches",
+    "yaml_path": "mindspore/ops/op_def/yaml/extract_image_patches_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Add",
+        "Cast",
+        "Concat",
+        "ExpandDims",
+        "ExtractImagePatches",
+        "MatMul",
+        "Mul",
+        "Range",
+        "Reshape",
+        "ScatterNd",
+        "Slice",
+        "Sub",
+        "Transpose"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::hardtanh_grad_op.yaml::HardtanhGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::hardtanh_grad_op.yaml::HardtanhGrad",
+    "unit_name": "HardtanhGrad",
+    "unit_type": "branch",
+    "op": "hardtanh_grad",
+    "primitive": "HardtanhGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/hardtanh_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnHardtanhBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

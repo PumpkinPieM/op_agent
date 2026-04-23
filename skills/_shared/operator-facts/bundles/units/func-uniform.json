@@ -1,0 +1,45 @@
+{
+  "bundle_id": "composite::ops/function/random_func.py::uniform",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/random_func.py::uniform",
+    "unit_name": "uniform",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/random_func.py",
+    "impl_symbol": "uniform"
+  },
+  "entries": [
+    "mindspore.ops.uniform"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_get_seed",
+      "unit_id": "composite::ops/function/random_func.py::_get_seed",
+      "unit_name": "_get_seed",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/random_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "const_utils.is_same_type(dtype, mstype.int32)",
+      "via_symbol": "_set_prim_op_user_data",
+      "unit_id": "composite::ops/function/random_func.py::_set_prim_op_user_data",
+      "unit_name": "_set_prim_op_user_data",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/random_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (const_utils.is_same_type(dtype, mstype.int32))",
+      "via_symbol": "_set_prim_op_user_data",
+      "unit_id": "composite::ops/function/random_func.py::_set_prim_op_user_data",
+      "unit_name": "_set_prim_op_user_data",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/random_func.py"
+    }
+  ]
+}

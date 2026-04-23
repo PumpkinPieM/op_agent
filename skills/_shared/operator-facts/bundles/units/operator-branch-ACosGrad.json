@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::a_cos_grad_op.yaml::ACosGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::a_cos_grad_op.yaml::ACosGrad",
+    "unit_name": "ACosGrad",
+    "unit_type": "branch",
+    "op": "a_cos_grad",
+    "primitive": "ACosGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/a_cos_grad_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "ACosGrad",
+        "Mul",
+        "Neg",
+        "PowTensorScalar",
+        "Sub"
+      ]
+    }
+  },
+  "entries": []
+}

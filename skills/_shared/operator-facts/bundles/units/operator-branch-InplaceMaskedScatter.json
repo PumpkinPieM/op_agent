@@ -1,0 +1,37 @@
+{
+  "bundle_id": "branch::inplace_masked_scatter_op.yaml::InplaceMaskedScatter",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_masked_scatter_op.yaml::InplaceMaskedScatter",
+    "unit_name": "InplaceMaskedScatter",
+    "unit_type": "branch",
+    "op": "inplace_masked_scatter",
+    "primitive": "InplaceMaskedScatter",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_masked_scatter_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceMaskedScatter"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Concat",
+        "MaskedFillScalar",
+        "MaskedSelect",
+        "Mul",
+        "Reshape",
+        "ScalarGt",
+        "Shape",
+        "Sub",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.masked_scatter_"
+  ]
+}

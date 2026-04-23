@@ -1,0 +1,36 @@
+{
+  "bundle_id": "branch::erf_op.yaml::Erf",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::erf_op.yaml::Erf",
+    "unit_name": "Erf",
+    "unit_type": "branch",
+    "op": "erf",
+    "primitive": "Erf",
+    "yaml_path": "mindspore/ops/op_def/yaml/erf_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnErf"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Exp",
+        "Mul",
+        "Muls",
+        "Neg",
+        "PowTensorScalar"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.erf",
+    "mindspore.mint.erf",
+    "mindspore.ops.erf"
+  ]
+}

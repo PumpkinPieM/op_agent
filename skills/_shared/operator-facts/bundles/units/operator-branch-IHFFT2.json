@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::ihfft2_op.yaml::IHFFT2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::ihfft2_op.yaml::IHFFT2",
+    "unit_name": "IHFFT2",
+    "unit_type": "branch",
+    "op": "ihfft2",
+    "primitive": "IHFFT2",
+    "yaml_path": "mindspore/ops/op_def/yaml/ihfft2_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "FFTShapeCopy",
+        "IFFT2",
+        "Sub"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.ihfft2"
+  ]
+}

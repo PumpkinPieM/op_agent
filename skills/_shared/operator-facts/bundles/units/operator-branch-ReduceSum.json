@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::reduce_sum_op.yaml::ReduceSum",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::reduce_sum_op.yaml::ReduceSum",
+    "unit_name": "ReduceSum",
+    "unit_type": "branch",
+    "op": "reduce_sum",
+    "primitive": "ReduceSum",
+    "yaml_path": "mindspore/ops/op_def/yaml/reduce_sum_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::selu_grad_op.yaml::SeluGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::selu_grad_op.yaml::SeluGrad",
+    "unit_name": "SeluGrad",
+    "unit_type": "branch",
+    "op": "selu_grad",
+    "primitive": "SeluGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/selu_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSeluBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

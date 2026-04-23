@@ -1,0 +1,35 @@
+{
+  "bundle_id": "branch::acosh_ext_op.yaml::AcoshExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::acosh_ext_op.yaml::AcoshExt",
+    "unit_name": "AcoshExt",
+    "unit_type": "branch",
+    "op": "acosh_ext",
+    "primitive": "AcoshExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/acosh_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAcosh"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mul",
+        "Rsqrt",
+        "Square",
+        "SubScalar"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.acosh",
+    "mindspore.mint.acosh",
+    "mindspore.mint.arccosh",
+    "mindspore.ops.acosh"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::moe_token_unpermute_grad_op.yaml::MoeTokenUnpermuteGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::moe_token_unpermute_grad_op.yaml::MoeTokenUnpermuteGrad",
+    "unit_name": "MoeTokenUnpermuteGrad",
+    "unit_type": "branch",
+    "op": "moe_token_unpermute_grad",
+    "primitive": "MoeTokenUnpermuteGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/moe_token_unpermute_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMoeTokenUnpermuteGrad"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

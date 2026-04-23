@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::count_nonzero_op.yaml::CountNonZero",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::count_nonzero_op.yaml::CountNonZero",
+    "unit_name": "CountNonZero",
+    "unit_type": "branch",
+    "op": "count_nonzero",
+    "primitive": "CountNonZero",
+    "yaml_path": "mindspore/ops/op_def/yaml/count_nonzero_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNeScalar",
+        "aclnnReduceSum"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.count_nonzero",
+    "mindspore.mint.count_nonzero",
+    "mindspore.ops.count_nonzero"
+  ]
+}

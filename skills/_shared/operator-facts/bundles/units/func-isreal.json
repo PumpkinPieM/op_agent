@@ -1,0 +1,28 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::isreal",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::isreal",
+    "unit_name": "isreal",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "isreal"
+  },
+  "entries": [
+    "mindspore.Tensor.isreal",
+    "mindspore.ops.isreal"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_is_tensor",
+      "unit_id": "composite::ops/function/math_func.py::_check_is_tensor",
+      "unit_name": "_check_is_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    }
+  ]
+}

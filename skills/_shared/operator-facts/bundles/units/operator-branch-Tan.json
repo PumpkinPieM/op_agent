@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::tan_op.yaml::Tan",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::tan_op.yaml::Tan",
+    "unit_name": "Tan",
+    "unit_type": "branch",
+    "op": "tan",
+    "primitive": "Tan",
+    "yaml_path": "mindspore/ops/op_def/yaml/tan_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnTan"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AddScalar",
+        "Mul",
+        "Square"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.tan",
+    "mindspore.mint.tan",
+    "mindspore.ops.tan"
+  ]
+}

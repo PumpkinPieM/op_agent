@@ -1,0 +1,42 @@
+{
+  "bundle_id": "branch::pow_op.yaml::Pow",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::pow_op.yaml::Pow",
+    "unit_name": "Pow",
+    "unit_type": "branch",
+    "op": "pow",
+    "primitive": "Pow",
+    "yaml_path": "mindspore/ops/op_def/yaml/pow_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnPowTensorTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Equal",
+        "GreaterEqual",
+        "Log",
+        "LogicalAnd",
+        "Mul",
+        "Pow",
+        "Select",
+        "Shape",
+        "Sub",
+        "SubScalar",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.pow",
+    "mindspore.mint.pow",
+    "mindspore.ops.float_power",
+    "mindspore.ops.pow"
+  ]
+}

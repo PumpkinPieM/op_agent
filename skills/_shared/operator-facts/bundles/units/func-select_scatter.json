@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::select_scatter",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::select_scatter",
+    "unit_name": "select_scatter",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "select_scatter"
+  },
+  "entries": [
+    "mindspore.Tensor.select_scatter"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_is_tensor",
+      "unit_id": "composite::ops/function/array_func.py::_check_is_tensor",
+      "unit_name": "_check_is_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/array_func.py"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::create_symmetric_memory_op.yaml::CreateSymmetricMemory",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::create_symmetric_memory_op.yaml::CreateSymmetricMemory",
+    "unit_name": "CreateSymmetricMemory",
+    "unit_type": "branch",
+    "op": "create_symmetric_memory",
+    "primitive": "CreateSymmetricMemory",
+    "yaml_path": "mindspore/ops/op_def/yaml/create_symmetric_memory_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnCreateSymmetricMemory"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

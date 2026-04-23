@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::tracev2_op.yaml::TraceV2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::tracev2_op.yaml::TraceV2",
+    "unit_name": "TraceV2",
+    "unit_type": "branch",
+    "op": "trace_v2",
+    "primitive": "TraceV2",
+    "yaml_path": "mindspore/ops/op_def/yaml/tracev2_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Shape",
+        "TraceV2Grad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.trace"
+  ]
+}

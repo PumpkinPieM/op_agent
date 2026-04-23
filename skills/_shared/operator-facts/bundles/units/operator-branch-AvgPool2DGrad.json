@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::avg_pool2d_grad_op.yaml::AvgPool2DGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::avg_pool2d_grad_op.yaml::AvgPool2DGrad",
+    "unit_name": "AvgPool2DGrad",
+    "unit_type": "branch",
+    "op": "avg_pool2d_grad",
+    "primitive": "AvgPool2DGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/avg_pool2d_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAvgPool2dBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AvgPool2D"
+      ]
+    }
+  },
+  "entries": []
+}

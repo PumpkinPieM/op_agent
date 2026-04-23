@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::binary_cross_entropy_op.yaml::BinaryCrossEntropy",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::binary_cross_entropy_op.yaml::BinaryCrossEntropy",
+    "unit_name": "BinaryCrossEntropy",
+    "unit_type": "branch",
+    "op": "binary_cross_entropy",
+    "primitive": "BinaryCrossEntropy",
+    "yaml_path": "mindspore/ops/op_def/yaml/binary_cross_entropy_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBinaryCrossEntropy"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BinaryCrossEntropyGrad",
+        "Log",
+        "Mul",
+        "RealDiv",
+        "Sub"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.binary_cross_entropy"
+  ]
+}

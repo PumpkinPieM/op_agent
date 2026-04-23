@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::right_shift_op.yaml::RightShift",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::right_shift_op.yaml::RightShift",
+    "unit_name": "RightShift",
+    "unit_type": "branch",
+    "op": "right_shift",
+    "primitive": "RightShift",
+    "yaml_path": "mindspore/ops/op_def/yaml/right_shift_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

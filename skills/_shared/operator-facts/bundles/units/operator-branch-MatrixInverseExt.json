@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::matrix_inverse_ext_op.yaml::MatrixInverseExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::matrix_inverse_ext_op.yaml::MatrixInverseExt",
+    "unit_name": "MatrixInverseExt",
+    "unit_type": "branch",
+    "op": "matrix_inverse_ext",
+    "primitive": "MatrixInverseExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/matrix_inverse_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInverse"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BatchMatMul",
+        "MatMul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.inverse",
+    "mindspore.mint.inverse",
+    "mindspore.ops.inverse"
+  ]
+}

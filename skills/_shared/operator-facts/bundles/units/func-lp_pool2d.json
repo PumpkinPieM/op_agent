@@ -1,0 +1,41 @@
+{
+  "bundle_id": "composite::ops/function/nn_func.py::lp_pool2d",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/nn_func.py::lp_pool2d",
+    "unit_name": "lp_pool2d",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py",
+    "impl_symbol": "lp_pool2d"
+  },
+  "entries": [
+    "mindspore.ops.lp_pool2d"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "avg_pool2d",
+      "unit_id": "branch::avg_pool2d_op.yaml::AvgPool2D",
+      "unit_name": "AvgPool2D",
+      "unit_type": "branch",
+      "op": "avg_pool2d",
+      "primitive": "AvgPool2D",
+      "yaml_path": "mindspore/ops/op_def/yaml/avg_pool2d_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnAvgPool2d"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "AvgPool2DGrad"
+        ]
+      }
+    }
+  ]
+}

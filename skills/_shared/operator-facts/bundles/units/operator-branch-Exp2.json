@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::exp2_op.yaml::Exp2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::exp2_op.yaml::Exp2",
+    "unit_name": "Exp2",
+    "unit_type": "branch",
+    "op": "exp2",
+    "primitive": "Exp2",
+    "yaml_path": "mindspore/ops/op_def/yaml/exp2_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnExp2"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "Mul",
+        "Muls"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.exp2",
+    "mindspore.ops.exp2"
+  ]
+}

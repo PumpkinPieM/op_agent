@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::dropout_gen_mask_ext_op.yaml::DropoutGenMaskExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::dropout_gen_mask_ext_op.yaml::DropoutGenMaskExt",
+    "unit_name": "DropoutGenMaskExt",
+    "unit_type": "branch",
+    "op": "dropout_gen_mask_ext",
+    "primitive": "DropoutGenMaskExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/dropout_gen_mask_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnDropoutGenMaskV2"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

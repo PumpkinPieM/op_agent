@@ -1,0 +1,96 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::diagonal_scatter",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::diagonal_scatter",
+    "unit_name": "diagonal_scatter",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "diagonal_scatter"
+  },
+  "entries": [
+    "mindspore.Tensor.diagonal_scatter"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_is_tensor",
+      "unit_id": "composite::ops/function/array_func.py::_check_is_tensor",
+      "unit_name": "_check_is_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/array_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_diagonal_scatter_shape",
+      "unit_id": "composite::ops/function/array_func.py::_check_diagonal_scatter_shape",
+      "unit_name": "_check_diagonal_scatter_shape",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/array_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (m == n)",
+      "via_symbol": "zeros",
+      "unit_id": "branch::zeros_op.yaml::Zeros",
+      "unit_name": "Zeros",
+      "unit_type": "branch",
+      "op": "zeros",
+      "primitive": "Zeros",
+      "yaml_path": "mindspore/ops/op_def/yaml/zeros_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnInplaceZero"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": []
+      }
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (m == n)",
+      "via_symbol": "concat",
+      "unit_id": "composite::ops/function/array_func.py::concat",
+      "unit_name": "concat",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/array_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (m == n) and src.shape != input_diag.shape",
+      "via_symbol": "zeros",
+      "unit_id": "branch::zeros_op.yaml::Zeros",
+      "unit_name": "Zeros",
+      "unit_type": "branch",
+      "op": "zeros",
+      "primitive": "Zeros",
+      "yaml_path": "mindspore/ops/op_def/yaml/zeros_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnInplaceZero"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": []
+      }
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (m == n) and src.shape != input_diag.shape",
+      "via_symbol": "concat",
+      "unit_id": "composite::ops/function/array_func.py::concat",
+      "unit_name": "concat",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/array_func.py"
+    }
+  ]
+}

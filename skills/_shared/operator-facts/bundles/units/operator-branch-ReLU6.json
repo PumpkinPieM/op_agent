@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::relu6_op.yaml::ReLU6",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::relu6_op.yaml::ReLU6",
+    "unit_name": "ReLU6",
+    "unit_type": "branch",
+    "op": "relu6",
+    "primitive": "ReLU6",
+    "yaml_path": "mindspore/ops/op_def/yaml/relu6_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "ReLU6Grad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.relu6"
+  ]
+}

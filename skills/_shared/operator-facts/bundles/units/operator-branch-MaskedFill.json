@@ -1,0 +1,34 @@
+{
+  "bundle_id": "branch::masked_fill_op.yaml::MaskedFill",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::masked_fill_op.yaml::MaskedFill",
+    "unit_name": "MaskedFill",
+    "unit_type": "branch",
+    "op": "masked_fill",
+    "primitive": "MaskedFill",
+    "yaml_path": "mindspore/ops/op_def/yaml/masked_fill_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceCopy",
+        "aclnnInplaceMaskedFillTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "MaskedFill",
+        "Select",
+        "SumExt"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.masked_fill",
+    "mindspore.ops.masked_fill"
+  ]
+}

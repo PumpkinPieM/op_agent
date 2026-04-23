@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::nsa_select_attention_op.yaml::NsaSelectAttention",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::nsa_select_attention_op.yaml::NsaSelectAttention",
+    "unit_name": "NsaSelectAttention",
+    "unit_type": "branch",
+    "op": "nsa_select_attention",
+    "primitive": "NsaSelectAttention",
+    "yaml_path": "mindspore/ops/op_def/yaml/nsa_select_attention_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNsaSelectedAttention"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "NsaSelectAttentionGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.nsa_select_attention"
+  ]
+}

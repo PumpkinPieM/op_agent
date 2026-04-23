@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::acosh_op.yaml::Acosh",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::acosh_op.yaml::Acosh",
+    "unit_name": "Acosh",
+    "unit_type": "branch",
+    "op": "acosh",
+    "primitive": "Acosh",
+    "yaml_path": "mindspore/ops/op_def/yaml/acosh_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "AcoshGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.arccosh"
+  ]
+}

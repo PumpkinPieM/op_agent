@@ -1,0 +1,35 @@
+{
+  "bundle_id": "branch::remainder_tensor_tensor_op.yaml::RemainderTensorTensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::remainder_tensor_tensor_op.yaml::RemainderTensorTensor",
+    "unit_name": "RemainderTensorTensor",
+    "unit_type": "branch",
+    "op": "remainder_tensor_tensor",
+    "primitive": "RemainderTensorTensor",
+    "yaml_path": "mindspore/ops/op_def/yaml/remainder_tensor_tensor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRemainderTensorTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "DivMod",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.__mod__",
+    "mindspore.Tensor.remainder",
+    "mindspore.mint.remainder",
+    "mindspore.ops.remainder",
+    "mindspore.ops.remainder_ext"
+  ]
+}

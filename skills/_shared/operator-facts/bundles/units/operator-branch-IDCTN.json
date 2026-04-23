@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::idctn_op.yaml::IDCTN",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::idctn_op.yaml::IDCTN",
+    "unit_name": "IDCTN",
+    "unit_type": "branch",
+    "op": "idctn",
+    "primitive": "IDCTN",
+    "yaml_path": "mindspore/ops/op_def/yaml/idctn_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "DCTN",
+        "FFTShapeCopy",
+        "Sub"
+      ]
+    }
+  },
+  "entries": []
+}

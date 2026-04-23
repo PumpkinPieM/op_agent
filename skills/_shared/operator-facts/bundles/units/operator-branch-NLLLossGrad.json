@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::nllloss_grad_op.yaml::NLLLossGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::nllloss_grad_op.yaml::NLLLossGrad",
+    "unit_name": "NLLLossGrad",
+    "unit_type": "branch",
+    "op": "nllloss_grad",
+    "primitive": "NLLLossGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/nllloss_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNLLLossBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

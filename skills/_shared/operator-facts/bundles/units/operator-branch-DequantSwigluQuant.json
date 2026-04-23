@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::dequant_swiglu_quant_op.yaml::DequantSwigluQuant",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::dequant_swiglu_quant_op.yaml::DequantSwigluQuant",
+    "unit_name": "DequantSwigluQuant",
+    "unit_type": "branch",
+    "op": "dequant_swiglu_quant",
+    "primitive": "DequantSwigluQuant",
+    "yaml_path": "mindspore/ops/op_def/yaml/dequant_swiglu_quant_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnDequantSwigluQuant"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

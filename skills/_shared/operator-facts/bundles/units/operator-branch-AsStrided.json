@@ -1,0 +1,39 @@
+{
+  "bundle_id": "branch::as_strided_op.yaml::AsStrided",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::as_strided_op.yaml::AsStrided",
+    "unit_name": "AsStrided",
+    "unit_type": "branch",
+    "op": "as_strided",
+    "primitive": "AsStrided",
+    "yaml_path": "mindspore/ops/op_def/yaml/as_strided_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAsStrided"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Arange",
+        "AsStrided",
+        "BroadcastTo",
+        "Div",
+        "IndexAddExt",
+        "InplaceCopy",
+        "Ones",
+        "Reshape",
+        "Shape",
+        "Squeeze",
+        "Sub",
+        "SumExt",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": []
+}

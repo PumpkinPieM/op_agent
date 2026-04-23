@@ -1,0 +1,26 @@
+{
+  "bundle_id": "branch::silent_check_v3_op.yaml::SilentCheckV3",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::silent_check_v3_op.yaml::SilentCheckV3",
+    "unit_name": "SilentCheckV3",
+    "unit_type": "branch",
+    "op": "silent_check_v3",
+    "primitive": "SilentCheckV3",
+    "yaml_path": "mindspore/ops/op_def/yaml/silent_check_v3_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceCopy",
+        "aclnnSilentCheckV2"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

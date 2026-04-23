@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::unstack_ext_view_op.yaml::UnstackExtView",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::unstack_ext_view_op.yaml::UnstackExtView",
+    "unit_name": "UnstackExtView",
+    "unit_type": "branch",
+    "op": "unstack_ext_view",
+    "primitive": "UnstackExtView",
+    "yaml_path": "mindspore/ops/op_def/yaml/unstack_ext_view_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnUnstackExtView"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "StackExt"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.unbind",
+    "mindspore.mint.unbind",
+    "mindspore.ops.unbind"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::tril_ext_op.yaml::TrilExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::tril_ext_op.yaml::TrilExt",
+    "unit_name": "TrilExt",
+    "unit_type": "branch",
+    "op": "tril_ext",
+    "primitive": "TrilExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/tril_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnTril"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "TrilExt"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.tril",
+    "mindspore.mint.tril",
+    "mindspore.ops.tril"
+  ]
+}

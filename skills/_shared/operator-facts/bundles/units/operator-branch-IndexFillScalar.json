@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::index_fill_scalar_op.yaml::IndexFillScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::index_fill_scalar_op.yaml::IndexFillScalar",
+    "unit_name": "IndexFillScalar",
+    "unit_type": "branch",
+    "op": "index_fill_scalar",
+    "primitive": "IndexFillScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/index_fill_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnIndexFillTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "IndexFillScalar",
+        "ZerosLike"
+      ]
+    }
+  },
+  "entries": []
+}

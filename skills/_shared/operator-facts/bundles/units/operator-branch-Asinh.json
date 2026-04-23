@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::asinh_op.yaml::Asinh",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::asinh_op.yaml::Asinh",
+    "unit_name": "Asinh",
+    "unit_type": "branch",
+    "op": "asinh",
+    "primitive": "Asinh",
+    "yaml_path": "mindspore/ops/op_def/yaml/asinh_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "AsinhGrad"
+      ]
+    }
+  },
+  "entries": []
+}

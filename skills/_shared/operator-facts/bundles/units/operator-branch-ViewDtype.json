@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::view_dtype_op.yaml::ViewDtype",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::view_dtype_op.yaml::ViewDtype",
+    "unit_name": "ViewDtype",
+    "unit_type": "branch",
+    "op": "view_dtype",
+    "primitive": "ViewDtype",
+    "yaml_path": "mindspore/ops/op_def/yaml/view_dtype_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnViewDtype"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.view"
+  ]
+}

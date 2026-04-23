@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::equal_ext_op.yaml::EqualExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::equal_ext_op.yaml::EqualExt",
+    "unit_name": "EqualExt",
+    "unit_type": "branch",
+    "op": "equal_ext",
+    "primitive": "EqualExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/equal_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnEqual"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.equal_ext_op"
+  ]
+}

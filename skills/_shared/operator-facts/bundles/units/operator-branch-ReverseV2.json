@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::reverse_v2_op.yaml::ReverseV2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::reverse_v2_op.yaml::ReverseV2",
+    "unit_name": "ReverseV2",
+    "unit_type": "branch",
+    "op": "reverse_v2",
+    "primitive": "ReverseV2",
+    "yaml_path": "mindspore/ops/op_def/yaml/reverse_v2_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnFlip"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ReverseV2"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.flip",
+    "mindspore.ops.flip",
+    "mindspore.ops.fliplr",
+    "mindspore.ops.flipud",
+    "mindspore.ops.reverse"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::trapz",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::trapz",
+    "unit_name": "trapz",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "trapz"
+  },
+  "entries": [
+    "mindspore.ops.trapz"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_dim_in_range",
+      "unit_id": "composite::ops/function/math_func.py::_check_dim_in_range",
+      "unit_name": "_check_dim_in_range",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    }
+  ]
+}

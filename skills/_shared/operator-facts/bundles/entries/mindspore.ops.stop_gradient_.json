@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.ops.stop_gradient_",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-20T15:15:54+08:00",
+  "generated_at": "2026-04-20T17:24:10+08:00",
   "entry": {
     "public_api": "mindspore.ops.stop_gradient_",
     "public_surface": "mindspore.ops",

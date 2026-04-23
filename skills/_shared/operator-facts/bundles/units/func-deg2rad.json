@@ -1,0 +1,28 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::deg2rad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::deg2rad",
+    "unit_name": "deg2rad",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "deg2rad"
+  },
+  "entries": [
+    "mindspore.Tensor.deg2rad",
+    "mindspore.ops.deg2rad"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_input_dtype",
+      "unit_id": "composite::ops/function/math_func.py::_check_input_dtype",
+      "unit_name": "_check_input_dtype",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    }
+  ]
+}

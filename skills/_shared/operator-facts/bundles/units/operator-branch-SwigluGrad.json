@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::swiglu_grad_op.yaml::SwigluGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::swiglu_grad_op.yaml::SwigluGrad",
+    "unit_name": "SwigluGrad",
+    "unit_type": "branch",
+    "op": "swiglu_grad",
+    "primitive": "SwigluGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/swiglu_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSwiGluGrad"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

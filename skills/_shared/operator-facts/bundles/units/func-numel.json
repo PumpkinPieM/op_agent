@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::numel",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::numel",
+    "unit_name": "numel",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "numel"
+  },
+  "entries": [
+    "mindspore.ops.numel"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_is_tensor",
+      "unit_id": "composite::ops/function/math_func.py::_check_is_tensor",
+      "unit_name": "_check_is_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    }
+  ]
+}

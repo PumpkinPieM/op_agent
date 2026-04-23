@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::log1p_op.yaml::Log1p",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::log1p_op.yaml::Log1p",
+    "unit_name": "Log1p",
+    "unit_type": "branch",
+    "op": "log1p",
+    "primitive": "Log1p",
+    "yaml_path": "mindspore/ops/op_def/yaml/log1p_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLog1p"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AddScalar",
+        "Conj",
+        "Div"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.log1p",
+    "mindspore.mint.log1p",
+    "mindspore.ops.log1p"
+  ]
+}

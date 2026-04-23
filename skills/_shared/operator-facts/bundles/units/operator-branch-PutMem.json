@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::put_mem_op.yaml::PutMem",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::put_mem_op.yaml::PutMem",
+    "unit_name": "PutMem",
+    "unit_type": "branch",
+    "op": "put_mem",
+    "primitive": "PutMem",
+    "yaml_path": "mindspore/ops/op_def/yaml/put_mem_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

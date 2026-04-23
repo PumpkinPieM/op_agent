@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::clone_op.yaml::Clone",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::clone_op.yaml::Clone",
+    "unit_name": "Clone",
+    "unit_type": "branch",
+    "op": "clone",
+    "primitive": "Clone",
+    "yaml_path": "mindspore/ops/op_def/yaml/clone_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceCopy"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.clone",
+    "mindspore.mint.clone"
+  ]
+}

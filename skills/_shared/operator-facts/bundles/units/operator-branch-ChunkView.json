@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::chunk_view_op.yaml::ChunkView",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::chunk_view_op.yaml::ChunkView",
+    "unit_name": "ChunkView",
+    "unit_type": "branch",
+    "op": "chunk_view",
+    "primitive": "ChunkView",
+    "yaml_path": "mindspore/ops/op_def/yaml/chunk_view_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnChunkView"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Concat"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.chunk"
+  ]
+}

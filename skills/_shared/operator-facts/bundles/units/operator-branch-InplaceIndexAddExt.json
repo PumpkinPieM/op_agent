@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::inplace_index_add_op.yaml::InplaceIndexAddExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_index_add_op.yaml::InplaceIndexAddExt",
+    "unit_name": "InplaceIndexAddExt",
+    "unit_type": "branch",
+    "op": "inplace_index_add",
+    "primitive": "InplaceIndexAddExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_index_add_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnIndexAdd"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Gather"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.index_add_",
+    "mindspore.ops.inplace_index_add"
+  ]
+}

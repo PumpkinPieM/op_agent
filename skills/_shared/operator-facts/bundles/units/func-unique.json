@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::unique",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::unique",
+    "unit_name": "unique",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "unique"
+  },
+  "entries": [
+    "mindspore.ops.unique"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "get_x_shape",
+      "unit_id": "composite::ops/function/array_func.py::get_x_shape",
+      "unit_name": "get_x_shape",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/array_func.py"
+    }
+  ]
+}

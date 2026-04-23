@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::reflection_pad_3d_grad_op.yaml::ReflectionPad3DGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::reflection_pad_3d_grad_op.yaml::ReflectionPad3DGrad",
+    "unit_name": "ReflectionPad3DGrad",
+    "unit_type": "branch",
+    "op": "reflection_pad_3d_grad",
+    "primitive": "ReflectionPad3DGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/reflection_pad_3d_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnReflectionPad3dBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

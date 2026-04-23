@@ -9,6 +9,7 @@
 - `ms_entry_unit_edges`
 - `ms_unit_graph_edges`
 - `ms_entry_bundle`
+- `ms_unit_bundle` schema / examples
 
 不再保留旧版：
 
@@ -22,10 +23,11 @@
 ```text
 operator-facts/
 ├── bundles/
-│   └── entries/                               # MindSpore entry bundles, one public API per file
-│       ├── mindspore.Tensor.abs.json          # one single-entry bundle
-│       ├── mindspore.Tensor.max.json          # one overload-entry bundle, contains multiple branch targets
-│       └── mindspore.Tensor.aminmax.json      # one composite-entry bundle, contains composite components
+│   ├── entries/                               # MindSpore entry bundles, one public API per file
+│   │   ├── mindspore.Tensor.abs.json          # one single-entry bundle
+│   │   ├── mindspore.Tensor.max.json          # one overload-entry bundle, contains multiple branch targets
+│   │   └── mindspore.Tensor.aminmax.json      # one composite-entry bundle, contains composite components
+│   └── units/                                 # MindSpore unit bundles, one unit per file
 ├── data/
 │   ├── ms_entry_identity.jsonl                # MS public entry identity index
 │   ├── ms_entry_unit_edges.jsonl              # MS entry -> unit routing index
@@ -35,17 +37,21 @@ operator-facts/
 ├── examples/
 │   ├── ms_entry_bundle.abs.example.json       # example single-entry bundle
 │   ├── ms_entry_bundle.aminmax.example.json   # example composite-entry bundle
+│   ├── ms_unit_bundle.argsort.example.json    # example branch unit bundle
+│   ├── ms_unit_bundle.split_ext.example.json  # example composite unit bundle
 │   └── pta_facts.example.json                 # PTA facts example
 ├── schemas/
 │   ├── ms_entry_bundle.schema.json            # entry bundle format, for bundles/entries/*.json
 │   ├── ms_entry_identity.schema.json          # entry identity format, for data/ms_entry_identity.jsonl
 │   ├── ms_entry_unit_edges.schema.json        # entry -> unit edge format, for data/ms_entry_unit_edges.jsonl
+│   ├── ms_unit_bundle.schema.json             # unit bundle format
 │   ├── ms_unit_graph_edges.schema.json        # composite graph edge format, for data/ms_unit_graph_edges.jsonl
 │   ├── ms_unit_identity.schema.json           # unit identity + coverage format, for data/ms_unit_identity.jsonl
 │   └── pta_facts.schema.json                  # PTA facts format, for data/pta_facts.jsonl
 ├── scripts/
 │   ├── build_ms_facts.py                      # build all 4 normalized MS facts tables
 │   ├── build_entry_bundles.py                 # build entry bundles from the 4 MS facts tables
+│   ├── build_unit_bundles.py                  # build unit bundles from the 4 MS facts tables
 │   ├── build_operator_facts.py                # end-to-end pipeline: facts -> validate -> bundles -> validate
 │   ├── build_ms_entry_identity.py             # build entry identity rows
 │   ├── build_ms_entry_unit_edges.py           # build entry -> unit routing rows
@@ -57,6 +63,7 @@ operator-facts/
 └── validation/
     ├── validate_ms_facts.py                   # validate the 4 MS facts tables + golden cases
     ├── validate_entry_bundles.py              # validate generated entry bundles against schema
+    ├── validate_unit_bundles.py               # validate generated unit bundles against schema
     └── golden/ms_facts.golden.json            # golden regression cases for key APIs
 ```
 
@@ -121,7 +128,7 @@ branch unit 覆盖字段统一为：
 
 ## bundle 设计
 
-当前消费层只保留 `entry bundle`。
+当前消费层以 `entry bundle` 为主，并已定义最小 `unit bundle` schema。
 
 ### branch bundle 形态
 
@@ -160,6 +167,20 @@ branch unit 覆盖字段统一为：
   - 若 `unit_type = branch`，再保留 `op`、`primitive`、`yaml_path`、`coverage`
   - 若 `unit_type = composite`，只保留 `impl_path`
 
+### unit bundle 形态
+
+`unit bundle` 以单个 `unit` 为中心，只保留：
+
+- `unit`
+- `entries`
+- `components`（仅 composite unit 出现）
+
+其中：
+
+- `entries` 直接使用 `public_api` 字符串数组
+- branch unit 在 `unit` 下直接携带 `coverage`
+- composite unit 在 `components` 中只保留直接涉及到的 `public_api / unit / primitive_symbol`
+
 ## 从头构建流程
 
 ### 一键构建
@@ -183,6 +204,8 @@ python op_agent/skills/_shared/operator-facts/scripts/build_operator_facts.py \
 2. `validation/validate_ms_facts.py`
 3. `build_entry_bundles.py`
 4. `validation/validate_entry_bundles.py`
+5. `build_unit_bundles.py`
+6. `validation/validate_unit_bundles.py`
 
 ### 分步构建
 
@@ -216,6 +239,12 @@ python op_agent/skills/_shared/operator-facts/validation/validate_ms_facts.py
 
 ```bash
 python op_agent/skills/_shared/operator-facts/scripts/build_entry_bundles.py
+```
+
+#### 4. 构建 unit bundles
+
+```bash
+python op_agent/skills/_shared/operator-facts/scripts/build_unit_bundles.py
 ```
 
 产出目录：

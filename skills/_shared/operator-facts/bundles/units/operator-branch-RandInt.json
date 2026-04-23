@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::randint_op.yaml::RandInt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::randint_op.yaml::RandInt",
+    "unit_name": "RandInt",
+    "unit_type": "branch",
+    "op": "randint",
+    "primitive": "RandInt",
+    "yaml_path": "mindspore/ops/op_def/yaml/randint_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceRandom"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.randint",
+    "mindspore.ops.randint"
+  ]
+}

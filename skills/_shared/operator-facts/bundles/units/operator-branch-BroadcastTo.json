@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::broadcast_to_op.yaml::BroadcastTo",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::broadcast_to_op.yaml::BroadcastTo",
+    "unit_name": "BroadcastTo",
+    "unit_type": "branch",
+    "op": "broadcast_to",
+    "primitive": "BroadcastTo",
+    "yaml_path": "mindspore/ops/op_def/yaml/broadcast_to_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBroadcastTo"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.broadcast_to",
+    "mindspore.ops.broadcast_to",
+    "mindspore.ops.copysign"
+  ]
+}

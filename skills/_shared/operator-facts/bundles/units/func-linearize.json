@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/grad/grad_func.py::linearize",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/grad/grad_func.py::linearize",
+    "unit_name": "linearize",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py",
+    "impl_symbol": "linearize"
+  },
+  "entries": [
+    "mindspore.ops.linearize"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "not isinstance(inputs, (Tensor, tuple, list))",
+      "via_symbol": "_raise_type_error",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_raise_type_error",
+      "unit_name": "_raise_type_error",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/random_func.py::multinomial_with_replacement",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/random_func.py::multinomial_with_replacement",
+    "unit_name": "multinomial_with_replacement",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/random_func.py",
+    "impl_symbol": "multinomial_with_replacement"
+  },
+  "entries": [
+    "mindspore.ops.multinomial_with_replacement"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_set_prim_op_user_data",
+      "unit_id": "composite::ops/function/random_func.py::_set_prim_op_user_data",
+      "unit_name": "_set_prim_op_user_data",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/random_func.py"
+    }
+  ]
+}

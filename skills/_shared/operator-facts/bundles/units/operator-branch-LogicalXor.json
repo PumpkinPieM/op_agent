@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::logical_xor_op.yaml::LogicalXor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::logical_xor_op.yaml::LogicalXor",
+    "unit_name": "LogicalXor",
+    "unit_type": "branch",
+    "op": "logical_xor",
+    "primitive": "LogicalXor",
+    "yaml_path": "mindspore/ops/op_def/yaml/logical_xor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLogicalXor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.logical_xor",
+    "mindspore.mint.logical_xor",
+    "mindspore.ops.logical_xor"
+  ]
+}

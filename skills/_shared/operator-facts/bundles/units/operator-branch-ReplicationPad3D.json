@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::replication_pad_3d_op.yaml::ReplicationPad3D",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::replication_pad_3d_op.yaml::ReplicationPad3D",
+    "unit_name": "ReplicationPad3D",
+    "unit_type": "branch",
+    "op": "replication_pad_3d",
+    "primitive": "ReplicationPad3D",
+    "yaml_path": "mindspore/ops/op_def/yaml/replication_pad_3d_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnReplicationPad3d"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ReplicationPad3DGrad"
+      ]
+    }
+  },
+  "entries": []
+}

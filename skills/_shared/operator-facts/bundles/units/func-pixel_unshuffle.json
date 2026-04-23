@@ -1,0 +1,54 @@
+{
+  "bundle_id": "composite::ops/function/nn_func.py::pixel_unshuffle",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/nn_func.py::pixel_unshuffle",
+    "unit_name": "pixel_unshuffle",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py",
+    "impl_symbol": "pixel_unshuffle"
+  },
+  "entries": [
+    "mindspore.ops.pixel_unshuffle"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_positive_int",
+      "unit_id": "composite::ops/function/nn_func.py::_check_positive_int",
+      "unit_name": "_check_positive_int",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_is_tensor",
+      "unit_id": "composite::ops/function/nn_func.py::_check_is_tensor",
+      "unit_name": "_check_is_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_pixel_shuffle_unshuffle_input_shape",
+      "unit_id": "composite::ops/function/nn_func.py::_check_pixel_shuffle_unshuffle_input_shape",
+      "unit_name": "_check_pixel_shuffle_unshuffle_input_shape",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_pxiel_unshuffle_valid",
+      "unit_id": "composite::ops/function/nn_func.py::_check_pxiel_unshuffle_valid",
+      "unit_name": "_check_pxiel_unshuffle_valid",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    }
+  ]
+}

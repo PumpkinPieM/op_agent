@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::add_ext_op.yaml::AddExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::add_ext_op.yaml::AddExt",
+    "unit_name": "AddExt",
+    "unit_type": "branch",
+    "op": "add_ext",
+    "primitive": "AddExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/add_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAdd"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Muls"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.add",
+    "mindspore.mint.add",
+    "mindspore.ops.add"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::searchsorted_op.yaml::SearchSorted",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::searchsorted_op.yaml::SearchSorted",
+    "unit_name": "SearchSorted",
+    "unit_type": "branch",
+    "op": "searchsorted",
+    "primitive": "SearchSorted",
+    "yaml_path": "mindspore/ops/op_def/yaml/searchsorted_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSearchSorted"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.searchsorted",
+    "mindspore.ops.searchsorted"
+  ]
+}

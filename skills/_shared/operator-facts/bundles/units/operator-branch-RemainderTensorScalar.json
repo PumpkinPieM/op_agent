@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::remainder_tensor_scalar_op.yaml::RemainderTensorScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::remainder_tensor_scalar_op.yaml::RemainderTensorScalar",
+    "unit_name": "RemainderTensorScalar",
+    "unit_type": "branch",
+    "op": "remainder_tensor_scalar",
+    "primitive": "RemainderTensorScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/remainder_tensor_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRemainderTensorScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.__mod__",
+    "mindspore.Tensor.remainder",
+    "mindspore.mint.remainder",
+    "mindspore.ops.remainder",
+    "mindspore.ops.remainder_ext"
+  ]
+}

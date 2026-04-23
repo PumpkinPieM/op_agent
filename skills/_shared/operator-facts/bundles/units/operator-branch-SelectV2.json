@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::selectv2_op.yaml::SelectV2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::selectv2_op.yaml::SelectV2",
+    "unit_name": "SelectV2",
+    "unit_type": "branch",
+    "op": "select_v2",
+    "primitive": "SelectV2",
+    "yaml_path": "mindspore/ops/op_def/yaml/selectv2_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSelectV2"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

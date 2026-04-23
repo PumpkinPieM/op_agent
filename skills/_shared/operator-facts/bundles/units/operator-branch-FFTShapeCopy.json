@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::fft_shapecopy_op.yaml::FFTShapeCopy",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::fft_shapecopy_op.yaml::FFTShapeCopy",
+    "unit_name": "FFTShapeCopy",
+    "unit_type": "branch",
+    "op": "fft_shapecopy",
+    "primitive": "FFTShapeCopy",
+    "yaml_path": "mindspore/ops/op_def/yaml/fft_shapecopy_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

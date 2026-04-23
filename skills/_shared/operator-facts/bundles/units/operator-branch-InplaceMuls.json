@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::inplace_muls_op.yaml::InplaceMuls",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_muls_op.yaml::InplaceMuls",
+    "unit_name": "InplaceMuls",
+    "unit_type": "branch",
+    "op": "inplace_muls",
+    "primitive": "InplaceMuls",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_muls_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceMuls"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Muls"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.mul_"
+  ]
+}

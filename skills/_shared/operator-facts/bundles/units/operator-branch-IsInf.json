@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::isinf_op.yaml::IsInf",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::isinf_op.yaml::IsInf",
+    "unit_name": "IsInf",
+    "unit_type": "branch",
+    "op": "isinf",
+    "primitive": "IsInf",
+    "yaml_path": "mindspore/ops/op_def/yaml/isinf_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAbs",
+        "aclnnEqScalar",
+        "aclnnInplaceZero",
+        "aclnnIsInf"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.isinf",
+    "mindspore.mint.isinf",
+    "mindspore.ops.isinf"
+  ]
+}

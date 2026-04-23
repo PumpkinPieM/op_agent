@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::mul_op.yaml::Mul",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::mul_op.yaml::Mul",
+    "unit_name": "Mul",
+    "unit_type": "branch",
+    "op": "mul",
+    "primitive": "Mul",
+    "yaml_path": "mindspore/ops/op_def/yaml/mul_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMul"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.mul",
+    "mindspore.mint.mul",
+    "mindspore.ops.mul"
+  ]
+}

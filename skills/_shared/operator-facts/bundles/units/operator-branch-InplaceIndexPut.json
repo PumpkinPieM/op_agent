@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::inplace_index_put_op.yaml::InplaceIndexPut",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_index_put_op.yaml::InplaceIndexPut",
+    "unit_name": "InplaceIndexPut",
+    "unit_type": "branch",
+    "op": "inplace_index_put",
+    "primitive": "InplaceIndexPut",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_index_put_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Clone",
+        "Equal",
+        "Index",
+        "InplaceIndexPut",
+        "Mul",
+        "Reshape",
+        "Shape",
+        "SumExt",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": []
+}

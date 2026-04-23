@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::repeat_interleave_grad_op.yaml::RepeatInterleaveGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::repeat_interleave_grad_op.yaml::RepeatInterleaveGrad",
+    "unit_name": "RepeatInterleaveGrad",
+    "unit_type": "branch",
+    "op": "repeat_interleave_grad",
+    "primitive": "RepeatInterleaveGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/repeat_interleave_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRepeatInterleaveGrad"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

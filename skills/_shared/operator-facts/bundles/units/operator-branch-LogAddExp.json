@@ -1,0 +1,34 @@
+{
+  "bundle_id": "branch::logaddexp_op.yaml::LogAddExp",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::logaddexp_op.yaml::LogAddExp",
+    "unit_name": "LogAddExp",
+    "unit_type": "branch",
+    "op": "logaddexp",
+    "primitive": "LogAddExp",
+    "yaml_path": "mindspore/ops/op_def/yaml/logaddexp_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLogAddExp"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AddScalar",
+        "Div",
+        "Exp",
+        "Sub"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.logaddexp",
+    "mindspore.mint.logaddexp",
+    "mindspore.ops.logaddexp"
+  ]
+}

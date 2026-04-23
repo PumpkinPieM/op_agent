@@ -1,0 +1,35 @@
+{
+  "bundle_id": "branch::transpose_op.yaml::Transpose",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::transpose_op.yaml::Transpose",
+    "unit_name": "Transpose",
+    "unit_type": "branch",
+    "op": "transpose",
+    "primitive": "Transpose",
+    "yaml_path": "mindspore/ops/op_def/yaml/transpose_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnPermute"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Transpose"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.permute",
+    "mindspore.mint.permute",
+    "mindspore.ops.diag_embed",
+    "mindspore.ops.moveaxis",
+    "mindspore.ops.movedim",
+    "mindspore.ops.permute",
+    "mindspore.ops.swapaxes"
+  ]
+}

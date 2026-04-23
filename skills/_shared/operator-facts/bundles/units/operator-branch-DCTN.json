@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::dctn_op.yaml::DCTN",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::dctn_op.yaml::DCTN",
+    "unit_name": "DCTN",
+    "unit_type": "branch",
+    "op": "dctn",
+    "primitive": "DCTN",
+    "yaml_path": "mindspore/ops/op_def/yaml/dctn_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "FFTOrtho",
+        "FFTShapeCopy",
+        "IDCTN"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::normal_float_tensor_op.yaml::NormalFloatTensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::normal_float_tensor_op.yaml::NormalFloatTensor",
+    "unit_name": "NormalFloatTensor",
+    "unit_type": "branch",
+    "op": "normal_float_tensor",
+    "primitive": "NormalFloatTensor",
+    "yaml_path": "mindspore/ops/op_def/yaml/normal_float_tensor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNormalFloatTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.normal"
+  ]
+}

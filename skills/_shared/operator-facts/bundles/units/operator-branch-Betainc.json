@@ -1,0 +1,34 @@
+{
+  "bundle_id": "branch::betainc_op.yaml::Betainc",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::betainc_op.yaml::Betainc",
+    "unit_name": "Betainc",
+    "unit_type": "branch",
+    "op": "betainc",
+    "primitive": "Betainc",
+    "yaml_path": "mindspore/ops/op_def/yaml/betainc_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Add",
+        "Exp",
+        "Log1p",
+        "Mul",
+        "Neg",
+        "Reshape",
+        "Shape",
+        "Sub",
+        "SubScalar",
+        "Xlogy"
+      ]
+    }
+  },
+  "entries": []
+}

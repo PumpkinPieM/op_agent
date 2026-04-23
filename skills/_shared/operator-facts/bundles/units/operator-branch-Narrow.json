@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::narrow_op.yaml::Narrow",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::narrow_op.yaml::Narrow",
+    "unit_name": "Narrow",
+    "unit_type": "branch",
+    "op": "narrow",
+    "primitive": "Narrow",
+    "yaml_path": "mindspore/ops/op_def/yaml/narrow_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNarrow"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Concat",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.narrow",
+    "mindspore.ops.narrow"
+  ]
+}

@@ -2,7 +2,7 @@
   "bundle_id": "mindspore.mint.batch_norm_gather_stats_with_counts",
   "bundle_type": "entry",
   "schema_version": "v2",
-  "generated_at": "2026-04-20T15:15:54+08:00",
+  "generated_at": "2026-04-20T17:24:10+08:00",
   "entry": {
     "public_api": "mindspore.mint.batch_norm_gather_stats_with_counts",
     "public_surface": "mindspore.mint",

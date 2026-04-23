@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::softmax_backward_op.yaml::SoftmaxBackward",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::softmax_backward_op.yaml::SoftmaxBackward",
+    "unit_name": "SoftmaxBackward",
+    "unit_type": "branch",
+    "op": "softmax_backward",
+    "primitive": "SoftmaxBackward",
+    "yaml_path": "mindspore/ops/op_def/yaml/softmax_backward_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSoftmaxBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mul",
+        "ReduceSum",
+        "SoftmaxBackward",
+        "Sub"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::inplace_elu_op.yaml::InplaceElu",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_elu_op.yaml::InplaceElu",
+    "unit_name": "InplaceElu",
+    "unit_type": "branch",
+    "op": "inplace_elu",
+    "primitive": "InplaceElu",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_elu_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnEluBackward",
+        "aclnnInplaceElu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "EluGradExt"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::split_with_size_view_op.yaml::SplitWithSizeView",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::split_with_size_view_op.yaml::SplitWithSizeView",
+    "unit_name": "SplitWithSizeView",
+    "unit_type": "branch",
+    "op": "split_with_size_view",
+    "primitive": "SplitWithSizeView",
+    "yaml_path": "mindspore/ops/op_def/yaml/split_with_size_view_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSplitWithSizeView"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Concat"
+      ]
+    }
+  },
+  "entries": []
+}

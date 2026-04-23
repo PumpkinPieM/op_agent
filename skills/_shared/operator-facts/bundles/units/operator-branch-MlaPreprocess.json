@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::mla_preprocess_op.yaml::MlaPreprocess",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::mla_preprocess_op.yaml::MlaPreprocess",
+    "unit_name": "MlaPreprocess",
+    "unit_type": "branch",
+    "op": "mla_preprocess",
+    "primitive": "MlaPreprocess",
+    "yaml_path": "mindspore/ops/op_def/yaml/mla_preprocess_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

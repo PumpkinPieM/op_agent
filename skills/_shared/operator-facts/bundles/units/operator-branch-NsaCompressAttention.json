@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::nsa_compress_attention_op.yaml::NsaCompressAttention",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::nsa_compress_attention_op.yaml::NsaCompressAttention",
+    "unit_name": "NsaCompressAttention",
+    "unit_type": "branch",
+    "op": "nsa_compress_attention",
+    "primitive": "NsaCompressAttention",
+    "yaml_path": "mindspore/ops/op_def/yaml/nsa_compress_attention_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNsaCompressAttention"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "FlashAttentionScoreGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.nsa_compress_attention"
+  ]
+}

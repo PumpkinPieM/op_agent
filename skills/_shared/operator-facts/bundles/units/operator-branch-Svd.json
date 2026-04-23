@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::svd_op.yaml::Svd",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::svd_op.yaml::Svd",
+    "unit_name": "Svd",
+    "unit_type": "branch",
+    "op": "svd",
+    "primitive": "Svd",
+    "yaml_path": "mindspore/ops/op_def/yaml/svd_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Svd"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.svd"
+  ]
+}

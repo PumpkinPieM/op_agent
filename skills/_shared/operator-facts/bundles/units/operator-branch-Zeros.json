@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::zeros_op.yaml::Zeros",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::zeros_op.yaml::Zeros",
+    "unit_name": "Zeros",
+    "unit_type": "branch",
+    "op": "zeros",
+    "primitive": "Zeros",
+    "yaml_path": "mindspore/ops/op_def/yaml/zeros_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceZero"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.zeros",
+    "mindspore.ops.diagflat",
+    "mindspore.ops.zeros"
+  ]
+}

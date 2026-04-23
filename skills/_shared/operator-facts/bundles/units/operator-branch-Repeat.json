@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::repeat_op.yaml::Repeat",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::repeat_op.yaml::Repeat",
+    "unit_name": "Repeat",
+    "unit_type": "branch",
+    "op": "repeat",
+    "primitive": "Repeat",
+    "yaml_path": "mindspore/ops/op_def/yaml/repeat_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRepeat"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mul",
+        "Reshape",
+        "Shape",
+        "SumExt",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.repeat"
+  ]
+}

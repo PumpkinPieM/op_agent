@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::var_op.yaml::Var",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::var_op.yaml::Var",
+    "unit_name": "Var",
+    "unit_type": "branch",
+    "op": "var",
+    "primitive": "Var",
+    "yaml_path": "mindspore/ops/op_def/yaml/var_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnVarCorrection"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.var",
+    "mindspore.mint.var",
+    "mindspore.ops.var"
+  ]
+}

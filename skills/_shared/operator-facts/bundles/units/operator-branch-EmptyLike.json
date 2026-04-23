@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::empty_like_op.yaml::EmptyLike",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::empty_like_op.yaml::EmptyLike",
+    "unit_name": "EmptyLike",
+    "unit_type": "branch",
+    "op": "empty_like",
+    "primitive": "EmptyLike",
+    "yaml_path": "mindspore/ops/op_def/yaml/empty_like_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnEmptyLike"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.empty_like",
+    "mindspore.ops.empty_like"
+  ]
+}

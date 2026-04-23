@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::ceil_op.yaml::Ceil",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::ceil_op.yaml::Ceil",
+    "unit_name": "Ceil",
+    "unit_type": "branch",
+    "op": "ceil",
+    "primitive": "Ceil",
+    "yaml_path": "mindspore/ops/op_def/yaml/ceil_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnCeil"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.ceil",
+    "mindspore.mint.ceil",
+    "mindspore.ops.ceil"
+  ]
+}

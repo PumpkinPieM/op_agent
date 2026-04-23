@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::group_topk_op.yaml::GroupTopk",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::group_topk_op.yaml::GroupTopk",
+    "unit_name": "GroupTopk",
+    "unit_type": "branch",
+    "op": "group_topk",
+    "primitive": "GroupTopk",
+    "yaml_path": "mindspore/ops/op_def/yaml/group_topk_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::stft",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::stft",
+    "unit_name": "stft",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "stft"
+  },
+  "entries": [
+    "mindspore.ops.stft"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "center",
+      "via_symbol": "_check_attr_dtype",
+      "unit_id": "composite::ops/function/math_func.py::_check_attr_dtype",
+      "unit_name": "_check_attr_dtype",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    }
+  ]
+}

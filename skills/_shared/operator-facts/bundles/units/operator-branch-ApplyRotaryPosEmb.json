@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::apply_rotary_pos_emb_op.yaml::ApplyRotaryPosEmb",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::apply_rotary_pos_emb_op.yaml::ApplyRotaryPosEmb",
+    "unit_name": "ApplyRotaryPosEmb",
+    "unit_type": "branch",
+    "op": "apply_rotary_pos_emb",
+    "primitive": "ApplyRotaryPosEmb",
+    "yaml_path": "mindspore/ops/op_def/yaml/apply_rotary_pos_emb_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnApplyRotaryPosEmb"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

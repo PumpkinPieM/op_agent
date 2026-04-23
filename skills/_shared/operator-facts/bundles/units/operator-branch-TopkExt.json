@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::topk_ext_op.yaml::TopkExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::topk_ext_op.yaml::TopkExt",
+    "unit_name": "TopkExt",
+    "unit_type": "branch",
+    "op": "topk_ext",
+    "primitive": "TopkExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/topk_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnTopk"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "InplaceScatterSrc",
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.topk",
+    "mindspore.mint.topk",
+    "mindspore.ops.topk"
+  ]
+}

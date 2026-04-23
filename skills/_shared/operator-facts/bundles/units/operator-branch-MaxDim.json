@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::max_dim_op.yaml::MaxDim",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::max_dim_op.yaml::MaxDim",
+    "unit_name": "MaxDim",
+    "unit_type": "branch",
+    "op": "max_dim",
+    "primitive": "MaxDim",
+    "yaml_path": "mindspore/ops/op_def/yaml/max_dim_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMaxDim"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.max",
+    "mindspore.mint.max",
+    "mindspore.ops.max"
+  ]
+}

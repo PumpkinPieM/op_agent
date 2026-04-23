@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::prelu_op.yaml::PReLU",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::prelu_op.yaml::PReLU",
+    "unit_name": "PReLU",
+    "unit_type": "branch",
+    "op": "prelu",
+    "primitive": "PReLU",
+    "yaml_path": "mindspore/ops/op_def/yaml/prelu_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnPrelu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "PReLUGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.prelu"
+  ]
+}

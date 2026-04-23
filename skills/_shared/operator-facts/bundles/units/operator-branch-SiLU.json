@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::silu_op.yaml::SiLU",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::silu_op.yaml::SiLU",
+    "unit_name": "SiLU",
+    "unit_type": "branch",
+    "op": "silu",
+    "primitive": "SiLU",
+    "yaml_path": "mindspore/ops/op_def/yaml/silu_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSilu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "SiLUGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.silu"
+  ]
+}

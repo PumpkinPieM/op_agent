@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::batch_norm_grad_with_add_and_activation_op.yaml::BatchNormGradWithAddAndActivation",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::batch_norm_grad_with_add_and_activation_op.yaml::BatchNormGradWithAddAndActivation",
+    "unit_name": "BatchNormGradWithAddAndActivation",
+    "unit_type": "branch",
+    "op": "batch_norm_grad_with_add_and_activation",
+    "primitive": "BatchNormGradWithAddAndActivation",
+    "yaml_path": "mindspore/ops/op_def/yaml/batch_norm_grad_with_add_and_activation_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

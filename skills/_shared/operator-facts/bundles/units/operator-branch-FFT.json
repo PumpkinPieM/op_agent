@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::fft_op.yaml::FFT",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::fft_op.yaml::FFT",
+    "unit_name": "FFT",
+    "unit_type": "branch",
+    "op": "fft",
+    "primitive": "FFT",
+    "yaml_path": "mindspore/ops/op_def/yaml/fft_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.fft"
+  ]
+}

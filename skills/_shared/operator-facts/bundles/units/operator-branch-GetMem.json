@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::get_mem_op.yaml::GetMem",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::get_mem_op.yaml::GetMem",
+    "unit_name": "GetMem",
+    "unit_type": "branch",
+    "op": "get_mem",
+    "primitive": "GetMem",
+    "yaml_path": "mindspore/ops/op_def/yaml/get_mem_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

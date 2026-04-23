@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::fftn_op.yaml::FFTN",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::fftn_op.yaml::FFTN",
+    "unit_name": "FFTN",
+    "unit_type": "branch",
+    "op": "fftn",
+    "primitive": "FFTN",
+    "yaml_path": "mindspore/ops/op_def/yaml/fftn_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.fftn"
+  ]
+}

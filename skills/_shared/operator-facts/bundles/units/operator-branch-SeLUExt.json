@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::selu_ext_op.yaml::SeLUExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::selu_ext_op.yaml::SeLUExt",
+    "unit_name": "SeLUExt",
+    "unit_type": "branch",
+    "op": "selu_ext",
+    "primitive": "SeLUExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/selu_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSelu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "SeluGrad"
+      ]
+    }
+  },
+  "entries": []
+}

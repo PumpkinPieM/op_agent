@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::bitwise_xor_scalar_op.yaml::BitwiseXorScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::bitwise_xor_scalar_op.yaml::BitwiseXorScalar",
+    "unit_name": "BitwiseXorScalar",
+    "unit_type": "branch",
+    "op": "bitwise_xor_scalar",
+    "primitive": "BitwiseXorScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/bitwise_xor_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBitwiseXorScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.bitwise_xor",
+    "mindspore.mint.bitwise_xor",
+    "mindspore.ops.bitwise_xor"
+  ]
+}

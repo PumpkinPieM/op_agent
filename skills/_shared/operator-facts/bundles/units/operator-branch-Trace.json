@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::trace_op.yaml::Trace",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::trace_op.yaml::Trace",
+    "unit_name": "Trace",
+    "unit_type": "branch",
+    "op": "trace",
+    "primitive": "Trace",
+    "yaml_path": "mindspore/ops/op_def/yaml/trace_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Shape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.trace"
+  ]
+}

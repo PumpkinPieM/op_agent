@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::multi_scale_deformable_attn_op.yaml::MultiScaleDeformableAttn",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::multi_scale_deformable_attn_op.yaml::MultiScaleDeformableAttn",
+    "unit_name": "MultiScaleDeformableAttn",
+    "unit_type": "branch",
+    "op": "multi_scale_deformable_attn",
+    "primitive": "MultiScaleDeformableAttn",
+    "yaml_path": "mindspore/ops/op_def/yaml/multi_scale_deformable_attn_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnCast",
+        "aclnnMultiScaleDeformableAttn",
+        "aclnnMultiScaleDeformableAttnFunction"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "MultiScaleDeformableAttnGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.multi_scale_deformable_attn_function"
+  ]
+}

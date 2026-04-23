@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::smooth_l1_loss_grad_op.yaml::SmoothL1LossGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::smooth_l1_loss_grad_op.yaml::SmoothL1LossGrad",
+    "unit_name": "SmoothL1LossGrad",
+    "unit_type": "branch",
+    "op": "smooth_l1_loss_grad",
+    "primitive": "SmoothL1LossGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/smooth_l1_loss_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSmoothL1LossBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

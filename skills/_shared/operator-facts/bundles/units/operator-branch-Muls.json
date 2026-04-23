@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::muls_op.yaml::Muls",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::muls_op.yaml::Muls",
+    "unit_name": "Muls",
+    "unit_type": "branch",
+    "op": "muls",
+    "primitive": "Muls",
+    "yaml_path": "mindspore/ops/op_def/yaml/muls_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMuls"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Muls"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.mul",
+    "mindspore.mint.mul",
+    "mindspore.ops.mul"
+  ]
+}

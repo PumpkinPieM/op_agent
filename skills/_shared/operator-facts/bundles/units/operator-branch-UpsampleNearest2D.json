@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::upsample_nearest2d_op.yaml::UpsampleNearest2D",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::upsample_nearest2d_op.yaml::UpsampleNearest2D",
+    "unit_name": "UpsampleNearest2D",
+    "unit_type": "branch",
+    "op": "upsample_nearest2d",
+    "primitive": "UpsampleNearest2D",
+    "yaml_path": "mindspore/ops/op_def/yaml/upsample_nearest2d_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnUpsampleNearest2d"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Shape",
+        "UpsampleNearest2DGrad"
+      ]
+    }
+  },
+  "entries": []
+}

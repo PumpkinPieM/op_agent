@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/sparse_unary_func.py::coo_sin",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/sparse_unary_func.py::coo_sin",
+    "unit_name": "coo_sin",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/sparse_unary_func.py",
+    "impl_symbol": "coo_sin"
+  },
+  "entries": [
+    "mindspore.ops.coo_sin"
+  ],
+  "components": []
+}

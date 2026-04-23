@@ -1,0 +1,35 @@
+{
+  "bundle_id": "branch::addcdiv_ext_op.yaml::AddcdivExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::addcdiv_ext_op.yaml::AddcdivExt",
+    "unit_name": "AddcdivExt",
+    "unit_type": "branch",
+    "op": "addcdiv_ext",
+    "primitive": "AddcdivExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/addcdiv_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAddcdiv"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Div",
+        "FillScalar",
+        "Mul",
+        "Muls",
+        "Neg"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.addcdiv",
+    "mindspore.mint.addcdiv",
+    "mindspore.ops.addcdiv"
+  ]
+}

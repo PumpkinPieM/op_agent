@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::view_op.yaml::View",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::view_op.yaml::View",
+    "unit_name": "View",
+    "unit_type": "branch",
+    "op": "view",
+    "primitive": "View",
+    "yaml_path": "mindspore/ops/op_def/yaml/view_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnView"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Reshape",
+        "Shape"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::signal_wait_until_op.yaml::SignalWaitUntil",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::signal_wait_until_op.yaml::SignalWaitUntil",
+    "unit_name": "SignalWaitUntil",
+    "unit_type": "branch",
+    "op": "signal_wait_until",
+    "primitive": "SignalWaitUntil",
+    "yaml_path": "mindspore/ops/op_def/yaml/signal_wait_until_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::softshrink_op.yaml::SoftShrink",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::softshrink_op.yaml::SoftShrink",
+    "unit_name": "SoftShrink",
+    "unit_type": "branch",
+    "op": "softshrink",
+    "primitive": "SoftShrink",
+    "yaml_path": "mindspore/ops/op_def/yaml/softshrink_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSoftshrink"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "SoftShrinkGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.soft_shrink",
+    "mindspore.ops.softshrink"
+  ]
+}

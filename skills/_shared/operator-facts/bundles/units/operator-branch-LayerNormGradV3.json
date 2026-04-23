@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::layer_norm_grad_v3_op.yaml::LayerNormGradV3",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::layer_norm_grad_v3_op.yaml::LayerNormGradV3",
+    "unit_name": "LayerNormGradV3",
+    "unit_type": "branch",
+    "op": "layer_norm_grad_v3",
+    "primitive": "LayerNormGradV3",
+    "yaml_path": "mindspore/ops/op_def/yaml/layer_norm_grad_v3_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

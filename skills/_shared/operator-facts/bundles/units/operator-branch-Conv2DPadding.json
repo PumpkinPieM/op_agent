@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::conv2d_padding_op.yaml::Conv2DPadding",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::conv2d_padding_op.yaml::Conv2DPadding",
+    "unit_name": "Conv2DPadding",
+    "unit_type": "branch",
+    "op": "conv2d_padding",
+    "primitive": "Conv2DPadding",
+    "yaml_path": "mindspore/ops/op_def/yaml/conv2d_padding_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ConvolutionGrad",
+        "Equal",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.conv2d"
+  ]
+}

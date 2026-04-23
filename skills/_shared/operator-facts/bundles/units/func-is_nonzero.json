@@ -1,0 +1,42 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::is_nonzero",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::is_nonzero",
+    "unit_name": "is_nonzero",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "is_nonzero"
+  },
+  "entries": [
+    "mindspore.ops.is_nonzero"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "squeeze",
+      "unit_id": "branch::squeeze_op.yaml::Squeeze",
+      "unit_name": "Squeeze",
+      "unit_type": "branch",
+      "op": "squeeze",
+      "primitive": "Squeeze",
+      "yaml_path": "mindspore/ops/op_def/yaml/squeeze_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnSqueeze"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Reshape",
+          "Shape"
+        ]
+      }
+    }
+  ]
+}

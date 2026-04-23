@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::sparse_flash_attention_grad_op.yaml::SparseFlashAttentionGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::sparse_flash_attention_grad_op.yaml::SparseFlashAttentionGrad",
+    "unit_name": "SparseFlashAttentionGrad",
+    "unit_type": "branch",
+    "op": "sparse_flash_attention_grad",
+    "primitive": "SparseFlashAttentionGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/sparse_flash_attention_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSparseFlashAttentionGrad"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

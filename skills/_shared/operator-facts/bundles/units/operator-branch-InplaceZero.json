@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::inplace_zero_op.yaml::InplaceZero",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_zero_op.yaml::InplaceZero",
+    "unit_name": "InplaceZero",
+    "unit_type": "branch",
+    "op": "inplace_zero",
+    "primitive": "InplaceZero",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_zero_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceZero"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.zero_",
+    "mindspore.ops.zero_"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/grad/grad_func.py::jacfwd",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/grad/grad_func.py::jacfwd",
+    "unit_name": "jacfwd",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py",
+    "impl_symbol": "jacfwd"
+  },
+  "entries": [
+    "mindspore.ops.jacfwd"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_has_aux_type",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_check_has_aux_type",
+      "unit_name": "_check_has_aux_type",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    }
+  ]
+}

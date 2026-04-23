@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::list_to_tuple_op.yaml::ListToTuple",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::list_to_tuple_op.yaml::ListToTuple",
+    "unit_name": "ListToTuple",
+    "unit_type": "branch",
+    "op": "list_to_tuple",
+    "primitive": "ListToTuple",
+    "yaml_path": "mindspore/ops/op_def/yaml/list_to_tuple_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "TupleToList"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::t_ext_op.yaml::TExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::t_ext_op.yaml::TExt",
+    "unit_name": "TExt",
+    "unit_type": "branch",
+    "op": "t_ext",
+    "primitive": "TExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/t_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnTExt"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "TExt"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.t",
+    "mindspore.mint.t",
+    "mindspore.ops.t"
+  ]
+}

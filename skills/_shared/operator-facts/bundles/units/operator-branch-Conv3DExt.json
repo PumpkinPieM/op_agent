@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::conv3d_ext_op.yaml::Conv3DExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::conv3d_ext_op.yaml::Conv3DExt",
+    "unit_name": "Conv3DExt",
+    "unit_type": "branch",
+    "op": "conv3d_ext",
+    "primitive": "Conv3DExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/conv3d_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnConvolution"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ConvolutionGrad",
+        "Equal",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.conv3d"
+  ]
+}

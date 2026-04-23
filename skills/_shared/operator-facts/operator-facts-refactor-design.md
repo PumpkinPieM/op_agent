@@ -525,6 +525,31 @@ entry 来源包括：
 - `examples/ms_entry_bundle.abs.example.json`
 - `examples/ms_entry_bundle.aminmax.example.json`
 
+`unit bundle` 收敛为同样的轻量消费视图：
+
+- 顶层固定保留：`bundle_id`、`bundle_type`、`schema_version`、`generated_at`、`unit`、`entries`
+- `entries` 直接使用 `public_api` 字符串数组，不重复展开 entry facts
+- 当 `unit.unit_type = composite` 时，额外保留 `components`
+- 不再额外保留 `routes`、`graphs`、递归 leaf 闭包
+
+`unit` 形态：
+
+- 当 `unit_type = branch` 时，保留：`unit_id`、`unit_name`、`unit_type`、`op`、`primitive`、`yaml_path`、`coverage`
+- 当 `unit_type = composite` 时，保留：`unit_id`、`unit_name`、`unit_type`、`impl_path`、`impl_symbol`
+
+`components` 形态与 `entry bundle` 的 `composite.components` 保持一致：
+
+- `component_type = public_api` 时保留：`public_api`、`condition`、`via_symbol`
+- `component_type = primitive_symbol` 时保留：`primitive_symbol`、`condition`、`via_symbol`
+- `component_type = unit` 时始终保留：`unit_id`、`unit_name`、`unit_type`、`condition`、`via_symbol`
+- 当 `component_type = unit` 且 `unit_type = branch` 时，额外保留：`op`、`primitive`、`yaml_path`、`coverage`
+- 当 `component_type = unit` 且 `unit_type = composite` 时，额外保留：`impl_path`
+
+参考样例：
+
+- `examples/ms_unit_bundle.argsort.example.json`
+- `examples/ms_unit_bundle.split_ext.example.json`
+
 ## 8. 推荐目录结构
 
 ```text
@@ -533,8 +558,8 @@ operator-facts/
 │   ├── entries/
 │   │   └── mindspore.Tensor.aminmax.json
 │   └── units/
-│       ├── branch--argmax_with_value_op.yaml--ArgMaxWithValue.json
-│       └── composite--mindspore_python_mindspore_ops_function_array_func_py--aminmax.json
+│       ├── operator-branch-ArgMaxWithValue.json
+│       └── func-aminmax.json
 ├── data/
 │   ├── ms_entry_identity.jsonl
 │   ├── ms_unit_identity.jsonl
@@ -593,7 +618,8 @@ operator-facts/
 - 其余 4 个 `build_ms_*` 脚本仍然保留，便于单表调试和局部回归
 - `validation/validate_ms_facts.py` 负责基础 schema 校验、引用完整性校验和 golden case 校验
 - `validation/validate_entry_bundles.py` 负责 `ms_entry_bundle` schema 校验
-- `scripts/build_operator_facts.py` 负责串联 `build_ms_facts -> validate_ms_facts -> build_entry_bundles -> validate_entry_bundles`
+- `validation/validate_unit_bundles.py` 负责 `ms_unit_bundle` schema 校验
+- `scripts/build_operator_facts.py` 负责串联 `build_ms_facts -> validate_ms_facts -> build_entry_bundles -> validate_entry_bundles -> build_unit_bundles -> validate_unit_bundles`
 
 建议同时维护一份最小 golden 数据：
 
