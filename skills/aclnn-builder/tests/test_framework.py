@@ -114,8 +114,8 @@ class FakeExecutor:
 def test_manifest_template_loads():
     manifest = load_manifest(TESTS_DIR / "cases.yaml")
     assert manifest.schema_version == "1.0.0"
-    assert manifest.cases[0].case_id == "example_aclnn_abs"
-    assert manifest.cases[0].enabled is False
+    assert manifest.cases[0].case_id == "adaptivemaxpool3d"
+    assert manifest.cases[0].enabled is True
 
 
 def test_render_prompt_replaces_repo_and_artifact_placeholders(tmp_path: Path):
@@ -320,6 +320,70 @@ def test_runner_executes_multiple_cases_with_isolation(tmp_path: Path):
     assert summary["case_outcomes"][0]["execution_result"]["elapsed_time"] == format_elapsed_minutes(1.0)
 
 
+def test_runner_executes_multiple_cases_in_parallel(tmp_path: Path):
+    source_repo = tmp_path / "mindspore"
+    skill_root = tmp_path / ".codex" / "skills"
+    op_plugin_root = tmp_path / "op-plugin"
+    init_repo(source_repo, {"base.txt": "base\n"})
+    op_plugin_root.mkdir(parents=True, exist_ok=True)
+    (skill_root / "aclnn-builder").mkdir(parents=True, exist_ok=True)
+    (skill_root / "aclnn-builder" / "SKILL.md").write_text("skill\n", encoding="utf-8")
+    manifest = Manifest(
+        schema_version="1.0.0",
+        default_artifact_globs=(),
+        cases=(
+            CaseSpec(
+                case_id="case_one",
+                prompt="first",
+                repos=(
+                    RepoSpec(
+                        name="mindspore",
+                        source=str(source_repo),
+                        artifact_globs=("*_Feature.md",),
+                        expected_changes=ExpectedChangeSet(added=("alpha.txt",)),
+                    ),
+                ),
+            ),
+            CaseSpec(
+                case_id="case_two",
+                prompt="second",
+                repos=(
+                    RepoSpec(
+                        name="mindspore",
+                        source=str(source_repo),
+                        artifact_globs=("*_Feature.md",),
+                        expected_changes=ExpectedChangeSet(added=("beta.txt",)),
+                    ),
+                ),
+            ),
+        ),
+    )
+    executor = FakeExecutor(
+        {
+            "case_one": [("add", "mindspore", "alpha.txt"), ("artifact", "mindspore", "alpha_Feature.md")],
+            "case_two": [("add", "mindspore", "beta.txt"), ("artifact", "mindspore", "beta_Feature.md")],
+        }
+    )
+    runner = SkillTestRunner(
+        manifest=manifest,
+        executor=executor,
+        ms_root=source_repo,
+        path_root=tmp_path,
+        skill_path=skill_root,
+        op_plugin_dir=op_plugin_root,
+        runs_root=tmp_path / "runs",
+    )
+    _, outcomes = runner.run(workers=2)
+
+    assert len(outcomes) == 2
+    assert all(outcome.valid for outcome in outcomes)
+    actual_added = {outcome.case_id: outcome.repo_outcomes[0].source_changes.added for outcome in outcomes}
+    assert actual_added == {
+        "case_one": ("alpha.txt",),
+        "case_two": ("beta.txt",),
+    }
+
+
 def test_manifest_rejects_overlapping_expected_paths(tmp_path: Path):
     manifest_path = tmp_path / "bad.yaml"
     manifest_path.write_text(
@@ -421,6 +485,18 @@ def test_cli_keep_sandboxes_defaults_on_and_cleanup_flag_disables_it():
 
     cleanup_args = parser.parse_args(["--cleanup-sandboxes"])
     assert cleanup_args.keep_sandboxes is False
+
+
+def test_cli_workers_defaults_to_one_and_accepts_explicit_value():
+    parser = build_argument_parser()
+    default_args = parser.parse_args([])
+    assert default_args.workers == 1
+
+    custom_args = parser.parse_args(["--workers", "4"])
+    assert custom_args.workers == 4
+
+    with pytest.raises(SystemExit):
+        parser.parse_args(["--workers", "0"])
 
 
 def test_opencode_executor_builds_command(tmp_path: Path):

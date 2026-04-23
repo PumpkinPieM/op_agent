@@ -33,6 +33,7 @@ Per case, the runner:
 7. writes JSON summaries and raw executor logs into the case directory
 
 This isolation model keeps both workspace state and model session context clean across consecutive runs.
+Use `--workers N` to run multiple cases concurrently; result aggregation happens after all workers finish.
 
 ## Case Contract
 
@@ -55,10 +56,11 @@ If you do not pass `--skill-path`, the runner expects skills under `<ms_root>/.c
 Before invoking Codex, the runner copies the resolved skills tree into the isolated MindSpore checkout under `.codex/skills`.
 Use `--op-plugin` to pass the `op-plugin` repository path. In prompts, `{{op_plugin_dir}}` is replaced with that resolved path. `--op-plugin` is required for non-dry-run execution.
 Use `--executor` to choose `codex` (default), `opencode`, or `claudecode`.
+Use `--workers` to control case-level parallelism; the default is `1`.
 A typical run of all test cases:
 
 ```bash
-python <op_agent_root>/skills/aclnn-builder/tests/run_skill_cases.py --op-plugin=<op_plugin_dir>
+python <op_agent_root>/skills/aclnn-builder/tests/run_skill_cases.py --op-plugin=<op_plugin_dir> --workers 4
 ```
 
 Dry-run prompt rendering and sandbox setup:

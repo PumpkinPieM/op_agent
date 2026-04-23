@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import fnmatch
 import json
 import os
@@ -8,6 +9,7 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import uuid
 from dataclasses import asdict, dataclass, field
@@ -1207,6 +1209,8 @@ class SkillTestRunner:
         self.op_plugin_dir = op_plugin_dir
         self.runs_root = runs_root
         self.keep_sandboxes = keep_sandboxes
+        self._worktree_locks: dict[Path, threading.Lock] = {}
+        self._worktree_locks_guard = threading.Lock()
 
     def select_cases(self, case_ids: Iterable[str] | None = None, include_disabled: bool = False) -> tuple[CaseSpec, ...]:
         if case_ids:
@@ -1217,12 +1221,105 @@ class SkillTestRunner:
             return selected
         return tuple(case for case in selected if case.enabled)
 
+    def _lock_for_case_repos(self, case: CaseSpec) -> tuple[threading.Lock, ...]:
+        source_paths = sorted(
+            {
+                resolve_repo_source(repo, ms_root=self.ms_root, path_root=self.path_root)
+                for repo in case.repos
+                if repo.isolation == "git-worktree"
+            },
+            key=str,
+        )
+        locks: list[threading.Lock] = []
+        with self._worktree_locks_guard:
+            for source_path in source_paths:
+                locks.append(self._worktree_locks.setdefault(source_path, threading.Lock()))
+        return tuple(locks)
+
+    def _run_case(self, case: CaseSpec, run_dir: Path, dry_run: bool) -> CaseOutcome:
+        case_dir = run_dir / case.case_id
+        sandbox_root = case_dir / "sandbox"
+        artifact_dir = case_dir / "artifacts"
+        artifact_dir.mkdir(parents=True, exist_ok=True)
+
+        repo_locks = self._lock_for_case_repos(case)
+        for lock in repo_locks:
+            lock.acquire()
+        try:
+            log_progress(f"{case.case_id}: preparing isolated repositories")
+            prepared = prepare_repos(case, sandbox_root, ms_root=self.ms_root, path_root=self.path_root)
+        finally:
+            for lock in reversed(repo_locks):
+                lock.release()
+
+        try:
+            log_progress(f"{case.case_id}: staging skills into isolated checkout")
+            stage_skills_for_case(prepared, self.skill_path)
+            log_progress(f"{case.case_id}: rendering prompt")
+            prompt = render_prompt(
+                case.prompt,
+                prepared_repos=prepared,
+                artifact_dir=artifact_dir,
+                case_dir=case_dir,
+                run_dir=run_dir,
+                op_plugin_dir=self.op_plugin_dir,
+                skill_trigger_prefix=getattr(self.executor, "skill_trigger_prefix", CODEX_SKILL_TRIGGER_PREFIX),
+            )
+            prompt_path = case_dir / "prompt.txt"
+            prompt_path.parent.mkdir(parents=True, exist_ok=True)
+            prompt_path.write_text(prompt, encoding="utf-8")
+
+            if dry_run:
+                log_progress(f"{case.case_id}: dry-run mode, skipping codex execution")
+            execution_result = None if dry_run else self.executor.run(
+                ExecutionRequest(
+                    case=case,
+                    prompt=prompt,
+                    prompt_path=prompt_path,
+                    case_dir=case_dir,
+                    run_dir=run_dir,
+                    artifact_dir=artifact_dir,
+                    op_plugin_dir=self.op_plugin_dir,
+                    prepared_repos=prepared,
+                )
+            )
+            log_progress(f"{case.case_id}: validating repository changes")
+            repo_outcomes = tuple(classify_repo_changes(repo) for repo in prepared.values())
+            case_valid = all(repo.valid for repo in repo_outcomes) and (
+                execution_result is None
+                or (execution_result.returncode == 0 and not execution_result.timed_out)
+            )
+            outcome = CaseOutcome(
+                case_id=case.case_id,
+                valid=case_valid,
+                execution_result=execution_result,
+                repo_outcomes=repo_outcomes,
+                case_dir=case_dir,
+                prompt_path=prompt_path,
+            )
+            summary_path = case_dir / "summary.json"
+            summary_path.write_text(json.dumps(outcome.as_dict(), indent=2, sort_keys=True), encoding="utf-8")
+            log_progress(f"{case.case_id}: completed with status {'passed' if case_valid else 'failed'}")
+            return outcome
+        finally:
+            if not self.keep_sandboxes:
+                cleanup_locks = self._lock_for_case_repos(case)
+                for lock in cleanup_locks:
+                    lock.acquire()
+                try:
+                    log_progress(f"{case.case_id}: cleaning up isolated repositories")
+                    cleanup_prepared_repos(prepared)
+                finally:
+                    for lock in reversed(cleanup_locks):
+                        lock.release()
+
     def run(
         self,
         case_ids: Iterable[str] | None = None,
         run_id: str | None = None,
         dry_run: bool = False,
         include_disabled: bool = False,
+        workers: int = 1,
     ) -> tuple[Path, tuple[CaseOutcome, ...]]:
         run_started_at = time.time()
         run_id = run_id or time.strftime("%Y%m%d-%H%M%S") + f"-{uuid.uuid4().hex[:6]}"
@@ -1230,68 +1327,14 @@ class SkillTestRunner:
         _ensure_clean_directory(run_dir)
         selected_cases = self.select_cases(case_ids=case_ids, include_disabled=include_disabled)
         outcomes: list[CaseOutcome] = []
-        log_progress(f"starting run {run_id} with {len(selected_cases)} case(s)")
+        log_progress(f"starting run {run_id} with {len(selected_cases)} case(s) using {workers} worker(s)")
 
-        for case in selected_cases:
-            case_dir = run_dir / case.case_id
-            sandbox_root = case_dir / "sandbox"
-            artifact_dir = case_dir / "artifacts"
-            artifact_dir.mkdir(parents=True, exist_ok=True)
-            log_progress(f"{case.case_id}: preparing isolated repositories")
-            prepared = prepare_repos(case, sandbox_root, ms_root=self.ms_root, path_root=self.path_root)
-            try:
-                log_progress(f"{case.case_id}: staging skills into isolated checkout")
-                stage_skills_for_case(prepared, self.skill_path)
-                log_progress(f"{case.case_id}: rendering prompt")
-                prompt = render_prompt(
-                    case.prompt,
-                    prepared_repos=prepared,
-                    artifact_dir=artifact_dir,
-                    case_dir=case_dir,
-                    run_dir=run_dir,
-                    op_plugin_dir=self.op_plugin_dir,
-                    skill_trigger_prefix=getattr(self.executor, "skill_trigger_prefix", CODEX_SKILL_TRIGGER_PREFIX),
-                )
-                prompt_path = case_dir / "prompt.txt"
-                prompt_path.parent.mkdir(parents=True, exist_ok=True)
-                prompt_path.write_text(prompt, encoding="utf-8")
-
-                if dry_run:
-                    log_progress(f"{case.case_id}: dry-run mode, skipping codex execution")
-                execution_result = None if dry_run else self.executor.run(
-                    ExecutionRequest(
-                        case=case,
-                        prompt=prompt,
-                        prompt_path=prompt_path,
-                        case_dir=case_dir,
-                        run_dir=run_dir,
-                        artifact_dir=artifact_dir,
-                        op_plugin_dir=self.op_plugin_dir,
-                        prepared_repos=prepared,
-                    )
-                )
-                log_progress(f"{case.case_id}: validating repository changes")
-                repo_outcomes = tuple(classify_repo_changes(repo) for repo in prepared.values())
-                case_valid = all(repo.valid for repo in repo_outcomes) and (
-                    execution_result is None
-                    or (execution_result.returncode == 0 and not execution_result.timed_out)
-                )
-                outcome = CaseOutcome(
-                    case_id=case.case_id,
-                    valid=case_valid,
-                    execution_result=execution_result,
-                    repo_outcomes=repo_outcomes,
-                    case_dir=case_dir,
-                    prompt_path=prompt_path,
-                )
-                outcomes.append(outcome)
-                summary_path = case_dir / "summary.json"
-                summary_path.write_text(json.dumps(outcome.as_dict(), indent=2, sort_keys=True), encoding="utf-8")
-                log_progress(f"{case.case_id}: completed with status {'passed' if case_valid else 'failed'}")
-            finally:
-                if not self.keep_sandboxes:
-                    log_progress(f"{case.case_id}: cleaning up isolated repositories")
-                    cleanup_prepared_repos(prepared)
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            future_to_case_id = {
+                executor.submit(self._run_case, case, run_dir, dry_run): case.case_id for case in selected_cases
+            }
+            for future in as_completed(future_to_case_id):
+                outcomes.append(future.result())
 
         run_finished_at = time.time()
         run_summary = {
@@ -1311,6 +1354,12 @@ class SkillTestRunner:
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
+    def positive_int(value: str) -> int:
+        parsed = int(value)
+        if parsed <= 0:
+            raise argparse.ArgumentTypeError("--workers must be a positive integer")
+        return parsed
+
     parser = argparse.ArgumentParser(description="Run isolated aclnn-builder skill test cases.")
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--executor", choices=("codex", "opencode", "claudecode"), default="codex")
@@ -1319,6 +1368,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--op-plugin", type=Path, default=None)
     parser.add_argument("--runs-root", type=Path, default=None)
     parser.add_argument("--run-id", default="")
+    parser.add_argument("--workers", type=positive_int, default=1)
     parser.add_argument("--case", dest="cases", action="append", default=[])
     parser.add_argument("--include-disabled", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
@@ -1398,6 +1448,7 @@ def main(argv: list[str] | None = None) -> int:
             run_id=args.run_id or None,
             dry_run=args.dry_run,
             include_disabled=args.include_disabled,
+            workers=args.workers,
         )
     except ManifestError as exc:
         print(
