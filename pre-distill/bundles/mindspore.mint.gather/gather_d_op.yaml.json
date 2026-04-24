@@ -1,0 +1,78 @@
+{
+  "bundle_key": "mindspore.mint.gather::gather_d_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.gather",
+    "public_surface": "mindspore.mint",
+    "api_name": "gather",
+    "op_branch": "gather_d_op.yaml",
+    "op": "gather_d",
+    "primitive": "GatherD"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.array_func",
+    "target_symbol": "gather_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.gen_ops_prim.gather_d_op",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "gather_d::GatherD",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/gather_d_op.yaml",
+    "class_name": "GatherD",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnGather"
+    ],
+    "aclnn_source": [
+      "aclnn_config",
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/gather_d.cc",
+      "mindspore/ops/infer/ops_func_impl/gather_d.cc",
+      "mindspore/ops/infer/ops_func_impl/gather_d.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/gather_d.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/gather_d_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/gather_d_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_gather_d.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_aicpu_ops/test_gather_d.py",
+      "tests/st/ops/cpu/test_gather_d_op.py",
+      "tests/st/ops/dynamic_shape/grad/test_gatherd.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/gather_d_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.gather::gather_d_op.yaml",
+    "coverage_key": "gather_d::GatherD"
+  }
+}

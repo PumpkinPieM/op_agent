@@ -1,0 +1,74 @@
+{
+  "bundle_key": "mindspore.Tensor.trunc::trunc_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.trunc",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "trunc",
+    "op_branch": "trunc_op.yaml",
+    "op": "trunc",
+    "primitive": "Trunc"
+  },
+  "resolver": {
+    "py_method": "tensor_trunc",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "trunc",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/trunc.yaml",
+    "source_file": "mindspore/ops/api_def/trunc.yaml"
+  },
+  "coverage": {
+    "coverage_key": "trunc::Trunc",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/trunc_op.yaml",
+    "class_name": "Trunc",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnTrunc"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/trunc.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/trunc.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_trunc.cc"
+    ],
+    "st": [
+      "tests/st/ops/cpu/test_trunc_op.py",
+      "tests/st/ops/gpu/test_trunc_op.py",
+      "tests/st/ops/test_ops_trunc.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/trunc_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.trunc::trunc_op.yaml",
+    "coverage_key": "trunc::Trunc"
+  }
+}

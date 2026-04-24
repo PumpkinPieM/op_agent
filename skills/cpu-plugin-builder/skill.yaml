@@ -1,0 +1,38 @@
+schema_version: "1.0.0"
+name: "cpu-plugin-builder"
+display_name: "CPU Plugin Builder"
+description: "Build MindSpore CPU operators via ATen/libtorch adaptation."
+version: "0.1.0"
+
+entry:
+  type: "manual"
+  path: "SKILL.md"
+
+inputs:
+  - name: "op_name"
+    type: "string"
+    required: true
+    description: "Target operator name."
+  - name: "output_dir"
+    type: "path"
+    required: false
+    description: "Optional output directory for generated files."
+
+outputs:
+  report_schema: "skills/_shared/contract/report.schema.json"
+  out_dir_layout: "runs/<run_id>/out/"
+
+permissions:
+  network: "none"
+  filesystem: "workspace-write"
+
+dependencies:
+  tools:
+    - "bash"
+    - "rg"
+  python: []
+
+tags:
+  - "mindspore"
+  - "cpu"
+  - "op-plugin"

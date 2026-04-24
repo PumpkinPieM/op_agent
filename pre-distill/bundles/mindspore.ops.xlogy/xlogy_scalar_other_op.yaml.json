@@ -1,0 +1,72 @@
+{
+  "bundle_key": "mindspore.ops.xlogy::xlogy_scalar_other_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.ops.xlogy",
+    "public_surface": "mindspore.ops",
+    "api_name": "xlogy",
+    "op_branch": "xlogy_scalar_other_op.yaml",
+    "op": "xlogy_scalar_other",
+    "primitive": "XLogYScalarOther"
+  },
+  "resolver": {
+    "py_method": "tensor_xlogy",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "xlogy",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/xlogy.yaml",
+    "source_file": "mindspore/ops/api_def/xlogy.yaml"
+  },
+  "coverage": {
+    "coverage_key": "xlogy_scalar_other::XLogYScalarOther",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/xlogy_scalar_other_op.yaml",
+    "class_name": "XLogYScalarOther",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnXLogYScalarOther"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/xlogy_scalar_other.cc",
+      "mindspore/ops/infer/ops_func_impl/xlogy_scalar_other.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/xlogy_scalar_other.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/xlogy_scalar_other_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/xlogy_scalar_other_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_xlogy_scalar_other.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/xlogy_scalar_other_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.ops.xlogy::xlogy_scalar_other_op.yaml",
+    "coverage_key": "xlogy_scalar_other::XLogYScalarOther"
+  }
+}

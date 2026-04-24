@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.mint.empty_like::empty_like_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.empty_like",
+    "public_surface": "mindspore.mint",
+    "api_name": "empty_like",
+    "op_branch": "empty_like_op.yaml",
+    "op": "empty_like",
+    "primitive": "EmptyLike"
+  },
+  "resolver": {
+    "py_method": "tensor_empty_like",
+    "interface": "function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "empty_like",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.empty_like",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "empty_like::EmptyLike",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/empty_like_op.yaml",
+    "class_name": "EmptyLike",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "EmptyLikeAscend",
+    "aclnn": [
+      "aclnnEmptyLike"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/empty_like.cc",
+      "mindspore/ops/infer/ops_func_impl/empty_like.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/empty_like.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/empty_like.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/empty_like_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/empty_like_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_empty_like.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/empty_like_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.empty_like::empty_like_op.yaml",
+    "coverage_key": "empty_like::EmptyLike"
+  }
+}

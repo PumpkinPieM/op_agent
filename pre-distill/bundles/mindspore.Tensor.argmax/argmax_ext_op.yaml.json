@@ -1,0 +1,82 @@
+{
+  "bundle_key": "mindspore.Tensor.argmax::argmax_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.argmax",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "argmax",
+    "op_branch": "argmax_ext_op.yaml",
+    "op": "argmax_ext",
+    "primitive": "ArgMaxExt"
+  },
+  "resolver": {
+    "py_method": "tensor_argmax",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "argmax",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/argmax.yaml",
+    "source_file": "mindspore/ops/api_def/argmax.yaml"
+  },
+  "coverage": {
+    "coverage_key": "argmax_ext::ArgMaxExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/argmax_ext_op.yaml",
+    "class_name": "ArgMaxExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "ArgMaxAscend",
+    "aclnn": [
+      "aclnnArgMax"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/argmax.cc",
+      "mindspore/ops/infer/ops_func_impl/argmax.h",
+      "mindspore/ops/infer/ops_func_impl/argmax_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/argmax_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/argmax_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/argmax_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/argmax_ext_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/argmax_ext_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_argmax.cc",
+      "tests/ut/cpp/ops/test_ops_argmax_ext.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_argmax.py",
+      "tests/st/ops/cpu/test_argmax_op.py",
+      "tests/st/ops/gpu/test_argmax_op.py",
+      "tests/st/ops/test_ops_argmax_ext.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/argmax_doc.yaml",
+      "mindspore/ops/op_def/yaml/doc/argmax_ext_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.argmax::argmax_ext_op.yaml",
+    "coverage_key": "argmax_ext::ArgMaxExt"
+  }
+}

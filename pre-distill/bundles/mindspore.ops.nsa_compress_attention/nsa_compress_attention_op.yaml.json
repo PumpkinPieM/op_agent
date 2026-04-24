@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.ops.nsa_compress_attention::nsa_compress_attention_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.ops.nsa_compress_attention",
+    "public_surface": "mindspore.ops",
+    "api_name": "nsa_compress_attention",
+    "op_branch": "nsa_compress_attention_op.yaml",
+    "op": "nsa_compress_attention",
+    "primitive": "NsaCompressAttention"
+  },
+  "resolver": {
+    "py_method": "_tensor_nsa_compress_attention",
+    "interface": "function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "nsa_compress_attention",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/nsa_compress_attention.yaml",
+    "source_file": "mindspore/ops/api_def/nsa_compress_attention.yaml"
+  },
+  "coverage": {
+    "coverage_key": "nsa_compress_attention::NsaCompressAttention",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/nsa_compress_attention_op.yaml",
+    "class_name": "NsaCompressAttention",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "NsaCompressAttentionAscend",
+    "aclnn": [
+      "aclnnNsaCompressAttention"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/nsa_compress_attention.cc",
+      "mindspore/ops/infer/ops_func_impl/nsa_compress_attention.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/nsa_compress_attention.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/nsa_compress_attention.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/nsa_compress_attention_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/nsa_compress_attention_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [
+      "tests/st/ops/ascend/test_nsa_compress_attention.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/nsa_compress_attention_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.ops.nsa_compress_attention::nsa_compress_attention_op.yaml",
+    "coverage_key": "nsa_compress_attention::NsaCompressAttention"
+  }
+}

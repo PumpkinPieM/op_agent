@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.ops.sparse_flash_attention::sparse_flash_attention_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.ops.sparse_flash_attention",
+    "public_surface": "mindspore.ops",
+    "api_name": "sparse_flash_attention",
+    "op_branch": "sparse_flash_attention_op.yaml",
+    "op": "sparse_flash_attention",
+    "primitive": "SparseFlashAttention"
+  },
+  "resolver": {
+    "py_method": "_tensor_sparse_flash_attention",
+    "interface": "function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "sparse_flash_attention",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/sparse_flash_attention.yaml",
+    "source_file": "mindspore/ops/api_def/sparse_flash_attention.yaml"
+  },
+  "coverage": {
+    "coverage_key": "sparse_flash_attention::SparseFlashAttention",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/sparse_flash_attention_op.yaml",
+    "class_name": "SparseFlashAttention",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "SparseFlashAttentionAscend",
+    "aclnn": [
+      "aclnnSparseFlashAttention"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/sparse_flash_attention.cc",
+      "mindspore/ops/infer/ops_func_impl/sparse_flash_attention.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/sparse_flash_attention.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/sparse_flash_attention.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/sparse_flash_attention_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/sparse_flash_attention_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_sparse_flash_attention.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_sparse_flash_attention.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/sparse_flash_attention_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.ops.sparse_flash_attention::sparse_flash_attention_op.yaml",
+    "coverage_key": "sparse_flash_attention::SparseFlashAttention"
+  }
+}

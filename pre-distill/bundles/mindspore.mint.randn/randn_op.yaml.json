@@ -1,0 +1,68 @@
+{
+  "bundle_key": "mindspore.mint.randn::randn_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.randn",
+    "public_surface": "mindspore.mint",
+    "api_name": "randn",
+    "op_branch": "randn_op.yaml",
+    "op": "randn",
+    "primitive": "Randn"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.random_func",
+    "target_symbol": "randn_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.random_func.randn_",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "randn::Randn",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/randn_op.yaml",
+    "class_name": "Randn",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "RandnAscend",
+    "aclnn": [
+      "aclnnInplaceNormal"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/randn.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/randn.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/randn.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/randn_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/randn_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_other_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.randn::randn_op.yaml",
+    "coverage_key": "randn::Randn"
+  }
+}

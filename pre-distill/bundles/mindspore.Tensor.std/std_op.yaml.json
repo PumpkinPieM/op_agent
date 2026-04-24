@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.Tensor.std::std_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.std",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "std",
+    "op_branch": "std_op.yaml",
+    "op": "std",
+    "primitive": "Std"
+  },
+  "resolver": {
+    "py_method": "tensor_std",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "std",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/std.yaml",
+    "source_file": "mindspore/ops/api_def/std.yaml"
+  },
+  "coverage": {
+    "coverage_key": "std::Std",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/std_op.yaml",
+    "class_name": "Std",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "StdAscend",
+    "aclnn": [
+      "aclnnStd"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/std.cc",
+      "mindspore/ops/infer/ops_func_impl/std.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/std.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/std.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/std_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/std_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_std.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_func_std.py"
+    ],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.std::std_op.yaml",
+    "coverage_key": "std::Std"
+  }
+}

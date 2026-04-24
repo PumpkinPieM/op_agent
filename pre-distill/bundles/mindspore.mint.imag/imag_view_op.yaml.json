@@ -1,0 +1,64 @@
+{
+  "bundle_key": "mindspore.mint.imag::imag_view_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.imag",
+    "public_surface": "mindspore.mint",
+    "api_name": "imag",
+    "op_branch": "imag_view_op.yaml",
+    "op": "imag_view",
+    "primitive": "ImagView"
+  },
+  "resolver": {
+    "py_method": "tensor_imag",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "imag",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.imag",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "imag_view::ImagView",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/imag_view_op.yaml",
+    "class_name": "ImagView",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnImagView"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": false,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/imag_view.h"
+    ],
+    "pyboost": [],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.imag::imag_view_op.yaml",
+    "coverage_key": "imag_view::ImagView"
+  }
+}

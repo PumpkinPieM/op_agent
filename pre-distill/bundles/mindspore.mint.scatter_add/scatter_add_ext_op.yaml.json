@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.mint.scatter_add::scatter_add_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.scatter_add",
+    "public_surface": "mindspore.mint",
+    "api_name": "scatter_add",
+    "op_branch": "scatter_add_ext_op.yaml",
+    "op": "scatter_add_ext",
+    "primitive": "ScatterAddExt"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.array_func",
+    "target_symbol": "scatter_add_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.array_func.scatter_add_ext",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "scatter_add_ext::ScatterAddExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/scatter_add_ext_op.yaml",
+    "class_name": "ScatterAddExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "ScatterAddExtAscend",
+    "aclnn": [
+      "aclnnScatterAdd"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/scatter_add_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/scatter_add_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/scatter_add_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/scatter_add_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/scatter_add_ext_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/scatter_add_ext_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_scatter_add_ext.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_scatter_add_ext.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/scatter_add_ext_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.scatter_add::scatter_add_ext_op.yaml",
+    "coverage_key": "scatter_add_ext::ScatterAddExt"
+  }
+}
