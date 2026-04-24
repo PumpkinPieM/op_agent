@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::broadcast_to_view_op.yaml::BroadcastToView",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::broadcast_to_view_op.yaml::BroadcastToView",
+    "unit_name": "BroadcastToView",
+    "unit_type": "branch",
+    "op": "broadcast_to_view",
+    "primitive": "BroadcastToView",
+    "yaml_path": "mindspore/ops/op_def/yaml/broadcast_to_view_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBroadcastToView"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.broadcast_to"
+  ]
+}

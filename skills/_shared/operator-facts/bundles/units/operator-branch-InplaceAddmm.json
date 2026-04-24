@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::inplace_addmm_op.yaml::InplaceAddmm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_addmm_op.yaml::InplaceAddmm",
+    "unit_name": "InplaceAddmm",
+    "unit_type": "branch",
+    "op": "inplace_addmm",
+    "primitive": "InplaceAddmm",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_addmm_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceAddmm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "MatMul",
+        "Mul",
+        "ScalarToTensor",
+        "Transpose"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.addmm_"
+  ]
+}

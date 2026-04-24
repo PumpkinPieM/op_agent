@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::inplace_div_op.yaml::InplaceDiv",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_div_op.yaml::InplaceDiv",
+    "unit_name": "InplaceDiv",
+    "unit_type": "branch",
+    "op": "inplace_div",
+    "primitive": "InplaceDiv",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_div_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceDiv"
+      ],
+      "infer": true,
+      "kbk": false,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Conj",
+        "Div",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.div_"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::masked_select_op.yaml::MaskedSelect",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::masked_select_op.yaml::MaskedSelect",
+    "unit_name": "MaskedSelect",
+    "unit_type": "branch",
+    "op": "masked_select",
+    "primitive": "MaskedSelect",
+    "yaml_path": "mindspore/ops/op_def/yaml/masked_select_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMaskedSelect"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "MaskedSelectGrad",
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.masked_select",
+    "mindspore.mint.masked_select",
+    "mindspore.ops.masked_select"
+  ]
+}

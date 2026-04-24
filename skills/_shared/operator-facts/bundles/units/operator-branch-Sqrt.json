@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::sqrt_op.yaml::Sqrt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::sqrt_op.yaml::Sqrt",
+    "unit_name": "Sqrt",
+    "unit_type": "branch",
+    "op": "sqrt",
+    "primitive": "Sqrt",
+    "yaml_path": "mindspore/ops/op_def/yaml/sqrt_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSqrt"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "SqrtGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.sqrt",
+    "mindspore.mint.sqrt",
+    "mindspore.ops.sqrt",
+    "mindspore.ops.vector_norm"
+  ]
+}

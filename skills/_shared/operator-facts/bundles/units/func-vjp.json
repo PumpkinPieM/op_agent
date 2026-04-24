@@ -1,0 +1,36 @@
+{
+  "bundle_id": "composite::ops/function/grad/grad_func.py::vjp",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/grad/grad_func.py::vjp",
+    "unit_name": "vjp",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py",
+    "impl_symbol": "vjp"
+  },
+  "entries": [
+    "mindspore.ops.vjp"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_tensor",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_check_tensor",
+      "unit_name": "_check_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_has_aux_type",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_check_has_aux_type",
+      "unit_name": "_check_has_aux_type",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    }
+  ]
+}

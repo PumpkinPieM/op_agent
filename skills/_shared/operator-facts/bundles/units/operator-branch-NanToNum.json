@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::nan_to_num_op.yaml::NanToNum",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::nan_to_num_op.yaml::NanToNum",
+    "unit_name": "NanToNum",
+    "unit_type": "branch",
+    "op": "nan_to_num",
+    "primitive": "NanToNum",
+    "yaml_path": "mindspore/ops/op_def/yaml/nan_to_num_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNanToNum"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "IsFinite",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.nan_to_num",
+    "mindspore.mint.nan_to_num",
+    "mindspore.ops.nan_to_num"
+  ]
+}

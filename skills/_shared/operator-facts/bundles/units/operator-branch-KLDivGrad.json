@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::kl_div_grad_op.yaml::KLDivGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::kl_div_grad_op.yaml::KLDivGrad",
+    "unit_name": "KLDivGrad",
+    "unit_type": "branch",
+    "op": "kl_div_grad",
+    "primitive": "KLDivGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/kl_div_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnKlDivBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

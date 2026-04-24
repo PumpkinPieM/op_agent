@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::mm_ext_op.yaml::Mm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::mm_ext_op.yaml::Mm",
+    "unit_name": "Mm",
+    "unit_type": "branch",
+    "op": "mm_ext",
+    "primitive": "Mm",
+    "yaml_path": "mindspore/ops/op_def/yaml/mm_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mm"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.mm",
+    "mindspore.mint.mm"
+  ]
+}

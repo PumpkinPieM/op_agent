@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::resize_bilinear_v2_op.yaml::ResizeBilinearV2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::resize_bilinear_v2_op.yaml::ResizeBilinearV2",
+    "unit_name": "ResizeBilinearV2",
+    "unit_type": "branch",
+    "op": "resize_bilinear_v2",
+    "primitive": "ResizeBilinearV2",
+    "yaml_path": "mindspore/ops/op_def/yaml/resize_bilinear_v2_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "ResizeBilinearGrad"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::threshold_op.yaml::Threshold",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::threshold_op.yaml::Threshold",
+    "unit_name": "Threshold",
+    "unit_type": "branch",
+    "op": "threshold",
+    "primitive": "Threshold",
+    "yaml_path": "mindspore/ops/op_def/yaml/threshold_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnThreshold"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ThresholdGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.threshold"
+  ]
+}

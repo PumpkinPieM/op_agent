@@ -1,0 +1,39 @@
+{
+  "bundle_id": "branch::reshape_op.yaml::Reshape",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::reshape_op.yaml::Reshape",
+    "unit_name": "Reshape",
+    "unit_type": "branch",
+    "op": "reshape",
+    "primitive": "Reshape",
+    "yaml_path": "mindspore/ops/op_def/yaml/reshape_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnReshape"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Reshape",
+        "Shape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.reshape",
+    "mindspore.Tensor.reshape_as",
+    "mindspore.Tensor.view",
+    "mindspore.mint.reshape",
+    "mindspore.ops.atleast_3d",
+    "mindspore.ops.cartesian_prod",
+    "mindspore.ops.combinations",
+    "mindspore.ops.ravel",
+    "mindspore.ops.reshape",
+    "mindspore.ops.reshape_"
+  ]
+}

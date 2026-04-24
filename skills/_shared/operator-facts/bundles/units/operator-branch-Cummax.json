@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::cummax_op.yaml::Cummax",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::cummax_op.yaml::Cummax",
+    "unit_name": "Cummax",
+    "unit_type": "branch",
+    "op": "cummax",
+    "primitive": "Cummax",
+    "yaml_path": "mindspore/ops/op_def/yaml/cummax_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnCummax"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.cummax",
+    "mindspore.mint.cummax",
+    "mindspore.ops.cummax"
+  ]
+}

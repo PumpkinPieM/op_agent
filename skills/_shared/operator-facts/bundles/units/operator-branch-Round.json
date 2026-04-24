@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::round_op.yaml::Round",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::round_op.yaml::Round",
+    "unit_name": "Round",
+    "unit_type": "branch",
+    "op": "round",
+    "primitive": "Round",
+    "yaml_path": "mindspore/ops/op_def/yaml/round_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRoundDecimals"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.round",
+    "mindspore.mint.round",
+    "mindspore.ops.round"
+  ]
+}

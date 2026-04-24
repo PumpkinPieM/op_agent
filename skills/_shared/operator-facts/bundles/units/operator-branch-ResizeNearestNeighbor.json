@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::resize_nearest_neighbor_op.yaml::ResizeNearestNeighbor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::resize_nearest_neighbor_op.yaml::ResizeNearestNeighbor",
+    "unit_name": "ResizeNearestNeighbor",
+    "unit_type": "branch",
+    "op": "resize_nearest_neighbor",
+    "primitive": "ResizeNearestNeighbor",
+    "yaml_path": "mindspore/ops/op_def/yaml/resize_nearest_neighbor_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "ResizeNearestNeighborGrad"
+      ]
+    }
+  },
+  "entries": []
+}

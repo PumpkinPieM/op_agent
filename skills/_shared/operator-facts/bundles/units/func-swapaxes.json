@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::swapaxes",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::swapaxes",
+    "unit_name": "swapaxes",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "swapaxes"
+  },
+  "entries": [
+    "mindspore.Tensor.swapaxes"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_swapaxes_axis",
+      "unit_id": "composite::ops/function/array_func.py::_check_swapaxes_axis",
+      "unit_name": "_check_swapaxes_axis",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/array_func.py"
+    }
+  ]
+}

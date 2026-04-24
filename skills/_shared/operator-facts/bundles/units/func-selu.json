@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/nn_func.py::selu",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/nn_func.py::selu",
+    "unit_name": "selu",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py",
+    "impl_symbol": "selu"
+  },
+  "entries": [
+    "mindspore.ops.selu"
+  ],
+  "components": []
+}

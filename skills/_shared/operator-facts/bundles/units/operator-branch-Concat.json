@@ -1,0 +1,42 @@
+{
+  "bundle_id": "branch::concat_op.yaml::Concat",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::concat_op.yaml::Concat",
+    "unit_name": "Concat",
+    "unit_type": "branch",
+    "op": "concat",
+    "primitive": "Concat",
+    "yaml_path": "mindspore/ops/op_def/yaml/concat_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnCat"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Less",
+        "Mul",
+        "ScalarToTensor",
+        "Shape",
+        "Slice",
+        "Sub"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.cat",
+    "mindspore.mint.concat",
+    "mindspore.mint.hstack",
+    "mindspore.ops.block_diag",
+    "mindspore.ops.cat",
+    "mindspore.ops.column_stack",
+    "mindspore.ops.concat",
+    "mindspore.ops.hstack"
+  ]
+}

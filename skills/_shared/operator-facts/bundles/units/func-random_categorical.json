@@ -1,0 +1,28 @@
+{
+  "bundle_id": "composite::ops/function/random_func.py::random_categorical",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/random_func.py::random_categorical",
+    "unit_name": "random_categorical",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/random_func.py",
+    "impl_symbol": "random_categorical"
+  },
+  "entries": [
+    "mindspore.Tensor.random_categorical",
+    "mindspore.ops.random_categorical"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_set_prim_op_user_data",
+      "unit_id": "composite::ops/function/random_func.py::_set_prim_op_user_data",
+      "unit_name": "_set_prim_op_user_data",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/random_func.py"
+    }
+  ]
+}

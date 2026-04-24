@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::glu_grad_op.yaml::GluGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::glu_grad_op.yaml::GluGrad",
+    "unit_name": "GluGrad",
+    "unit_type": "branch",
+    "op": "glu_grad",
+    "primitive": "GluGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/glu_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnGluBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

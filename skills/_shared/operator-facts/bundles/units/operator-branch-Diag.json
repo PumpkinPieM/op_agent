@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::diag_op.yaml::Diag",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::diag_op.yaml::Diag",
+    "unit_name": "Diag",
+    "unit_type": "branch",
+    "op": "diag",
+    "primitive": "Diag",
+    "yaml_path": "mindspore/ops/op_def/yaml/diag_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

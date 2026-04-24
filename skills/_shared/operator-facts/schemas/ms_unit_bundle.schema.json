@@ -1,0 +1,353 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "operator-facts ms unit bundle",
+  "description": "MindSpore unit-centered bundle for precheck and reverse lookup consumption. A bundle contains one unit plus inbound public APIs and, for composite units, direct components.",
+  "type": "object",
+  "required": [
+    "bundle_id",
+    "bundle_type",
+    "schema_version",
+    "generated_at",
+    "unit",
+    "entries"
+  ],
+  "properties": {
+    "bundle_id": {
+      "type": "string",
+      "description": "Primary identifier of the unit bundle, normally equal to the unit_id."
+    },
+    "bundle_type": {
+      "type": "string",
+      "const": "unit",
+      "description": "Bundle category."
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "v2",
+      "description": "Bundle schema version."
+    },
+    "generated_at": {
+      "type": "string",
+      "description": "Generation timestamp in ISO-8601 format."
+    },
+    "unit": {
+      "type": "object",
+      "required": [
+        "unit_id",
+        "unit_name",
+        "unit_type"
+      ],
+      "properties": {
+        "unit_id": {
+          "type": "string",
+          "description": "Canonical execution unit identifier."
+        },
+        "unit_name": {
+          "type": "string",
+          "description": "Stable short name of the execution unit."
+        },
+        "unit_type": {
+          "type": "string",
+          "description": "Execution unit category.",
+          "enum": [
+            "branch",
+            "composite"
+          ]
+        },
+        "op": {
+          "type": "string",
+          "description": "MindSpore op name when unit_type is branch."
+        },
+        "primitive": {
+          "type": "string",
+          "description": "Primitive name when unit_type is branch."
+        },
+        "yaml_path": {
+          "type": "string",
+          "description": "Path to the op yaml definition file when unit_type is branch."
+        },
+        "coverage": {
+          "$ref": "#/$defs/unitCoverage"
+        },
+        "impl_path": {
+          "type": "string",
+          "description": "Implementation file path when unit_type is composite."
+        },
+        "impl_symbol": {
+          "type": "string",
+          "description": "Implementation symbol when unit_type is composite."
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "unit_type": {
+                "const": "branch"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "op",
+              "primitive",
+              "yaml_path",
+              "coverage"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "unit_type": {
+                "const": "composite"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "impl_path",
+              "impl_symbol"
+            ]
+          }
+        }
+      ]
+    },
+    "entries": {
+      "type": "array",
+      "description": "Public APIs that route to this unit.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "components": {
+      "type": "array",
+      "description": "Direct components referenced by this composite unit. Present only when unit.unit_type is composite.",
+      "items": {
+        "$ref": "#/$defs/component"
+      }
+    }
+  },
+  "$defs": {
+    "unitCoverage": {
+      "type": "object",
+      "required": [
+        "aclnn",
+        "infer",
+        "kbk",
+        "pyboost",
+        "bprop",
+        "bprop_units"
+      ],
+      "properties": {
+        "aclnn": {
+          "type": "array",
+          "description": "ACLNN interfaces associated with this unit.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "infer": {
+          "type": "boolean",
+          "description": "Whether infer support exists."
+        },
+        "kbk": {
+          "type": "boolean",
+          "description": "Whether KBK support exists."
+        },
+        "pyboost": {
+          "type": "boolean",
+          "description": "Whether PyBoost support exists."
+        },
+        "bprop": {
+          "type": "boolean",
+          "description": "Whether explicit bprop evidence exists."
+        },
+        "bprop_units": {
+          "type": "array",
+          "description": "Short names of operator units referenced by the bprop builder.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "component": {
+      "type": "object",
+      "required": [
+        "component_type",
+        "condition",
+        "via_symbol"
+      ],
+      "properties": {
+        "component_type": {
+          "type": "string",
+          "description": "Component category.",
+          "enum": [
+            "public_api",
+            "unit",
+            "primitive_symbol"
+          ]
+        },
+        "public_api": {
+          "type": "string",
+          "description": "Referenced public API when component_type is public_api."
+        },
+        "unit_id": {
+          "type": "string",
+          "description": "Referenced execution unit identifier when component_type is unit."
+        },
+        "unit_name": {
+          "type": "string",
+          "description": "Short name of the referenced execution unit."
+        },
+        "unit_type": {
+          "type": "string",
+          "description": "Execution unit category when component_type is unit.",
+          "enum": [
+            "branch",
+            "composite"
+          ]
+        },
+        "op": {
+          "type": "string",
+          "description": "MindSpore op name when component_type is unit and unit_type is branch."
+        },
+        "primitive": {
+          "type": "string",
+          "description": "Primitive name when component_type is unit and unit_type is branch."
+        },
+        "yaml_path": {
+          "type": "string",
+          "description": "Path to the op yaml definition file when component_type is unit and unit_type is branch."
+        },
+        "coverage": {
+          "$ref": "#/$defs/unitCoverage"
+        },
+        "impl_path": {
+          "type": "string",
+          "description": "Implementation file path when component_type is unit and unit_type is composite."
+        },
+        "condition": {
+          "type": "string",
+          "description": "Condition text under which the component is used."
+        },
+        "via_symbol": {
+          "type": "string",
+          "description": "Symbol used at the call site."
+        },
+        "primitive_symbol": {
+          "type": "string",
+          "description": "Referenced primitive symbol when component_type is primitive_symbol."
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "component_type": {
+                "const": "public_api"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "public_api"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component_type": {
+                "const": "unit"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "unit_id",
+              "unit_name",
+              "unit_type"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component_type": {
+                "const": "unit"
+              },
+              "unit_type": {
+                "const": "branch"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "op",
+              "primitive",
+              "yaml_path",
+              "coverage"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component_type": {
+                "const": "unit"
+              },
+              "unit_type": {
+                "const": "composite"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "impl_path"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "component_type": {
+                "const": "primitive_symbol"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "primitive_symbol"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "unit": {
+            "properties": {
+              "unit_type": {
+                "const": "composite"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "components"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

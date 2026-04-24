@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::floor_op.yaml::Floor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::floor_op.yaml::Floor",
+    "unit_name": "Floor",
+    "unit_type": "branch",
+    "op": "floor",
+    "primitive": "Floor",
+    "yaml_path": "mindspore/ops/op_def/yaml/floor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnFloor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.floor",
+    "mindspore.Tensor.floor_",
+    "mindspore.mint.floor",
+    "mindspore.ops.floor"
+  ]
+}

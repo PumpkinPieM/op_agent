@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::new_full_op.yaml::NewFull",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::new_full_op.yaml::NewFull",
+    "unit_name": "NewFull",
+    "unit_type": "branch",
+    "op": "new_full",
+    "primitive": "NewFull",
+    "yaml_path": "mindspore/ops/op_def/yaml/new_full_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceFillScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.new_full"
+  ]
+}

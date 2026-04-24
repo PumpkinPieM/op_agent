@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::inplace_bernoulli_scalar_op.yaml::InplaceBernoulliScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_bernoulli_scalar_op.yaml::InplaceBernoulliScalar",
+    "unit_name": "InplaceBernoulliScalar",
+    "unit_type": "branch",
+    "op": "inplace_bernoulli_scalar",
+    "primitive": "InplaceBernoulliScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_bernoulli_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceBernoulli"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.bernoulli_",
+    "mindspore.ops.bernoulli_"
+  ]
+}

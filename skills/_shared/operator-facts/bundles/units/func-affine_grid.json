@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::affine_grid",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::affine_grid",
+    "unit_name": "affine_grid",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "affine_grid"
+  },
+  "entries": [
+    "mindspore.ops.affine_grid"
+  ],
+  "components": []
+}

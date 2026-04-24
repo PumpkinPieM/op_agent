@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::multi_scale_deformable_attn_grad_op.yaml::MultiScaleDeformableAttnGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::multi_scale_deformable_attn_grad_op.yaml::MultiScaleDeformableAttnGrad",
+    "unit_name": "MultiScaleDeformableAttnGrad",
+    "unit_type": "branch",
+    "op": "multi_scale_deformable_attn_grad",
+    "primitive": "MultiScaleDeformableAttnGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/multi_scale_deformable_attn_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnCast",
+        "aclnnInplaceZero",
+        "aclnnMultiScaleDeformableAttentionGrad",
+        "aclnnMultiScaleDeformableAttnGrad"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

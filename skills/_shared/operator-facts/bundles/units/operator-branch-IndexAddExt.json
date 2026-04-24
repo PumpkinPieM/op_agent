@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::index_add_ext_op.yaml::IndexAddExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::index_add_ext_op.yaml::IndexAddExt",
+    "unit_name": "IndexAddExt",
+    "unit_type": "branch",
+    "op": "index_add_ext",
+    "primitive": "IndexAddExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/index_add_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnIndexAdd",
+        "aclnnInplaceCopy"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.index_add",
+    "mindspore.mint.index_add",
+    "mindspore.ops.index_add"
+  ]
+}

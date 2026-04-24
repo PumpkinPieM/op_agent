@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::logical_and_op.yaml::LogicalAnd",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::logical_and_op.yaml::LogicalAnd",
+    "unit_name": "LogicalAnd",
+    "unit_type": "branch",
+    "op": "logical_and",
+    "primitive": "LogicalAnd",
+    "yaml_path": "mindspore/ops/op_def/yaml/logical_and_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLogicalAnd"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.logical_and",
+    "mindspore.mint.logical_and",
+    "mindspore.ops.logical_and"
+  ]
+}

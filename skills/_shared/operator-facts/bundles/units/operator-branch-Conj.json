@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::conj_op.yaml::Conj",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::conj_op.yaml::Conj",
+    "unit_name": "Conj",
+    "unit_type": "branch",
+    "op": "conj",
+    "primitive": "Conj",
+    "yaml_path": "mindspore/ops/op_def/yaml/conj_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Conj"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.conj",
+    "mindspore.ops.adjoint",
+    "mindspore.ops.conj"
+  ]
+}

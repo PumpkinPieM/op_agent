@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::chunk_op.yaml::Chunk",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::chunk_op.yaml::Chunk",
+    "unit_name": "Chunk",
+    "unit_type": "branch",
+    "op": "chunk",
+    "primitive": "Chunk",
+    "yaml_path": "mindspore/ops/op_def/yaml/chunk_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnChunk"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Concat"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.chunk",
+    "mindspore.ops.chunk"
+  ]
+}

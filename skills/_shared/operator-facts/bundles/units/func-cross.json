@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::cross",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::cross",
+    "unit_name": "cross",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "cross"
+  },
+  "entries": [
+    "mindspore.Tensor.cross"
+  ],
+  "components": []
+}

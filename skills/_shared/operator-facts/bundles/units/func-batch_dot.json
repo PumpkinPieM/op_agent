@@ -1,0 +1,143 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::batch_dot",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::batch_dot",
+    "unit_name": "batch_dot",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "batch_dot"
+  },
+  "entries": [
+    "mindspore.ops.batch_dot"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_get_batch_size",
+      "unit_id": "composite::ops/function/math_func.py::_get_batch_size",
+      "unit_name": "_get_batch_size",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_typecheck_input_batch_dot",
+      "unit_id": "composite::ops/function/math_func.py::_typecheck_input_batch_dot",
+      "unit_name": "_typecheck_input_batch_dot",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_batch_size",
+      "unit_id": "composite::ops/function/math_func.py::_check_batch_size",
+      "unit_name": "_check_batch_size",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_axes_for_batch_dot",
+      "unit_id": "composite::ops/function/math_func.py::_check_axes_for_batch_dot",
+      "unit_name": "_check_axes_for_batch_dot",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "x1_dim_num == 2",
+      "via_symbol": "expand_dims",
+      "unit_id": "branch::expand_dims_op.yaml::ExpandDims",
+      "unit_name": "ExpandDims",
+      "unit_type": "branch",
+      "op": "expand_dims",
+      "primitive": "ExpandDims",
+      "yaml_path": "mindspore/ops/op_def/yaml/expand_dims_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnExpandDims"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Reshape",
+          "Shape"
+        ]
+      }
+    },
+    {
+      "component_type": "unit",
+      "condition": "x2_dim_num == 2",
+      "via_symbol": "expand_dims",
+      "unit_id": "branch::expand_dims_op.yaml::ExpandDims",
+      "unit_name": "ExpandDims",
+      "unit_type": "branch",
+      "op": "expand_dims",
+      "primitive": "ExpandDims",
+      "yaml_path": "mindspore/ops/op_def/yaml/expand_dims_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnExpandDims"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Reshape",
+          "Shape"
+        ]
+      }
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_calc_new_shape_batchdot",
+      "unit_id": "composite::ops/function/math_func.py::_calc_new_shape_batchdot",
+      "unit_name": "_calc_new_shape_batchdot",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_get_output_shape",
+      "unit_id": "composite::ops/function/math_func.py::_get_output_shape",
+      "unit_name": "_get_output_shape",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "transpose_op",
+      "unit_id": "branch::transpose_op.yaml::Transpose",
+      "unit_name": "Transpose",
+      "unit_type": "branch",
+      "op": "transpose",
+      "primitive": "Transpose",
+      "yaml_path": "mindspore/ops/op_def/yaml/transpose_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnPermute"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Transpose"
+        ]
+      }
+    }
+  ]
+}

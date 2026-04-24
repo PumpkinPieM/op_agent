@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::max_unpool2d_ext_op.yaml::MaxUnpool2DExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::max_unpool2d_ext_op.yaml::MaxUnpool2DExt",
+    "unit_name": "MaxUnpool2DExt",
+    "unit_type": "branch",
+    "op": "max_unpool2d_ext",
+    "primitive": "MaxUnpool2DExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/max_unpool2d_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMaxUnpool2d"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "GatherD",
+        "Reshape",
+        "Shape",
+        "Sub"
+      ]
+    }
+  },
+  "entries": []
+}

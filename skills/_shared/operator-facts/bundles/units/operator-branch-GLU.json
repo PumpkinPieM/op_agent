@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::glu_op.yaml::GLU",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::glu_op.yaml::GLU",
+    "unit_name": "GLU",
+    "unit_type": "branch",
+    "op": "glu",
+    "primitive": "GLU",
+    "yaml_path": "mindspore/ops/op_def/yaml/glu_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnGlu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "GluGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.glu"
+  ]
+}

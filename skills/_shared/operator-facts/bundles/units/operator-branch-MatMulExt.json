@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::matmul_ext_op.yaml::MatMulExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::matmul_ext_op.yaml::MatMulExt",
+    "unit_name": "MatMulExt",
+    "unit_type": "branch",
+    "op": "matmul_ext",
+    "primitive": "MatMulExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/matmul_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMatmul"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.matmul",
+    "mindspore.mint.matmul",
+    "mindspore.ops.matmul"
+  ]
+}

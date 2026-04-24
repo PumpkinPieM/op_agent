@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::prelu_grad_op.yaml::PReLUGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::prelu_grad_op.yaml::PReLUGrad",
+    "unit_name": "PReLUGrad",
+    "unit_type": "branch",
+    "op": "prelu_grad",
+    "primitive": "PReLUGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/prelu_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnPreluBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

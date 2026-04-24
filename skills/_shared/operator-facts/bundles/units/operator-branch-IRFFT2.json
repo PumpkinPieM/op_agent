@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::irfft2_op.yaml::IRFFT2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::irfft2_op.yaml::IRFFT2",
+    "unit_name": "IRFFT2",
+    "unit_type": "branch",
+    "op": "irfft2",
+    "primitive": "IRFFT2",
+    "yaml_path": "mindspore/ops/op_def/yaml/irfft2_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "FFTShapeCopy",
+        "IRFFTDouble",
+        "RFFT2"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.irfft2"
+  ]
+}

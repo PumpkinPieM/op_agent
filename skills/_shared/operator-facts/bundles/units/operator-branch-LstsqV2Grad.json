@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::lstsq_v2_grad_op.yaml::LstsqV2Grad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::lstsq_v2_grad_op.yaml::LstsqV2Grad",
+    "unit_name": "LstsqV2Grad",
+    "unit_type": "branch",
+    "op": "lstsq_v2_grad",
+    "primitive": "LstsqV2Grad",
+    "yaml_path": "mindspore/ops/op_def/yaml/lstsq_v2_grad_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

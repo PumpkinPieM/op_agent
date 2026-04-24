@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::sign_op.yaml::Sign",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::sign_op.yaml::Sign",
+    "unit_name": "Sign",
+    "unit_type": "branch",
+    "op": "sign",
+    "primitive": "Sign",
+    "yaml_path": "mindspore/ops/op_def/yaml/sign_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSign"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.sign",
+    "mindspore.mint.sign",
+    "mindspore.ops.sgn",
+    "mindspore.ops.sign"
+  ]
+}

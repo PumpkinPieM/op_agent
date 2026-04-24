@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::fast_gelu_op.yaml::FastGeLU",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::fast_gelu_op.yaml::FastGeLU",
+    "unit_name": "FastGeLU",
+    "unit_type": "branch",
+    "op": "fast_gelu",
+    "primitive": "FastGeLU",
+    "yaml_path": "mindspore/ops/op_def/yaml/fast_gelu_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.fast_gelu"
+  ]
+}

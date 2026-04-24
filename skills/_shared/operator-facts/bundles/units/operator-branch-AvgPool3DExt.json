@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::avg_pool3d_ext_op.yaml::AvgPool3DExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::avg_pool3d_ext_op.yaml::AvgPool3DExt",
+    "unit_name": "AvgPool3DExt",
+    "unit_type": "branch",
+    "op": "avg_pool3d_ext",
+    "primitive": "AvgPool3DExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/avg_pool3d_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAvgPool3d"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AvgPool3DGradExt"
+      ]
+    }
+  },
+  "entries": []
+}

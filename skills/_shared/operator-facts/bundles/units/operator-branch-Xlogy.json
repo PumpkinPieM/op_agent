@@ -1,0 +1,37 @@
+{
+  "bundle_id": "branch::xlogy_op.yaml::Xlogy",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::xlogy_op.yaml::Xlogy",
+    "unit_name": "Xlogy",
+    "unit_type": "branch",
+    "op": "xlogy",
+    "primitive": "Xlogy",
+    "yaml_path": "mindspore/ops/op_def/yaml/xlogy_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnXLogYTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BitwiseAndTensor",
+        "Div",
+        "Equal",
+        "LessEqual",
+        "MaskedFill",
+        "Mul",
+        "Xlogy"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.xlogy",
+    "mindspore.mint.xlogy",
+    "mindspore.ops.xlogy"
+  ]
+}

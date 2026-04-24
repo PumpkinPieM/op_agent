@@ -1,0 +1,36 @@
+{
+  "bundle_id": "branch::erfc_op.yaml::Erfc",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::erfc_op.yaml::Erfc",
+    "unit_name": "Erfc",
+    "unit_type": "branch",
+    "op": "erfc",
+    "primitive": "Erfc",
+    "yaml_path": "mindspore/ops/op_def/yaml/erfc_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnErfc"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Exp",
+        "Mul",
+        "Muls",
+        "Neg",
+        "PowTensorScalar"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.erfc",
+    "mindspore.mint.erfc",
+    "mindspore.ops.erfc"
+  ]
+}

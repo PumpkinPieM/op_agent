@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::scalar_cast_op.yaml::ScalarCast",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::scalar_cast_op.yaml::ScalarCast",
+    "unit_name": "ScalarCast",
+    "unit_type": "branch",
+    "op": "scalar_cast",
+    "primitive": "ScalarCast",
+    "yaml_path": "mindspore/ops/op_def/yaml/scalar_cast_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "ScalarCast",
+        "ScalarToTensor"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.scalar_cast"
+  ]
+}

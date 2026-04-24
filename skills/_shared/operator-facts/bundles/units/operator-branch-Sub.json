@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::sub_op.yaml::Sub",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::sub_op.yaml::Sub",
+    "unit_name": "Sub",
+    "unit_type": "branch",
+    "op": "sub",
+    "primitive": "Sub",
+    "yaml_path": "mindspore/ops/op_def/yaml/sub_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSub"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Neg"
+      ]
+    }
+  },
+  "entries": []
+}

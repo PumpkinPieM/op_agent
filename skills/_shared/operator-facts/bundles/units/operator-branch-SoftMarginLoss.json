@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::soft_margin_loss_op.yaml::SoftMarginLoss",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::soft_margin_loss_op.yaml::SoftMarginLoss",
+    "unit_name": "SoftMarginLoss",
+    "unit_type": "branch",
+    "op": "soft_margin_loss",
+    "primitive": "SoftMarginLoss",
+    "yaml_path": "mindspore/ops/op_def/yaml/soft_margin_loss_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSoftMarginLoss"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "SoftMarginLossGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.soft_margin_loss"
+  ]
+}

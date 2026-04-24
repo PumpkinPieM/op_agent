@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::solve_triangular_op.yaml::SolveTriangular",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::solve_triangular_op.yaml::SolveTriangular",
+    "unit_name": "SolveTriangular",
+    "unit_type": "branch",
+    "op": "solve_triangular",
+    "primitive": "SolveTriangular",
+    "yaml_path": "mindspore/ops/op_def/yaml/solve_triangular_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "MatMul",
+        "Neg",
+        "Reshape",
+        "SolveTriangular",
+        "Sub",
+        "Transpose"
+      ]
+    }
+  },
+  "entries": []
+}

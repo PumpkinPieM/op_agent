@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::masked_fill_scalar_op.yaml::MaskedFillScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::masked_fill_scalar_op.yaml::MaskedFillScalar",
+    "unit_name": "MaskedFillScalar",
+    "unit_type": "branch",
+    "op": "masked_fill_scalar",
+    "primitive": "MaskedFillScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/masked_fill_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceCopy",
+        "aclnnInplaceMaskedFillScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "MaskedFillScalar"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.masked_fill",
+    "mindspore.ops.masked_fill"
+  ]
+}

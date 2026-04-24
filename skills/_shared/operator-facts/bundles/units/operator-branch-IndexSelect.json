@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::index_select_op.yaml::IndexSelect",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::index_select_op.yaml::IndexSelect",
+    "unit_name": "IndexSelect",
+    "unit_type": "branch",
+    "op": "index_select",
+    "primitive": "IndexSelect",
+    "yaml_path": "mindspore/ops/op_def/yaml/index_select_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnIndexSelect"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "InplaceIndexAddExt",
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.index_select",
+    "mindspore.mint.index_select",
+    "mindspore.ops.index_select"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::copy_op.yaml::Copy",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::copy_op.yaml::Copy",
+    "unit_name": "Copy",
+    "unit_type": "branch",
+    "op": "copy",
+    "primitive": "Copy",
+    "yaml_path": "mindspore/ops/op_def/yaml/copy_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceCopy"
+      ],
+      "infer": true,
+      "kbk": false,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

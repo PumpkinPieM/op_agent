@@ -1,0 +1,77 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::tensor_dot",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::tensor_dot",
+    "unit_name": "tensor_dot",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "tensor_dot"
+  },
+  "entries": [
+    "mindspore.ops.tensor_dot"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_axes",
+      "unit_id": "composite::ops/function/math_func.py::_check_axes",
+      "unit_name": "_check_axes",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_axes_int_check",
+      "unit_id": "composite::ops/function/math_func.py::_axes_int_check",
+      "unit_name": "_axes_int_check",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_validate_axes",
+      "unit_id": "composite::ops/function/math_func.py::_validate_axes",
+      "unit_name": "_validate_axes",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_calc_new_shape",
+      "unit_id": "composite::ops/function/math_func.py::_calc_new_shape",
+      "unit_name": "_calc_new_shape",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "transpose_op",
+      "unit_id": "branch::transpose_op.yaml::Transpose",
+      "unit_name": "Transpose",
+      "unit_type": "branch",
+      "op": "transpose",
+      "primitive": "Transpose",
+      "yaml_path": "mindspore/ops/op_def/yaml/transpose_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnPermute"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Transpose"
+        ]
+      }
+    }
+  ]
+}

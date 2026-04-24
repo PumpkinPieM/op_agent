@@ -1,0 +1,26 @@
+{
+  "bundle_id": "branch::scalar_div_op.yaml::ScalarDiv",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::scalar_div_op.yaml::ScalarDiv",
+    "unit_name": "ScalarDiv",
+    "unit_type": "branch",
+    "op": "scalar_div",
+    "primitive": "ScalarDiv",
+    "yaml_path": "mindspore/ops/op_def/yaml/scalar_div_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "ScalarDiv",
+        "ScalarMul"
+      ]
+    }
+  },
+  "entries": []
+}

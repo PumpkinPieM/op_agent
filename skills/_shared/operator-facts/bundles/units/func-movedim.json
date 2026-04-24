@@ -1,0 +1,55 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::movedim",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::movedim",
+    "unit_name": "movedim",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "movedim"
+  },
+  "entries": [
+    "mindspore.Tensor.movedim"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "rank",
+      "unit_id": "branch::rank_op.yaml::Rank",
+      "unit_name": "Rank",
+      "unit_type": "branch",
+      "op": "rank",
+      "primitive": "Rank",
+      "yaml_path": "mindspore/ops/op_def/yaml/rank_op.yaml",
+      "coverage": {
+        "aclnn": [],
+        "infer": true,
+        "kbk": false,
+        "pyboost": false,
+        "bprop": true,
+        "bprop_units": []
+      }
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_axis_valid",
+      "unit_id": "composite::ops/function/array_func.py::_check_axis_valid",
+      "unit_name": "_check_axis_valid",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/array_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_get_moved_perm",
+      "unit_id": "composite::ops/function/array_func.py::_get_moved_perm",
+      "unit_name": "_get_moved_perm",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/array_func.py"
+    }
+  ]
+}

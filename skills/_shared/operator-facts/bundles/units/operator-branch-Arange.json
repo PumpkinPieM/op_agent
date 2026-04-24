@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::arange_op.yaml::Arange",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::arange_op.yaml::Arange",
+    "unit_name": "Arange",
+    "unit_type": "branch",
+    "op": "arange",
+    "primitive": "Arange",
+    "yaml_path": "mindspore/ops/op_def/yaml/arange_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnArange"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.arange",
+    "mindspore.ops.arange_ext"
+  ]
+}

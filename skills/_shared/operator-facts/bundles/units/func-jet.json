@@ -1,0 +1,36 @@
+{
+  "bundle_id": "composite::ops/function/grad/grad_func.py::jet",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/grad/grad_func.py::jet",
+    "unit_name": "jet",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py",
+    "impl_symbol": "jet"
+  },
+  "entries": [
+    "mindspore.ops.jet"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_jet_inputs",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_check_jet_inputs",
+      "unit_name": "_check_jet_inputs",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (isinstance(primals, list) and len(primals) > 1)",
+      "via_symbol": "_preprocess_jet",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_preprocess_jet",
+      "unit_name": "_preprocess_jet",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    }
+  ]
+}

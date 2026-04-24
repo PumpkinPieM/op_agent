@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::logical_or_op.yaml::LogicalOr",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::logical_or_op.yaml::LogicalOr",
+    "unit_name": "LogicalOr",
+    "unit_type": "branch",
+    "op": "logical_or",
+    "primitive": "LogicalOr",
+    "yaml_path": "mindspore/ops/op_def/yaml/logical_or_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLogicalOr"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.logical_or",
+    "mindspore.mint.logical_or",
+    "mindspore.ops.logical_or"
+  ]
+}

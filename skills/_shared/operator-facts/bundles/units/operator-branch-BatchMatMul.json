@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::batch_mat_mul_op.yaml::BatchMatMul",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::batch_mat_mul_op.yaml::BatchMatMul",
+    "unit_name": "BatchMatMul",
+    "unit_type": "branch",
+    "op": "batch_mat_mul",
+    "primitive": "BatchMatMul",
+    "yaml_path": "mindspore/ops/op_def/yaml/batch_mat_mul_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBatchMatMul",
+        "aclnnMatmul"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BatchMatMul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.bmm"
+  ]
+}

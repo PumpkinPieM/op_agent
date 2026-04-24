@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::addmm_op.yaml::Addmm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::addmm_op.yaml::Addmm",
+    "unit_name": "Addmm",
+    "unit_type": "branch",
+    "op": "addmm",
+    "primitive": "Addmm",
+    "yaml_path": "mindspore/ops/op_def/yaml/addmm_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAddmm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.addmm",
+    "mindspore.mint.addmm",
+    "mindspore.ops.addmm"
+  ]
+}

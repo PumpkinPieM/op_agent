@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::inplace_divmods_op.yaml::InplaceDivMods",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_divmods_op.yaml::InplaceDivMods",
+    "unit_name": "InplaceDivMods",
+    "unit_type": "branch",
+    "op": "inplace_divmods",
+    "primitive": "InplaceDivMods",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_divmods_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceDivMods"
+      ],
+      "infer": true,
+      "kbk": false,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.div_"
+  ]
+}

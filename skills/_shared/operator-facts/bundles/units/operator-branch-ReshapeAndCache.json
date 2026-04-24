@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::reshape_and_cache_op.yaml::ReshapeAndCache",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::reshape_and_cache_op.yaml::ReshapeAndCache",
+    "unit_name": "ReshapeAndCache",
+    "unit_type": "branch",
+    "op": "reshape_and_cache",
+    "primitive": "ReshapeAndCache",
+    "yaml_path": "mindspore/ops/op_def/yaml/reshape_and_cache_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnReshapeAndCache"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

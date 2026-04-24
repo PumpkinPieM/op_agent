@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::slice_ext_op.yaml::SliceExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::slice_ext_op.yaml::SliceExt",
+    "unit_name": "SliceExt",
+    "unit_type": "branch",
+    "op": "slice_ext",
+    "primitive": "SliceExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/slice_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSliceExt"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "InplaceCopy",
+        "Shape",
+        "SliceExt",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": []
+}

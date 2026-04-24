@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::zeros_like_ext_op.yaml::ZerosLikeExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::zeros_like_ext_op.yaml::ZerosLikeExt",
+    "unit_name": "ZerosLikeExt",
+    "unit_type": "branch",
+    "op": "zeros_like_ext",
+    "primitive": "ZerosLikeExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/zeros_like_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceZero"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.zeros_like"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::isclose_op.yaml::IsClose",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::isclose_op.yaml::IsClose",
+    "unit_name": "IsClose",
+    "unit_type": "branch",
+    "op": "isclose",
+    "primitive": "IsClose",
+    "yaml_path": "mindspore/ops/op_def/yaml/isclose_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnIsClose"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.isclose",
+    "mindspore.mint.isclose",
+    "mindspore.ops.isclose"
+  ]
+}

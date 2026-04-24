@@ -1,0 +1,26 @@
+{
+  "bundle_id": "branch::diagonal_op.yaml::Diagonal",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::diagonal_op.yaml::Diagonal",
+    "unit_name": "Diagonal",
+    "unit_type": "branch",
+    "op": "diagonal",
+    "primitive": "Diagonal",
+    "yaml_path": "mindspore/ops/op_def/yaml/diagonal_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.diagonal",
+    "mindspore.ops.diagonal"
+  ]
+}

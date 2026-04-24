@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::log_matrix_determinant_op.yaml::LogMatrixDeterminant",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::log_matrix_determinant_op.yaml::LogMatrixDeterminant",
+    "unit_name": "LogMatrixDeterminant",
+    "unit_type": "branch",
+    "op": "log_matrix_determinant",
+    "primitive": "LogMatrixDeterminant",
+    "yaml_path": "mindspore/ops/op_def/yaml/log_matrix_determinant_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Mul",
+        "Reshape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.log_matrix_determinant",
+    "mindspore.ops.slogdet"
+  ]
+}

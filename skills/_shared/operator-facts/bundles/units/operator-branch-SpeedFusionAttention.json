@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::speed_fusion_attention_op.yaml::SpeedFusionAttention",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::speed_fusion_attention_op.yaml::SpeedFusionAttention",
+    "unit_name": "SpeedFusionAttention",
+    "unit_type": "branch",
+    "op": "speed_fusion_attention",
+    "primitive": "SpeedFusionAttention",
+    "yaml_path": "mindspore/ops/op_def/yaml/speed_fusion_attention_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnFlashAttentionScoreV2",
+        "aclnnFlashAttentionVarLenScoreV2"
+      ],
+      "infer": true,
+      "kbk": false,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "SpeedFusionAttentionGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.speed_fusion_attention"
+  ]
+}

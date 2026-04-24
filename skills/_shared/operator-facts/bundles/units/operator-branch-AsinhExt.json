@@ -1,0 +1,36 @@
+{
+  "bundle_id": "branch::asinh_ext_op.yaml::AsinhExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::asinh_ext_op.yaml::AsinhExt",
+    "unit_name": "AsinhExt",
+    "unit_type": "branch",
+    "op": "asinh_ext",
+    "primitive": "AsinhExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/asinh_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAsinh"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AddScalar",
+        "Mul",
+        "Rsqrt",
+        "Square"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.asinh",
+    "mindspore.mint.arcsinh",
+    "mindspore.mint.asinh",
+    "mindspore.ops.arcsinh",
+    "mindspore.ops.asinh"
+  ]
+}

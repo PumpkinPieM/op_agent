@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::paged_attention_op.yaml::PagedAttention",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::paged_attention_op.yaml::PagedAttention",
+    "unit_name": "PagedAttention",
+    "unit_type": "branch",
+    "op": "paged_attention",
+    "primitive": "PagedAttention",
+    "yaml_path": "mindspore/ops/op_def/yaml/paged_attention_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnPagedAttention"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

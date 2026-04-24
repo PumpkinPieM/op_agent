@@ -1,0 +1,43 @@
+{
+  "bundle_id": "mindspore.mint.acos",
+  "bundle_type": "entry",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T17:24:10+08:00",
+  "entry": {
+    "public_api": "mindspore.mint.acos",
+    "public_surface": "mindspore.mint",
+    "public_name": "acos",
+    "entry_type": "single",
+    "source_type": "mint_export",
+    "source_path": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "branches": [
+    {
+      "route_type": "direct",
+      "resolver_type": "alias",
+      "target_symbol": "acos_ext",
+      "dispatch_order": 0,
+      "unit_id": "branch::acos_ext_op.yaml::AcosExt",
+      "unit_name": "AcosExt",
+      "op": "acos_ext",
+      "primitive": "AcosExt",
+      "yaml_path": "mindspore/ops/op_def/yaml/acos_ext_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnAcos"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Mul",
+          "Neg",
+          "Rsqrt",
+          "Square",
+          "Sub"
+        ]
+      }
+    }
+  ]
+}

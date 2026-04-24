@@ -1,0 +1,37 @@
+{
+  "bundle_id": "mindspore.Tensor.argmin",
+  "bundle_type": "entry",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T17:24:10+08:00",
+  "entry": {
+    "public_api": "mindspore.Tensor.argmin",
+    "public_surface": "mindspore.Tensor",
+    "public_name": "argmin",
+    "entry_type": "single",
+    "source_type": "api_def",
+    "source_path": "mindspore/ops/api_def/argmin.yaml"
+  },
+  "branches": [
+    {
+      "route_type": "direct",
+      "resolver_type": "py_method",
+      "target_symbol": "tensor_argmin",
+      "dispatch_order": 0,
+      "unit_id": "branch::argmin_ext_op.yaml::ArgMinExt",
+      "unit_name": "ArgMinExt",
+      "op": "argmin_ext",
+      "primitive": "ArgMinExt",
+      "yaml_path": "mindspore/ops/op_def/yaml/argmin_ext_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnArgMin"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": []
+      }
+    }
+  ]
+}

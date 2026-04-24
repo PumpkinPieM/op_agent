@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::bias_add_op.yaml::BiasAdd",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::bias_add_op.yaml::BiasAdd",
+    "unit_name": "BiasAdd",
+    "unit_type": "branch",
+    "op": "bias_add",
+    "primitive": "BiasAdd",
+    "yaml_path": "mindspore/ops/op_def/yaml/bias_add_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "BiasAddGrad",
+        "Equal",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.bias_add"
+  ]
+}

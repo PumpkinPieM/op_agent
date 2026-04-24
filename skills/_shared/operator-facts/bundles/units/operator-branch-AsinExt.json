@@ -1,0 +1,35 @@
+{
+  "bundle_id": "branch::asin_ext_op.yaml::AsinExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::asin_ext_op.yaml::AsinExt",
+    "unit_name": "AsinExt",
+    "unit_type": "branch",
+    "op": "asin_ext",
+    "primitive": "AsinExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/asin_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAsin"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mul",
+        "Rsqrt",
+        "Square",
+        "Sub"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.asin",
+    "mindspore.mint.arcsin",
+    "mindspore.mint.asin",
+    "mindspore.ops.asin"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::convolution_grad_op.yaml::ConvolutionGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::convolution_grad_op.yaml::ConvolutionGrad",
+    "unit_name": "ConvolutionGrad",
+    "unit_type": "branch",
+    "op": "convolution_grad",
+    "primitive": "ConvolutionGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/convolution_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnConvolutionBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

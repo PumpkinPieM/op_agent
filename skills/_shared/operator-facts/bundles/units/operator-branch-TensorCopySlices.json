@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::tensor_copy_slices_op.yaml::TensorCopySlices",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::tensor_copy_slices_op.yaml::TensorCopySlices",
+    "unit_name": "TensorCopySlices",
+    "unit_type": "branch",
+    "op": "tensor_copy_slices",
+    "primitive": "TensorCopySlices",
+    "yaml_path": "mindspore/ops/op_def/yaml/tensor_copy_slices_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "StridedSlice",
+        "TensorCopySlices",
+        "ZerosLike"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,34 @@
+{
+  "bundle_id": "branch::select_ext_view_op.yaml::SelectExtView",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::select_ext_view_op.yaml::SelectExtView",
+    "unit_name": "SelectExtView",
+    "unit_type": "branch",
+    "op": "select_ext_view",
+    "primitive": "SelectExtView",
+    "yaml_path": "mindspore/ops/op_def/yaml/select_ext_view_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSelectExtView"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Concat",
+        "ExpandDimsView",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.select",
+    "mindspore.mint.select",
+    "mindspore.ops.select",
+    "mindspore.ops.softplus"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "bundle_id": "branch::acos_ext_op.yaml::AcosExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::acos_ext_op.yaml::AcosExt",
+    "unit_name": "AcosExt",
+    "unit_type": "branch",
+    "op": "acos_ext",
+    "primitive": "AcosExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/acos_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAcos"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mul",
+        "Neg",
+        "Rsqrt",
+        "Square",
+        "Sub"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.acos",
+    "mindspore.mint.acos",
+    "mindspore.mint.arccos",
+    "mindspore.ops.acos",
+    "mindspore.ops.arccos"
+  ]
+}

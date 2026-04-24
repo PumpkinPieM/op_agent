@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::empty_op.yaml::Empty",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::empty_op.yaml::Empty",
+    "unit_name": "Empty",
+    "unit_type": "branch",
+    "op": "empty",
+    "primitive": "Empty",
+    "yaml_path": "mindspore/ops/op_def/yaml/empty_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnEmpty"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.empty",
+    "mindspore.ops.empty"
+  ]
+}

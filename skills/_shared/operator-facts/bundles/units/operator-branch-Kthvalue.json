@@ -1,0 +1,35 @@
+{
+  "bundle_id": "branch::kthvalue_op.yaml::Kthvalue",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::kthvalue_op.yaml::Kthvalue",
+    "unit_name": "Kthvalue",
+    "unit_type": "branch",
+    "op": "kthvalue",
+    "primitive": "Kthvalue",
+    "yaml_path": "mindspore/ops/op_def/yaml/kthvalue_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnKthvalue"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ExpandDims",
+        "Mul",
+        "Scatter",
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.kthvalue",
+    "mindspore.mint.kthvalue",
+    "mindspore.ops.kthvalue"
+  ]
+}

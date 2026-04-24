@@ -1,0 +1,54 @@
+{
+  "bundle_id": "composite::ops/function/nn_func.py::fractional_max_pool3d",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/nn_func.py::fractional_max_pool3d",
+    "unit_name": "fractional_max_pool3d",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py",
+    "impl_symbol": "fractional_max_pool3d"
+  },
+  "entries": [
+    "mindspore.ops.fractional_max_pool3d"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_fractional_output_size_ratio",
+      "unit_id": "composite::ops/function/nn_func.py::_check_fractional_output_size_ratio",
+      "unit_name": "_check_fractional_output_size_ratio",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_value_type",
+      "unit_id": "composite::ops/function/nn_func.py::_check_value_type",
+      "unit_name": "_check_value_type",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "output_size is None and isinstance(output_ratio, (float, int))",
+      "via_symbol": "_check_value_type",
+      "unit_id": "composite::ops/function/nn_func.py::_check_value_type",
+      "unit_name": "_check_value_type",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "output_size is None",
+      "via_symbol": "_check_float_range_inc_neither",
+      "unit_id": "composite::ops/function/nn_func.py::_check_float_range_inc_neither",
+      "unit_name": "_check_float_range_inc_neither",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    }
+  ]
+}

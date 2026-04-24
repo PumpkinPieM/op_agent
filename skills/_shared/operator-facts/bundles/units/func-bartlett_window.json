@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/spectral_func.py::bartlett_window",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/spectral_func.py::bartlett_window",
+    "unit_name": "bartlett_window",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/spectral_func.py",
+    "impl_symbol": "bartlett_window"
+  },
+  "entries": [
+    "mindspore.ops.bartlett_window"
+  ],
+  "components": []
+}

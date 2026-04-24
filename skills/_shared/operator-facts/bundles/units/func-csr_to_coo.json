@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/sparse_func.py::csr_to_coo",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/sparse_func.py::csr_to_coo",
+    "unit_name": "csr_to_coo",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/sparse_func.py",
+    "impl_symbol": "csr_to_coo"
+  },
+  "entries": [
+    "mindspore.ops.csr_to_coo"
+  ],
+  "components": []
+}

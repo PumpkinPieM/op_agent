@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::hfft_op.yaml::HFFT",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::hfft_op.yaml::HFFT",
+    "unit_name": "HFFT",
+    "unit_type": "branch",
+    "op": "hfft",
+    "primitive": "HFFT",
+    "yaml_path": "mindspore/ops/op_def/yaml/hfft_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "FFTShapeCopy",
+        "IHFFT",
+        "IRFFTDouble",
+        "Sub"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.hfft"
+  ]
+}

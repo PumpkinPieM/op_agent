@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::ne_scalar_op.yaml::NeScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::ne_scalar_op.yaml::NeScalar",
+    "unit_name": "NeScalar",
+    "unit_type": "branch",
+    "op": "ne_scalar",
+    "primitive": "NeScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/ne_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNeScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

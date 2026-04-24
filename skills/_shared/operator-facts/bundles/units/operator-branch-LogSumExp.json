@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::logsumexp_op.yaml::LogSumExp",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::logsumexp_op.yaml::LogSumExp",
+    "unit_name": "LogSumExp",
+    "unit_type": "branch",
+    "op": "logsumexp",
+    "primitive": "LogSumExp",
+    "yaml_path": "mindspore/ops/op_def/yaml/logsumexp_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLogSumExp"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Equal",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.logsumexp",
+    "mindspore.mint.logsumexp",
+    "mindspore.ops.logsumexp"
+  ]
+}

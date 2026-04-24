@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::sin_op.yaml::Sin",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::sin_op.yaml::Sin",
+    "unit_name": "Sin",
+    "unit_type": "branch",
+    "op": "sin",
+    "primitive": "Sin",
+    "yaml_path": "mindspore/ops/op_def/yaml/sin_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSin"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "Cos",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.sin",
+    "mindspore.mint.sin",
+    "mindspore.ops.sin"
+  ]
+}

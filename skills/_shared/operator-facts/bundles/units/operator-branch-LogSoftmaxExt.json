@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::log_softmax_ext_op.yaml::LogSoftmaxExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::log_softmax_ext_op.yaml::LogSoftmaxExt",
+    "unit_name": "LogSoftmaxExt",
+    "unit_type": "branch",
+    "op": "log_softmax_ext",
+    "primitive": "LogSoftmaxExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/log_softmax_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLogSoftmax"
+      ],
+      "infer": true,
+      "kbk": false,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "LogSoftmaxGrad"
+      ]
+    }
+  },
+  "entries": []
+}

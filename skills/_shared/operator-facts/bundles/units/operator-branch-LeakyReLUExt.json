@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::leaky_relu_ext_op.yaml::LeakyReLUExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::leaky_relu_ext_op.yaml::LeakyReLUExt",
+    "unit_name": "LeakyReLUExt",
+    "unit_type": "branch",
+    "op": "leaky_relu_ext",
+    "primitive": "LeakyReLUExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/leaky_relu_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLeakyRelu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "LeakyReLUGradExt"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::index_fill_tensor_op.yaml::IndexFillTensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::index_fill_tensor_op.yaml::IndexFillTensor",
+    "unit_name": "IndexFillTensor",
+    "unit_type": "branch",
+    "op": "index_fill_tensor",
+    "primitive": "IndexFillTensor",
+    "yaml_path": "mindspore/ops/op_def/yaml/index_fill_tensor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnIndexFillTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "IndexFillScalar",
+        "IndexSelect",
+        "SumExt",
+        "Unique2",
+        "ZerosLike"
+      ]
+    }
+  },
+  "entries": []
+}

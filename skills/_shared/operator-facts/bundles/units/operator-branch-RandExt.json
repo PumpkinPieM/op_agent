@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::rand_ext_op.yaml::RandExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::rand_ext_op.yaml::RandExt",
+    "unit_name": "RandExt",
+    "unit_type": "branch",
+    "op": "rand_ext",
+    "primitive": "RandExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/rand_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceUniform"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.rand"
+  ]
+}

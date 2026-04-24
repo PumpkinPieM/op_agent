@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::rms_norm_op.yaml::RmsNorm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::rms_norm_op.yaml::RmsNorm",
+    "unit_name": "RmsNorm",
+    "unit_type": "branch",
+    "op": "rms_norm",
+    "primitive": "RmsNorm",
+    "yaml_path": "mindspore/ops/op_def/yaml/rms_norm_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRmsNorm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "RmsNormGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.rms_norm"
+  ]
+}

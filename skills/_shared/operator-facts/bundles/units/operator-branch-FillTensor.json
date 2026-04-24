@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::fill_tensor_op.yaml::FillTensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::fill_tensor_op.yaml::FillTensor",
+    "unit_name": "FillTensor",
+    "unit_type": "branch",
+    "op": "fill_tensor",
+    "primitive": "FillTensor",
+    "yaml_path": "mindspore/ops/op_def/yaml/fill_tensor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceFillScalar",
+        "aclnnInplaceFillTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "FillTensor",
+        "Reshape",
+        "Shape",
+        "SumExt"
+      ]
+    }
+  },
+  "entries": []
+}

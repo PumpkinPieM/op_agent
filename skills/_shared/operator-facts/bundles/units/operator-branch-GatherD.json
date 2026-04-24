@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::gather_d_op.yaml::GatherD",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::gather_d_op.yaml::GatherD",
+    "unit_name": "GatherD",
+    "unit_type": "branch",
+    "op": "gather_d",
+    "primitive": "GatherD",
+    "yaml_path": "mindspore/ops/op_def/yaml/gather_d_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnGather"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "GatherDGradV2"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.gather",
+    "mindspore.mint.gather",
+    "mindspore.ops.gather",
+    "mindspore.ops.gather_d",
+    "mindspore.ops.gather_elements"
+  ]
+}

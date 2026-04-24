@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::batch_norm_ext_op.yaml::BatchNormExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::batch_norm_ext_op.yaml::BatchNormExt",
+    "unit_name": "BatchNormExt",
+    "unit_type": "branch",
+    "op": "batch_norm_ext",
+    "primitive": "BatchNormExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/batch_norm_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBatchNorm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BatchNormGradExt",
+        "Cast"
+      ]
+    }
+  },
+  "entries": []
+}

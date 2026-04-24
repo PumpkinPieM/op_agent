@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::add_layernorm_v2_op.yaml::AddLayerNormV2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::add_layernorm_v2_op.yaml::AddLayerNormV2",
+    "unit_name": "AddLayerNormV2",
+    "unit_type": "branch",
+    "op": "add_layernorm_v2",
+    "primitive": "AddLayerNormV2",
+    "yaml_path": "mindspore/ops/op_def/yaml/add_layernorm_v2_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAddLayerNorm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AddLayerNormGrad",
+        "Equal",
+        "Mul",
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.add_layer_norm"
+  ]
+}

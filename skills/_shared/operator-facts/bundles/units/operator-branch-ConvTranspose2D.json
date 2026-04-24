@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::conv_transpose2d_op.yaml::ConvTranspose2D",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::conv_transpose2d_op.yaml::ConvTranspose2D",
+    "unit_name": "ConvTranspose2D",
+    "unit_type": "branch",
+    "op": "conv_transpose2d",
+    "primitive": "ConvTranspose2D",
+    "yaml_path": "mindspore/ops/op_def/yaml/conv_transpose2d_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnConvolution"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ConvolutionGrad",
+        "Reshape",
+        "Shape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.conv_transpose2d"
+  ]
+}

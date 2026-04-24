@@ -1,0 +1,39 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::hann_window",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::hann_window",
+    "unit_name": "hann_window",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "hann_window"
+  },
+  "entries": [
+    "mindspore.ops.hann_window"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "not (window_length <= 1)",
+      "via_symbol": "arange",
+      "unit_id": "branch::arange_op.yaml::Arange",
+      "unit_name": "Arange",
+      "unit_type": "branch",
+      "op": "arange",
+      "primitive": "Arange",
+      "yaml_path": "mindspore/ops/op_def/yaml/arange_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnArange"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": []
+      }
+    }
+  ]
+}

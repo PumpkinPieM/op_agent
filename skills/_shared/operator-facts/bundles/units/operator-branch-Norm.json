@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::norm_op.yaml::Norm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::norm_op.yaml::Norm",
+    "unit_name": "Norm",
+    "unit_type": "branch",
+    "op": "norm",
+    "primitive": "Norm",
+    "yaml_path": "mindspore/ops/op_def/yaml/norm_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNorm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.norm"
+  ]
+}

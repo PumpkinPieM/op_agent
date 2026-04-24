@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::softplus_ext_op.yaml::SoftplusExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::softplus_ext_op.yaml::SoftplusExt",
+    "unit_name": "SoftplusExt",
+    "unit_type": "branch",
+    "op": "softplus_ext",
+    "primitive": "SoftplusExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/softplus_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSoftplus"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "SoftplusGradExt"
+      ]
+    }
+  },
+  "entries": []
+}

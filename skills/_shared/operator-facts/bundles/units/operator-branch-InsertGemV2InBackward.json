@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::insert_gemv2_in_backward_op.yaml::InsertGemV2InBackward",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::insert_gemv2_in_backward_op.yaml::InsertGemV2InBackward",
+    "unit_name": "InsertGemV2InBackward",
+    "unit_type": "branch",
+    "op": "insert_gem_v2_in_backward",
+    "primitive": "InsertGemV2InBackward",
+    "yaml_path": "mindspore/ops/op_def/yaml/insert_gemv2_in_backward_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Add",
+        "GenerateEodMaskV2",
+        "Sub"
+      ]
+    }
+  },
+  "entries": []
+}

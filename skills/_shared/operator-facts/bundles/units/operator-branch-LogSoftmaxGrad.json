@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::log_softmax_grad_op.yaml::LogSoftmaxGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::log_softmax_grad_op.yaml::LogSoftmaxGrad",
+    "unit_name": "LogSoftmaxGrad",
+    "unit_type": "branch",
+    "op": "log_softmax_grad",
+    "primitive": "LogSoftmaxGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/log_softmax_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLogSoftmaxBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

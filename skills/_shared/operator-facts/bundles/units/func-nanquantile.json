@@ -1,0 +1,37 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::nanquantile",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::nanquantile",
+    "unit_name": "nanquantile",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "nanquantile"
+  },
+  "entries": [
+    "mindspore.Tensor.nanquantile",
+    "mindspore.ops.nanquantile"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "axis is not None",
+      "via_symbol": "_check_attr_dtype",
+      "unit_id": "composite::ops/function/math_func.py::_check_attr_dtype",
+      "unit_name": "_check_attr_dtype",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "keepdims is not None",
+      "via_symbol": "_check_attr_dtype",
+      "unit_id": "composite::ops/function/math_func.py::_check_attr_dtype",
+      "unit_name": "_check_attr_dtype",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    }
+  ]
+}

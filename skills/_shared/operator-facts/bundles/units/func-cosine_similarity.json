@@ -1,0 +1,43 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::cosine_similarity",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::cosine_similarity",
+    "unit_name": "cosine_similarity",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "cosine_similarity"
+  },
+  "entries": [
+    "mindspore.ops.cosine_similarity"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "sum",
+      "unit_id": "branch::sum_ext_op.yaml::SumExt",
+      "unit_name": "SumExt",
+      "unit_type": "branch",
+      "op": "sum_ext",
+      "primitive": "SumExt",
+      "yaml_path": "mindspore/ops/op_def/yaml/sum_ext_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnReduceSum"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Cast",
+          "Equal",
+          "Mul"
+        ]
+      }
+    }
+  ]
+}

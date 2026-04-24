@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/other_func.py::move_to",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/other_func.py::move_to",
+    "unit_name": "move_to",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/other_func.py",
+    "impl_symbol": "move_to"
+  },
+  "entries": [
+    "mindspore.ops.move_to"
+  ],
+  "components": []
+}

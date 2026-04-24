@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::relu_op.yaml::ReLU",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::relu_op.yaml::ReLU",
+    "unit_name": "ReLU",
+    "unit_type": "branch",
+    "op": "relu",
+    "primitive": "ReLU",
+    "yaml_path": "mindspore/ops/op_def/yaml/relu_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRelu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ReluGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.relu",
+    "mindspore.ops.relu_"
+  ]
+}

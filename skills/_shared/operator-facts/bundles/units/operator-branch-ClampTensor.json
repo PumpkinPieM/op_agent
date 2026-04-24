@@ -1,0 +1,41 @@
+{
+  "bundle_id": "branch::clamp_tensor_op.yaml::ClampTensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::clamp_tensor_op.yaml::ClampTensor",
+    "unit_name": "ClampTensor",
+    "unit_type": "branch",
+    "op": "clamp_tensor",
+    "primitive": "ClampTensor",
+    "yaml_path": "mindspore/ops/op_def/yaml/clamp_tensor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnClampTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Add",
+        "Cast",
+        "Greater",
+        "GreaterEqual",
+        "Less",
+        "LessEqual",
+        "LogicalAnd",
+        "LogicalOr",
+        "Mul",
+        "Select"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.clamp",
+    "mindspore.mint.clamp",
+    "mindspore.ops.clamp",
+    "mindspore.ops.clip"
+  ]
+}

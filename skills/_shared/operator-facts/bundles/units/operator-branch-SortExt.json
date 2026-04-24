@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::sort_ext_op.yaml::SortExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::sort_ext_op.yaml::SortExt",
+    "unit_name": "SortExt",
+    "unit_type": "branch",
+    "op": "sort_ext",
+    "primitive": "SortExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/sort_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSort"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "InplaceScatterSrc",
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.sort",
+    "mindspore.mint.sort",
+    "mindspore.ops.sort"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::asinh_grad_op.yaml::AsinhGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::asinh_grad_op.yaml::AsinhGrad",
+    "unit_name": "AsinhGrad",
+    "unit_type": "branch",
+    "op": "asinh_grad",
+    "primitive": "AsinhGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/asinh_grad_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "AsinhGrad",
+        "Mul",
+        "Muls",
+        "Tanh"
+      ]
+    }
+  },
+  "entries": []
+}

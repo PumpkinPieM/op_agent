@@ -1,0 +1,27 @@
+{
+  "bundle_id": "composite::ops/function/sparse_func.py::make_row_tensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/sparse_func.py::make_row_tensor",
+    "unit_name": "make_row_tensor",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/sparse_func.py",
+    "impl_symbol": "make_row_tensor"
+  },
+  "entries": [
+    "mindspore.ops.make_row_tensor"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "print_info",
+      "unit_id": "composite::ops/function/sparse_func.py::print_info",
+      "unit_name": "print_info",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/sparse_func.py"
+    }
+  ]
+}

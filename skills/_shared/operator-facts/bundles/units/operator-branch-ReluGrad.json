@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::relu_grad_op.yaml::ReluGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::relu_grad_op.yaml::ReluGrad",
+    "unit_name": "ReluGrad",
+    "unit_type": "branch",
+    "op": "relu_grad",
+    "primitive": "ReluGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/relu_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnThresholdBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ReluGrad"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::avg_pool1d_op.yaml::AvgPool1D",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::avg_pool1d_op.yaml::AvgPool1D",
+    "unit_name": "AvgPool1D",
+    "unit_type": "branch",
+    "op": "avg_pool1d",
+    "primitive": "AvgPool1D",
+    "yaml_path": "mindspore/ops/op_def/yaml/avg_pool1d_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAvgPool2d"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AvgPool2DGrad",
+        "ExpandDims",
+        "Reshape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.avg_pool1d"
+  ]
+}

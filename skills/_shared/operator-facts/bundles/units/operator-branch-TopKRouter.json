@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::topkrouter_op.yaml::TopKRouter",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::topkrouter_op.yaml::TopKRouter",
+    "unit_name": "TopKRouter",
+    "unit_type": "branch",
+    "op": "topkrouter",
+    "primitive": "TopKRouter",
+    "yaml_path": "mindspore/ops/op_def/yaml/topkrouter_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

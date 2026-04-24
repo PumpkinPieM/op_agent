@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::grid_sampler_2d_op.yaml::GridSampler2D",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::grid_sampler_2d_op.yaml::GridSampler2D",
+    "unit_name": "GridSampler2D",
+    "unit_type": "branch",
+    "op": "grid_sampler_2d",
+    "primitive": "GridSampler2D",
+    "yaml_path": "mindspore/ops/op_def/yaml/grid_sampler_2d_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnGridSampler2D"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "GridSampler2DGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.grid_sample"
+  ]
+}

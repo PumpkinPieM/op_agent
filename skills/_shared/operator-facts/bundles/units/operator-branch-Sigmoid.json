@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::sigmoid_op.yaml::Sigmoid",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::sigmoid_op.yaml::Sigmoid",
+    "unit_name": "Sigmoid",
+    "unit_type": "branch",
+    "op": "sigmoid",
+    "primitive": "Sigmoid",
+    "yaml_path": "mindspore/ops/op_def/yaml/sigmoid_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSigmoid"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "SigmoidGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.sigmoid",
+    "mindspore.ops.sigmoid"
+  ]
+}

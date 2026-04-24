@@ -1,0 +1,26 @@
+{
+  "bundle_id": "branch::set_data_op.yaml::SetData",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::set_data_op.yaml::SetData",
+    "unit_name": "SetData",
+    "unit_type": "branch",
+    "op": "set_data",
+    "primitive": "SetData",
+    "yaml_path": "mindspore/ops/op_def/yaml/set_data_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": []
+}

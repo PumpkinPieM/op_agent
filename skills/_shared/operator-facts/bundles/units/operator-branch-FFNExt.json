@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::ffn_ext_op.yaml::FFNExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::ffn_ext_op.yaml::FFNExt",
+    "unit_name": "FFNExt",
+    "unit_type": "branch",
+    "op": "ffn_ext",
+    "primitive": "FFNExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/ffn_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnFFN"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

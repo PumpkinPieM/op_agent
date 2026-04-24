@@ -1,0 +1,59 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::norm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::norm",
+    "unit_name": "norm",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "norm"
+  },
+  "entries": [
+    "mindspore.Tensor.norm"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_axis",
+      "unit_id": "composite::ops/function/math_func.py::_check_axis",
+      "unit_name": "_check_axis",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_ord",
+      "unit_id": "composite::ops/function/math_func.py::_check_ord",
+      "unit_name": "_check_ord",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/math_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "dtype is not None",
+      "via_symbol": "cast",
+      "unit_id": "branch::cast_op.yaml::Cast",
+      "unit_name": "Cast",
+      "unit_type": "branch",
+      "op": "cast",
+      "primitive": "Cast",
+      "yaml_path": "mindspore/ops/op_def/yaml/cast_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnCast"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Cast"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::bitwise_or_tensor_op.yaml::BitwiseOrTensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::bitwise_or_tensor_op.yaml::BitwiseOrTensor",
+    "unit_name": "BitwiseOrTensor",
+    "unit_type": "branch",
+    "op": "bitwise_or_tensor",
+    "primitive": "BitwiseOrTensor",
+    "yaml_path": "mindspore/ops/op_def/yaml/bitwise_or_tensor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBitwiseOrTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.bitwise_or",
+    "mindspore.mint.bitwise_or",
+    "mindspore.ops.bitwise_or"
+  ]
+}

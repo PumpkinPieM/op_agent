@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::convolution_op.yaml::Convolution",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::convolution_op.yaml::Convolution",
+    "unit_name": "Convolution",
+    "unit_type": "branch",
+    "op": "convolution",
+    "primitive": "Convolution",
+    "yaml_path": "mindspore/ops/op_def/yaml/convolution_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnConvolution"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "ConvolutionGrad"
+      ]
+    }
+  },
+  "entries": []
+}

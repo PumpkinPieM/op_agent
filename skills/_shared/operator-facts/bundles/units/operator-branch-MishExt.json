@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::mish_ext_op.yaml::MishExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::mish_ext_op.yaml::MishExt",
+    "unit_name": "MishExt",
+    "unit_type": "branch",
+    "op": "mish_ext",
+    "primitive": "MishExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/mish_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMish"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "MishGradExt"
+      ]
+    }
+  },
+  "entries": []
+}

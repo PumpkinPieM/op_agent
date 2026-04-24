@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::scalar_bool_op.yaml::ScalarBool",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::scalar_bool_op.yaml::ScalarBool",
+    "unit_name": "ScalarBool",
+    "unit_type": "branch",
+    "op": "scalar_bool",
+    "primitive": "ScalarBool",
+    "yaml_path": "mindspore/ops/op_def/yaml/scalar_bool_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

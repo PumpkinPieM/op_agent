@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::sum_ext_op.yaml::SumExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::sum_ext_op.yaml::SumExt",
+    "unit_name": "SumExt",
+    "unit_type": "branch",
+    "op": "sum_ext",
+    "primitive": "SumExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/sum_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnReduceSum"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Equal",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.sum",
+    "mindspore.mint.sum",
+    "mindspore.ops.sum"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::scalar_to_tensor_op.yaml::ScalarToTensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::scalar_to_tensor_op.yaml::ScalarToTensor",
+    "unit_name": "ScalarToTensor",
+    "unit_type": "branch",
+    "op": "scalar_to_tensor",
+    "primitive": "ScalarToTensor",
+    "yaml_path": "mindspore/ops/op_def/yaml/scalar_to_tensor_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.scalar_to_tensor"
+  ]
+}

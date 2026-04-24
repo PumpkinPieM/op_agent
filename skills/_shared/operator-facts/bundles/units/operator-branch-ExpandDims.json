@@ -1,0 +1,34 @@
+{
+  "bundle_id": "branch::expand_dims_op.yaml::ExpandDims",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::expand_dims_op.yaml::ExpandDims",
+    "unit_name": "ExpandDims",
+    "unit_type": "branch",
+    "op": "expand_dims",
+    "primitive": "ExpandDims",
+    "yaml_path": "mindspore/ops/op_def/yaml/expand_dims_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnExpandDims"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Reshape",
+        "Shape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.expand_dims",
+    "mindspore.Tensor.unsqueeze",
+    "mindspore.ops.block_diag",
+    "mindspore.ops.expand_dims",
+    "mindspore.ops.unsqueeze"
+  ]
+}

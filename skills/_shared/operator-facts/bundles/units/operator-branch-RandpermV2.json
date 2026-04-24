@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::randperm_v2_op.yaml::RandpermV2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::randperm_v2_op.yaml::RandpermV2",
+    "unit_name": "RandpermV2",
+    "unit_type": "branch",
+    "op": "randperm_v2",
+    "primitive": "RandpermV2",
+    "yaml_path": "mindspore/ops/op_def/yaml/randperm_v2_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.randperm"
+  ]
+}

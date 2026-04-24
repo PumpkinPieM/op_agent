@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/random_func.py::exponential_",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/random_func.py::exponential_",
+    "unit_name": "exponential_",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/random_func.py",
+    "impl_symbol": "exponential_"
+  },
+  "entries": [
+    "mindspore.Tensor.exponential_"
+  ],
+  "components": []
+}

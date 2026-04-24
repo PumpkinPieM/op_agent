@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::adaptive_avg_pool3d_ext_op.yaml::AdaptiveAvgPool3DExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::adaptive_avg_pool3d_ext_op.yaml::AdaptiveAvgPool3DExt",
+    "unit_name": "AdaptiveAvgPool3DExt",
+    "unit_type": "branch",
+    "op": "adaptive_avg_pool3d_ext",
+    "primitive": "AdaptiveAvgPool3DExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/adaptive_avg_pool3d_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAdaptiveAvgPool3d",
+        "aclnnMean"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AdaptiveAvgPool3DGradExt",
+        "Add",
+        "Sub"
+      ]
+    }
+  },
+  "entries": []
+}

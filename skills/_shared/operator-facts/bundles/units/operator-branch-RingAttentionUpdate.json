@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::ring_attention_update_op.yaml::RingAttentionUpdate",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::ring_attention_update_op.yaml::RingAttentionUpdate",
+    "unit_name": "RingAttentionUpdate",
+    "unit_type": "branch",
+    "op": "ring_attention_update",
+    "primitive": "RingAttentionUpdate",
+    "yaml_path": "mindspore/ops/op_def/yaml/ring_attention_update_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRingAttentionUpdate"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.ring_attention_update"
+  ]
+}

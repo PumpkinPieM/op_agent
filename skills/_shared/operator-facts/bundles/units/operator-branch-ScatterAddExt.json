@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::scatter_add_ext_op.yaml::ScatterAddExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::scatter_add_ext_op.yaml::ScatterAddExt",
+    "unit_name": "ScatterAddExt",
+    "unit_type": "branch",
+    "op": "scatter_add_ext",
+    "primitive": "ScatterAddExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/scatter_add_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnScatterAdd"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "GatherD"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.scatter_add",
+    "mindspore.mint.scatter_add",
+    "mindspore.ops.scatter_add"
+  ]
+}

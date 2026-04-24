@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::ones_op.yaml::Ones",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::ones_op.yaml::Ones",
+    "unit_name": "Ones",
+    "unit_type": "branch",
+    "op": "ones",
+    "primitive": "Ones",
+    "yaml_path": "mindspore/ops/op_def/yaml/ones_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceOne"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.ones",
+    "mindspore.ops.ones"
+  ]
+}

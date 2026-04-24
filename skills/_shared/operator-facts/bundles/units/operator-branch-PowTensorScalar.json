@@ -1,0 +1,40 @@
+{
+  "bundle_id": "branch::pow_tensor_scalar_op.yaml::PowTensorScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::pow_tensor_scalar_op.yaml::PowTensorScalar",
+    "unit_name": "PowTensorScalar",
+    "unit_type": "branch",
+    "op": "pow_tensor_scalar",
+    "primitive": "PowTensorScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/pow_tensor_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnPowTensorScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Equal",
+        "Mul",
+        "Muls",
+        "PowTensorScalar",
+        "ScalarCast",
+        "ScalarSub",
+        "Shape",
+        "Sub",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.pow",
+    "mindspore.mint.pow",
+    "mindspore.ops.float_power",
+    "mindspore.ops.pow"
+  ]
+}

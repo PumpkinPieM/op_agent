@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::inplace_remainder_tensor_tensor_op.yaml::InplaceRemainderTensorTensor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_remainder_tensor_tensor_op.yaml::InplaceRemainderTensorTensor",
+    "unit_name": "InplaceRemainderTensorTensor",
+    "unit_type": "branch",
+    "op": "inplace_remainder_tensor_tensor",
+    "primitive": "InplaceRemainderTensorTensor",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_remainder_tensor_tensor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceRemainderTensorTensor"
+      ],
+      "infer": true,
+      "kbk": false,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "DivMod",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.remainder_"
+  ]
+}

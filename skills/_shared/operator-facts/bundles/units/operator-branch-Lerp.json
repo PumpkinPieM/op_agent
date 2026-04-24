@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::lerp_op.yaml::Lerp",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::lerp_op.yaml::Lerp",
+    "unit_name": "Lerp",
+    "unit_type": "branch",
+    "op": "lerp",
+    "primitive": "Lerp",
+    "yaml_path": "mindspore/ops/op_def/yaml/lerp_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLerp"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mul",
+        "Sub"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.lerp",
+    "mindspore.mint.lerp",
+    "mindspore.ops.lerp"
+  ]
+}

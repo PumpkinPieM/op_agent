@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::rfft2_op.yaml::RFFT2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::rfft2_op.yaml::RFFT2",
+    "unit_name": "RFFT2",
+    "unit_type": "branch",
+    "op": "rfft2",
+    "primitive": "RFFT2",
+    "yaml_path": "mindspore/ops/op_def/yaml/rfft2_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "FFTShapeCopy",
+        "IFFT2"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.rfft2"
+  ]
+}

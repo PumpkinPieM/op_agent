@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::median_ext_op.yaml::MedianExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::median_ext_op.yaml::MedianExt",
+    "unit_name": "MedianExt",
+    "unit_type": "branch",
+    "op": "median_ext",
+    "primitive": "MedianExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/median_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMedian"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.median",
+    "mindspore.mint.median",
+    "mindspore.ops.median"
+  ]
+}

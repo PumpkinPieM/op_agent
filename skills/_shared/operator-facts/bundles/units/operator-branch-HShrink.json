@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::hshrink_op.yaml::HShrink",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::hshrink_op.yaml::HShrink",
+    "unit_name": "HShrink",
+    "unit_type": "branch",
+    "op": "hshrink",
+    "primitive": "HShrink",
+    "yaml_path": "mindspore/ops/op_def/yaml/hshrink_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnHardshrink"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "HShrinkGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.hardshrink",
+    "mindspore.ops.hardshrink"
+  ]
+}

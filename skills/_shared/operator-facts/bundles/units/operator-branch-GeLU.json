@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::gelu_op.yaml::GeLU",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::gelu_op.yaml::GeLU",
+    "unit_name": "GeLU",
+    "unit_type": "branch",
+    "op": "gelu",
+    "primitive": "GeLU",
+    "yaml_path": "mindspore/ops/op_def/yaml/gelu_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnGelu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

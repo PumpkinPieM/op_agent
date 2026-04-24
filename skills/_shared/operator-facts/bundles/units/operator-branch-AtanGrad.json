@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::atan_grad_op.yaml::AtanGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::atan_grad_op.yaml::AtanGrad",
+    "unit_name": "AtanGrad",
+    "unit_type": "branch",
+    "op": "atan_grad",
+    "primitive": "AtanGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/atan_grad_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "AtanGrad",
+        "Mul",
+        "Muls"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::nsa_compress_grad_op.yaml::NsaCompressGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::nsa_compress_grad_op.yaml::NsaCompressGrad",
+    "unit_name": "NsaCompressGrad",
+    "unit_type": "branch",
+    "op": "nsa_compress_grad",
+    "primitive": "NsaCompressGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/nsa_compress_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNsaCompressGrad"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::assign_sub_op.yaml::AssignSub",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::assign_sub_op.yaml::AssignSub",
+    "unit_name": "AssignSub",
+    "unit_type": "branch",
+    "op": "assign_sub",
+    "primitive": "AssignSub",
+    "yaml_path": "mindspore/ops/op_def/yaml/assign_sub_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Neg"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.assign_sub"
+  ]
+}

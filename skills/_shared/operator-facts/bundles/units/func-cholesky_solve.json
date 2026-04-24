@@ -1,0 +1,18 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::cholesky_solve",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::cholesky_solve",
+    "unit_name": "cholesky_solve",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "cholesky_solve"
+  },
+  "entries": [
+    "mindspore.Tensor.cholesky_solve",
+    "mindspore.ops.cholesky_solve"
+  ],
+  "components": []
+}

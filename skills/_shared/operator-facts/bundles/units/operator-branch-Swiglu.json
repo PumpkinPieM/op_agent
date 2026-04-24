@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::swiglu_op.yaml::Swiglu",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::swiglu_op.yaml::Swiglu",
+    "unit_name": "Swiglu",
+    "unit_type": "branch",
+    "op": "swiglu",
+    "primitive": "Swiglu",
+    "yaml_path": "mindspore/ops/op_def/yaml/swiglu_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSwiGlu"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "SwigluGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.swiglu"
+  ]
+}

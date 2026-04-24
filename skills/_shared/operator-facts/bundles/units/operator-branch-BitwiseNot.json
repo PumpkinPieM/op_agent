@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::bitwise_not_op.yaml::BitwiseNot",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::bitwise_not_op.yaml::BitwiseNot",
+    "unit_name": "BitwiseNot",
+    "unit_type": "branch",
+    "op": "bitwise_not",
+    "primitive": "BitwiseNot",
+    "yaml_path": "mindspore/ops/op_def/yaml/bitwise_not_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBitwiseNot"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.bitwise_not",
+    "mindspore.mint.bitwise_not",
+    "mindspore.ops.bitwise_not"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::eye_op.yaml::Eye",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::eye_op.yaml::Eye",
+    "unit_name": "Eye",
+    "unit_type": "branch",
+    "op": "eye",
+    "primitive": "Eye",
+    "yaml_path": "mindspore/ops/op_def/yaml/eye_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnEye"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.eye",
+    "mindspore.ops.eye"
+  ]
+}

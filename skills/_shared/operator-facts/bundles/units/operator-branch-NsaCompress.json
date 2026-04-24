@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::nsa_compress_op.yaml::NsaCompress",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::nsa_compress_op.yaml::NsaCompress",
+    "unit_name": "NsaCompress",
+    "unit_type": "branch",
+    "op": "nsa_compress",
+    "primitive": "NsaCompress",
+    "yaml_path": "mindspore/ops/op_def/yaml/nsa_compress_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNsaCompress"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.nsa_compress"
+  ]
+}

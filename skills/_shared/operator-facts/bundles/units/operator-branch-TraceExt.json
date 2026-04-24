@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::trace_ext_op.yaml::TraceExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::trace_ext_op.yaml::TraceExt",
+    "unit_name": "TraceExt",
+    "unit_type": "branch",
+    "op": "trace_ext",
+    "primitive": "TraceExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/trace_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnTrace"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Eye",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.trace"
+  ]
+}

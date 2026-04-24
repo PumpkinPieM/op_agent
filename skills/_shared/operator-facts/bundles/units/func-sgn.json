@@ -1,0 +1,43 @@
+{
+  "bundle_id": "composite::ops/function/math_func.py::sgn",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/math_func.py::sgn",
+    "unit_name": "sgn",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/math_func.py",
+    "impl_symbol": "sgn"
+  },
+  "entries": [
+    "mindspore.Tensor.sgn"
+  ],
+  "components": [
+    {
+      "component_type": "public_api",
+      "condition": "not (not ops.is_complex(input))",
+      "via_symbol": "masked_fill",
+      "public_api": "mindspore.ops.masked_fill"
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (not ops.is_complex(input))",
+      "via_symbol": "zeros_like",
+      "unit_id": "branch::zeros_like_op.yaml::ZerosLike",
+      "unit_name": "ZerosLike",
+      "unit_type": "branch",
+      "op": "zeros_like",
+      "primitive": "ZerosLike",
+      "yaml_path": "mindspore/ops/op_def/yaml/zeros_like_op.yaml",
+      "coverage": {
+        "aclnn": [],
+        "infer": true,
+        "kbk": false,
+        "pyboost": false,
+        "bprop": true,
+        "bprop_units": []
+      }
+    }
+  ]
+}

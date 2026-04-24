@@ -1,0 +1,18 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::tensor_scatter_sub",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::tensor_scatter_sub",
+    "unit_name": "tensor_scatter_sub",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "tensor_scatter_sub"
+  },
+  "entries": [
+    "mindspore.Tensor.scatter_sub",
+    "mindspore.ops.tensor_scatter_sub"
+  ],
+  "components": []
+}

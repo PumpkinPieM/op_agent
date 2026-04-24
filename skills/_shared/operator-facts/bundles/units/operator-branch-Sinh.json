@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::sinh_op.yaml::Sinh",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::sinh_op.yaml::Sinh",
+    "unit_name": "Sinh",
+    "unit_type": "branch",
+    "op": "sinh",
+    "primitive": "Sinh",
+    "yaml_path": "mindspore/ops/op_def/yaml/sinh_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnSinh"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "Cosh",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.sinh",
+    "mindspore.mint.sinh",
+    "mindspore.ops.sinh"
+  ]
+}

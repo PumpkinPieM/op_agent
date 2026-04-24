@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::batch_to_space_nd",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::batch_to_space_nd",
+    "unit_name": "batch_to_space_nd",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "batch_to_space_nd"
+  },
+  "entries": [
+    "mindspore.ops.batch_to_space_nd"
+  ],
+  "components": []
+}

@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::bmm_ext_op.yaml::BatchMatMulExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::bmm_ext_op.yaml::BatchMatMulExt",
+    "unit_name": "BatchMatMulExt",
+    "unit_type": "branch",
+    "op": "bmm_ext",
+    "primitive": "BatchMatMulExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/bmm_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBatchMatMul"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BatchMatMulExt",
+        "Transpose"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.bmm"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::celu_op.yaml::CeLU",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::celu_op.yaml::CeLU",
+    "unit_name": "CeLU",
+    "unit_type": "branch",
+    "op": "celu",
+    "primitive": "CeLU",
+    "yaml_path": "mindspore/ops/op_def/yaml/celu_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "AddScalar",
+        "GreaterEqualScalar",
+        "Mul",
+        "RealDiv",
+        "Select",
+        "Shape"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.celu"
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "bundle_id": "composite::ops/function/nn_func.py::cosine_embedding_loss",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/nn_func.py::cosine_embedding_loss",
+    "unit_name": "cosine_embedding_loss",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py",
+    "impl_symbol": "cosine_embedding_loss"
+  },
+  "entries": [
+    "mindspore.ops.cosine_embedding_loss"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_is_tensor",
+      "unit_id": "composite::ops/function/nn_func.py::_check_is_tensor",
+      "unit_name": "_check_is_tensor",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "check_input_dtype",
+      "unit_id": "composite::ops/function/nn_func.py::check_input_dtype",
+      "unit_name": "check_input_dtype",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_reduced_shape_valid",
+      "unit_id": "composite::ops/function/nn_func.py::_check_reduced_shape_valid",
+      "unit_name": "_check_reduced_shape_valid",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_value_type",
+      "unit_id": "composite::ops/function/nn_func.py::_check_value_type",
+      "unit_name": "_check_value_type",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/nn_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "zeros_like",
+      "unit_id": "branch::zeros_like_op.yaml::ZerosLike",
+      "unit_name": "ZerosLike",
+      "unit_type": "branch",
+      "op": "zeros_like",
+      "primitive": "ZerosLike",
+      "yaml_path": "mindspore/ops/op_def/yaml/zeros_like_op.yaml",
+      "coverage": {
+        "aclnn": [],
+        "infer": true,
+        "kbk": false,
+        "pyboost": false,
+        "bprop": true,
+        "bprop_units": []
+      }
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "select",
+      "unit_id": "branch::select_ext_view_op.yaml::SelectExtView",
+      "unit_name": "SelectExtView",
+      "unit_type": "branch",
+      "op": "select_ext_view",
+      "primitive": "SelectExtView",
+      "yaml_path": "mindspore/ops/op_def/yaml/select_ext_view_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnSelectExtView"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Concat",
+          "ExpandDimsView",
+          "Zeros"
+        ]
+      }
+    }
+  ]
+}

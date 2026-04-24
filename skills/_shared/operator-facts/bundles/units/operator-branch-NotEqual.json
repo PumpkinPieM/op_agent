@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::not_equal_op.yaml::NotEqual",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::not_equal_op.yaml::NotEqual",
+    "unit_name": "NotEqual",
+    "unit_type": "branch",
+    "op": "not_equal",
+    "primitive": "NotEqual",
+    "yaml_path": "mindspore/ops/op_def/yaml/not_equal_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNeTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.not_equal",
+    "mindspore.mint.isnan",
+    "mindspore.mint.ne",
+    "mindspore.mint.not_equal",
+    "mindspore.ops.isnan_ext",
+    "mindspore.ops.ne",
+    "mindspore.ops.not_equal"
+  ]
+}

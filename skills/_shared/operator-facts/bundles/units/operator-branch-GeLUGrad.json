@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::gelu_grad_op.yaml::GeLUGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::gelu_grad_op.yaml::GeLUGrad",
+    "unit_name": "GeLUGrad",
+    "unit_type": "branch",
+    "op": "gelu_grad",
+    "primitive": "GeLUGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/gelu_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnGeluBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

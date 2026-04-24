@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::reduce_min_op.yaml::ReduceMin",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::reduce_min_op.yaml::ReduceMin",
+    "unit_name": "ReduceMin",
+    "unit_type": "branch",
+    "op": "reduce_min",
+    "primitive": "ReduceMin",
+    "yaml_path": "mindspore/ops/op_def/yaml/reduce_min_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAmin"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "Equal",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.amin"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::logsigmoid_grad_op.yaml::LogSigmoidGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::logsigmoid_grad_op.yaml::LogSigmoidGrad",
+    "unit_name": "LogSigmoidGrad",
+    "unit_type": "branch",
+    "op": "logsigmoid_grad",
+    "primitive": "LogSigmoidGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/logsigmoid_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLogSigmoidBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::baddbmm_op.yaml::Baddbmm",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::baddbmm_op.yaml::Baddbmm",
+    "unit_name": "Baddbmm",
+    "unit_type": "branch",
+    "op": "baddbmm",
+    "primitive": "Baddbmm",
+    "yaml_path": "mindspore/ops/op_def/yaml/baddbmm_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBaddbmm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BatchMatMul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.baddbmm",
+    "mindspore.ops.baddbmm"
+  ]
+}

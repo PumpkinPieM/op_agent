@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::log2_op.yaml::Log2",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::log2_op.yaml::Log2",
+    "unit_name": "Log2",
+    "unit_type": "branch",
+    "op": "log2",
+    "primitive": "Log2",
+    "yaml_path": "mindspore/ops/op_def/yaml/log2_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLog2"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "Div",
+        "Muls"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.log2",
+    "mindspore.mint.log2",
+    "mindspore.ops.log2"
+  ]
+}

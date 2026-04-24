@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::nllloss_op.yaml::NLLLoss",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::nllloss_op.yaml::NLLLoss",
+    "unit_name": "NLLLoss",
+    "unit_type": "branch",
+    "op": "nllloss",
+    "primitive": "NLLLoss",
+    "yaml_path": "mindspore/ops/op_def/yaml/nllloss_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNLLLoss"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "NLLLossGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.cross_entropy",
+    "mindspore.ops.nll_loss"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::fftshift_op.yaml::FFTShift",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::fftshift_op.yaml::FFTShift",
+    "unit_name": "FFTShift",
+    "unit_type": "branch",
+    "op": "fftshift",
+    "primitive": "FFTShift",
+    "yaml_path": "mindspore/ops/op_def/yaml/fftshift_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "IFFTShift"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.fftshift"
+  ]
+}

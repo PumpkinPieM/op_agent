@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::diagonal_view_op.yaml::DiagonalView",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::diagonal_view_op.yaml::DiagonalView",
+    "unit_name": "DiagonalView",
+    "unit_type": "branch",
+    "op": "diagonal_view",
+    "primitive": "DiagonalView",
+    "yaml_path": "mindspore/ops/op_def/yaml/diagonal_view_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnDiagonalView"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

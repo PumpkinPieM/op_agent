@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::less_equal_op.yaml::LessEqual",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::less_equal_op.yaml::LessEqual",
+    "unit_name": "LessEqual",
+    "unit_type": "branch",
+    "op": "less_equal",
+    "primitive": "LessEqual",
+    "yaml_path": "mindspore/ops/op_def/yaml/less_equal_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLeTensor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.less_equal",
+    "mindspore.mint.less_equal",
+    "mindspore.ops.less_equal"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "bundle_id": "branch::fmod_scalar_op.yaml::FmodScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::fmod_scalar_op.yaml::FmodScalar",
+    "unit_name": "FmodScalar",
+    "unit_type": "branch",
+    "op": "fmod_scalar",
+    "primitive": "FmodScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/fmod_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnFmodScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.fmod",
+    "mindspore.mint.fmod",
+    "mindspore.ops.fmod"
+  ]
+}

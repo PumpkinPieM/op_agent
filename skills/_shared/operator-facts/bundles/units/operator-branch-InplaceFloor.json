@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::inplace_floor_op.yaml::InplaceFloor",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_floor_op.yaml::InplaceFloor",
+    "unit_name": "InplaceFloor",
+    "unit_type": "branch",
+    "op": "inplace_floor",
+    "primitive": "InplaceFloor",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_floor_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceFloor"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Shape",
+        "Zeros"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.floor_"
+  ]
+}

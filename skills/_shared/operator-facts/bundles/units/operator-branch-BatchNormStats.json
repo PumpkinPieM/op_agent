@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::batch_norm_stats_op.yaml::BatchNormStats",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::batch_norm_stats_op.yaml::BatchNormStats",
+    "unit_name": "BatchNormStats",
+    "unit_type": "branch",
+    "op": "batch_norm_stats",
+    "primitive": "BatchNormStats",
+    "yaml_path": "mindspore/ops/op_def/yaml/batch_norm_stats_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBatchNormStats"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.batch_norm_stats"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "bundle_id": "composite::ops/function/random_func.py::laplace",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/random_func.py::laplace",
+    "unit_name": "laplace",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/random_func.py",
+    "impl_symbol": "laplace"
+  },
+  "entries": [
+    "mindspore.ops.laplace"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_get_seed",
+      "unit_id": "composite::ops/function/random_func.py::_get_seed",
+      "unit_name": "_get_seed",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/random_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_set_prim_op_user_data",
+      "unit_id": "composite::ops/function/random_func.py::_set_prim_op_user_data",
+      "unit_name": "_set_prim_op_user_data",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/random_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_shape",
+      "unit_id": "composite::ops/function/random_func.py::_check_shape",
+      "unit_name": "_check_shape",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/random_func.py"
+    }
+  ]
+}

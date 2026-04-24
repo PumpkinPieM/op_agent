@@ -1,0 +1,38 @@
+{
+  "bundle_id": "branch::dense_op.yaml::Dense",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::dense_op.yaml::Dense",
+    "unit_name": "Dense",
+    "unit_type": "branch",
+    "op": "dense",
+    "primitive": "Dense",
+    "yaml_path": "mindspore/ops/op_def/yaml/dense_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAdd",
+        "aclnnAddmm",
+        "aclnnMatmul",
+        "aclnnPermute"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "MatMul",
+        "MatMulExt",
+        "Mul",
+        "Reshape",
+        "SumExt",
+        "Transpose"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.dense"
+  ]
+}

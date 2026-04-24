@@ -1,0 +1,30 @@
+{
+  "bundle_id": "branch::std_mean_op.yaml::StdMean",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::std_mean_op.yaml::StdMean",
+    "unit_name": "StdMean",
+    "unit_type": "branch",
+    "op": "std_mean",
+    "primitive": "StdMean",
+    "yaml_path": "mindspore/ops/op_def/yaml/std_mean_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnStdMeanCorrection"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Add"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.std_mean",
+    "mindspore.ops.std_mean"
+  ]
+}

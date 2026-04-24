@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::cdist_grad_op.yaml::CdistGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::cdist_grad_op.yaml::CdistGrad",
+    "unit_name": "CdistGrad",
+    "unit_type": "branch",
+    "op": "cdist_grad",
+    "primitive": "CdistGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/cdist_grad_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

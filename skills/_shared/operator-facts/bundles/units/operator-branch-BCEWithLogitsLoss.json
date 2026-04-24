@@ -1,0 +1,37 @@
+{
+  "bundle_id": "branch::binary_cross_entropy_with_logits_op.yaml::BCEWithLogitsLoss",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::binary_cross_entropy_with_logits_op.yaml::BCEWithLogitsLoss",
+    "unit_name": "BCEWithLogitsLoss",
+    "unit_type": "branch",
+    "op": "binary_cross_entropy_with_logits",
+    "primitive": "BCEWithLogitsLoss",
+    "yaml_path": "mindspore/ops/op_def/yaml/binary_cross_entropy_with_logits_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBinaryCrossEntropyWithLogits"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BinaryCrossEntropyWithLogitsBackward",
+        "Cast",
+        "Div",
+        "Divs",
+        "Log",
+        "Mul",
+        "Neg",
+        "Sigmoid",
+        "Sub"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.binary_cross_entropy_with_logits"
+  ]
+}

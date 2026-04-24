@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::full_like_op.yaml::FullLike",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::full_like_op.yaml::FullLike",
+    "unit_name": "FullLike",
+    "unit_type": "branch",
+    "op": "full_like",
+    "primitive": "FullLike",
+    "yaml_path": "mindspore/ops/op_def/yaml/full_like_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceFillScalar"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.full_like",
+    "mindspore.ops.full_like"
+  ]
+}

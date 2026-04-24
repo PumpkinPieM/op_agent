@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::cum_prod_op.yaml::CumProd",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::cum_prod_op.yaml::CumProd",
+    "unit_name": "CumProd",
+    "unit_type": "branch",
+    "op": "cum_prod",
+    "primitive": "CumProd",
+    "yaml_path": "mindspore/ops/op_def/yaml/cum_prod_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "CumProd",
+        "CumSum",
+        "Equal",
+        "Mul",
+        "RealDiv"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.mint.cumprod",
+    "mindspore.ops.cumprod"
+  ]
+}

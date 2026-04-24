@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::tanh_grad_op.yaml::TanhGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::tanh_grad_op.yaml::TanhGrad",
+    "unit_name": "TanhGrad",
+    "unit_type": "branch",
+    "op": "tanh_grad",
+    "primitive": "TanhGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/tanh_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnTanhBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Mul",
+        "Muls",
+        "TanhGrad"
+      ]
+    }
+  },
+  "entries": []
+}

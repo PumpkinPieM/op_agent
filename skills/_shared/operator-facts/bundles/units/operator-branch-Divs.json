@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::divs_op.yaml::Divs",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::divs_op.yaml::Divs",
+    "unit_name": "Divs",
+    "unit_type": "branch",
+    "op": "divs",
+    "primitive": "Divs",
+    "yaml_path": "mindspore/ops/op_def/yaml/divs_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnDivs"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Divs"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.div",
+    "mindspore.mint.div",
+    "mindspore.mint.divide",
+    "mindspore.ops.div",
+    "mindspore.ops.divide"
+  ]
+}

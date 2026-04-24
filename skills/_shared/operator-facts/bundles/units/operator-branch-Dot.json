@@ -1,0 +1,32 @@
+{
+  "bundle_id": "branch::dot_op.yaml::Dot",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::dot_op.yaml::Dot",
+    "unit_name": "Dot",
+    "unit_type": "branch",
+    "op": "dot",
+    "primitive": "Dot",
+    "yaml_path": "mindspore/ops/op_def/yaml/dot_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnDot"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Conj",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.dot",
+    "mindspore.mint.dot",
+    "mindspore.ops.dot"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::layer_norm_ext_op.yaml::LayerNormExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::layer_norm_ext_op.yaml::LayerNormExt",
+    "unit_name": "LayerNormExt",
+    "unit_type": "branch",
+    "op": "layer_norm_ext",
+    "primitive": "LayerNormExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/layer_norm_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnLayerNorm"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "LayerNormGradExt"
+      ]
+    }
+  },
+  "entries": []
+}

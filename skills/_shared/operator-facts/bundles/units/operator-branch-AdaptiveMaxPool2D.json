@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::adaptive_max_pool2d_op.yaml::AdaptiveMaxPool2D",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::adaptive_max_pool2d_op.yaml::AdaptiveMaxPool2D",
+    "unit_name": "AdaptiveMaxPool2D",
+    "unit_type": "branch",
+    "op": "adaptive_max_pool2d",
+    "primitive": "AdaptiveMaxPool2D",
+    "yaml_path": "mindspore/ops/op_def/yaml/adaptive_max_pool2d_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnAdaptiveMaxPool2d"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AdaptiveMaxPool2DGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.adaptive_max_pool2d"
+  ]
+}

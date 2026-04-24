@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::kv_scale_cache_op.yaml::KvScaleCache",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::kv_scale_cache_op.yaml::KvScaleCache",
+    "unit_name": "KvScaleCache",
+    "unit_type": "branch",
+    "op": "kv_scale_cache",
+    "primitive": "KvScaleCache",
+    "yaml_path": "mindspore/ops/op_def/yaml/kv_scale_cache_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

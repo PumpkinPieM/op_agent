@@ -1,0 +1,33 @@
+{
+  "bundle_id": "branch::expm1_op.yaml::Expm1",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::expm1_op.yaml::Expm1",
+    "unit_name": "Expm1",
+    "unit_type": "branch",
+    "op": "expm1",
+    "primitive": "Expm1",
+    "yaml_path": "mindspore/ops/op_def/yaml/expm1_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnExpm1"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "AddScalar",
+        "Conj",
+        "Mul"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.expm1",
+    "mindspore.mint.expm1",
+    "mindspore.ops.expm1"
+  ]
+}

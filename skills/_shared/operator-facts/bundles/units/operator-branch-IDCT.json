@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::idct_op.yaml::IDCT",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::idct_op.yaml::IDCT",
+    "unit_name": "IDCT",
+    "unit_type": "branch",
+    "op": "idct",
+    "primitive": "IDCT",
+    "yaml_path": "mindspore/ops/op_def/yaml/idct_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "DCT",
+        "FFTShapeCopy",
+        "Sub"
+      ]
+    }
+  },
+  "entries": []
+}

@@ -1,0 +1,37 @@
+{
+  "bundle_id": "branch::clamp_scalar_op.yaml::ClampScalar",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::clamp_scalar_op.yaml::ClampScalar",
+    "unit_name": "ClampScalar",
+    "unit_type": "branch",
+    "op": "clamp_scalar",
+    "primitive": "ClampScalar",
+    "yaml_path": "mindspore/ops/op_def/yaml/clamp_scalar_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnClamp"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Cast",
+        "GreaterEqual",
+        "LessEqual",
+        "LogicalAnd",
+        "ScalarToTensor",
+        "Select"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.clamp",
+    "mindspore.mint.clamp",
+    "mindspore.ops.clamp",
+    "mindspore.ops.clip"
+  ]
+}

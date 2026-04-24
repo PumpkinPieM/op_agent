@@ -1,0 +1,64 @@
+{
+  "bundle_id": "composite::ops/function/array_func.py::split_ext",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/array_func.py::split_ext",
+    "unit_name": "split_ext",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/array_func.py",
+    "impl_symbol": "split_ext"
+  },
+  "entries": [
+    "mindspore.ops.split_ext"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "isinstance(split_size, int)",
+      "via_symbol": "split_tensor_op",
+      "unit_id": "branch::split_tensor_op.yaml::SplitTensor",
+      "unit_name": "SplitTensor",
+      "unit_type": "branch",
+      "op": "split_tensor",
+      "primitive": "SplitTensor",
+      "yaml_path": "mindspore/ops/op_def/yaml/split_tensor_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnSplitTensor"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Concat"
+        ]
+      }
+    },
+    {
+      "component_type": "unit",
+      "condition": "not (isinstance(split_size, int)) and isinstance(split_size, (list, tuple))",
+      "via_symbol": "split_with_size_op",
+      "unit_id": "branch::split_with_size_op.yaml::SplitWithSize",
+      "unit_name": "SplitWithSize",
+      "unit_type": "branch",
+      "op": "split_with_size",
+      "primitive": "SplitWithSize",
+      "yaml_path": "mindspore/ops/op_def/yaml/split_with_size_op.yaml",
+      "coverage": {
+        "aclnn": [
+          "aclnnSplitWithSize"
+        ],
+        "infer": true,
+        "kbk": true,
+        "pyboost": true,
+        "bprop": true,
+        "bprop_units": [
+          "Concat"
+        ]
+      }
+    }
+  ]
+}

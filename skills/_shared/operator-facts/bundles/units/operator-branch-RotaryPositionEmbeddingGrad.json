@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::rotary_position_embedding_grad_op.yaml::RotaryPositionEmbeddingGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::rotary_position_embedding_grad_op.yaml::RotaryPositionEmbeddingGrad",
+    "unit_name": "RotaryPositionEmbeddingGrad",
+    "unit_type": "branch",
+    "op": "rotary_position_embedding_grad",
+    "primitive": "RotaryPositionEmbeddingGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/rotary_position_embedding_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnRotaryPositionEmbeddingGrad"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

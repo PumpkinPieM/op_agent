@@ -1,0 +1,23 @@
+{
+  "bundle_id": "branch::format_cast_op.yaml::FormatCast",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::format_cast_op.yaml::FormatCast",
+    "unit_name": "FormatCast",
+    "unit_type": "branch",
+    "op": "format_cast",
+    "primitive": "FormatCast",
+    "yaml_path": "mindspore/ops/op_def/yaml/format_cast_op.yaml",
+    "coverage": {
+      "aclnn": [],
+      "infer": true,
+      "kbk": false,
+      "pyboost": false,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

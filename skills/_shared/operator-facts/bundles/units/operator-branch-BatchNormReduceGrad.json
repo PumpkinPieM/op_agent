@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::batch_norm_reduce_grad_op.yaml::BatchNormReduceGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::batch_norm_reduce_grad_op.yaml::BatchNormReduceGrad",
+    "unit_name": "BatchNormReduceGrad",
+    "unit_type": "branch",
+    "op": "batch_norm_reduce_grad",
+    "primitive": "BatchNormReduceGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/batch_norm_reduce_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnBatchNormReduceBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

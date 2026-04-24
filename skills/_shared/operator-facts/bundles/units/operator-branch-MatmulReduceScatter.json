@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::matmul_reduce_scatter_op.yaml::MatmulReduceScatter",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::matmul_reduce_scatter_op.yaml::MatmulReduceScatter",
+    "unit_name": "MatmulReduceScatter",
+    "unit_type": "branch",
+    "op": "matmul_reduce_scatter",
+    "primitive": "MatmulReduceScatter",
+    "yaml_path": "mindspore/ops/op_def/yaml/matmul_reduce_scatter_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMatmulReduceScatter"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.ops.matmul_reduce_scatter"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "bundle_id": "branch::inplace_index_copy_op.yaml::InplaceIndexCopy",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::inplace_index_copy_op.yaml::InplaceIndexCopy",
+    "unit_name": "InplaceIndexCopy",
+    "unit_type": "branch",
+    "op": "inplace_index_copy",
+    "primitive": "InplaceIndexCopy",
+    "yaml_path": "mindspore/ops/op_def/yaml/inplace_index_copy_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceIndexCopy"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "BroadcastToView",
+        "IndexFillScalar",
+        "IndexSelect",
+        "Mul",
+        "Rank",
+        "ScalarGt",
+        "Shape",
+        "Squeeze"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.index_copy_"
+  ]
+}

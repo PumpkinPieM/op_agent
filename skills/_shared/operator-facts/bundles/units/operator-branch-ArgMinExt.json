@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::argmin_ext_op.yaml::ArgMinExt",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::argmin_ext_op.yaml::ArgMinExt",
+    "unit_name": "ArgMinExt",
+    "unit_type": "branch",
+    "op": "argmin_ext",
+    "primitive": "ArgMinExt",
+    "yaml_path": "mindspore/ops/op_def/yaml/argmin_ext_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnArgMin"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.Tensor.argmin",
+    "mindspore.mint.argmin",
+    "mindspore.ops.argmin"
+  ]
+}

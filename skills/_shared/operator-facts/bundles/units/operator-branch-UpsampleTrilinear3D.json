@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::upsample_trilinear3d_op.yaml::UpsampleTrilinear3D",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::upsample_trilinear3d_op.yaml::UpsampleTrilinear3D",
+    "unit_name": "UpsampleTrilinear3D",
+    "unit_type": "branch",
+    "op": "upsample_trilinear3d",
+    "primitive": "UpsampleTrilinear3D",
+    "yaml_path": "mindspore/ops/op_def/yaml/upsample_trilinear3d_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnUpsampleTrilinear3d"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "Shape",
+        "UpsampleTrilinear3DGrad"
+      ]
+    }
+  },
+  "entries": []
+}

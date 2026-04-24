@@ -1,0 +1,17 @@
+{
+  "bundle_id": "composite::ops/function/random_func.py::uniform_ext",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/random_func.py::uniform_ext",
+    "unit_name": "uniform_ext",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/random_func.py",
+    "impl_symbol": "uniform_ext"
+  },
+  "entries": [
+    "mindspore.Tensor.uniform"
+  ],
+  "components": []
+}

@@ -1,0 +1,45 @@
+{
+  "bundle_id": "composite::ops/function/grad/grad_func.py::jvp",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "composite::ops/function/grad/grad_func.py::jvp",
+    "unit_name": "jvp",
+    "unit_type": "composite",
+    "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py",
+    "impl_symbol": "jvp"
+  },
+  "entries": [
+    "mindspore.ops.jvp"
+  ],
+  "components": [
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_has_aux_type",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_check_has_aux_type",
+      "unit_name": "_check_has_aux_type",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "not isinstance(inputs, (Tensor, tuple, list)) or not isinstance(v, (Tensor, tuple, list))",
+      "via_symbol": "_raise_type_error",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_raise_type_error",
+      "unit_name": "_raise_type_error",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    },
+    {
+      "component_type": "unit",
+      "condition": "",
+      "via_symbol": "_check_jvp_input_v_len",
+      "unit_id": "composite::ops/function/grad/grad_func.py::_check_jvp_input_v_len",
+      "unit_name": "_check_jvp_input_v_len",
+      "unit_type": "composite",
+      "impl_path": "mindspore/python/mindspore/ops/function/grad/grad_func.py"
+    }
+  ]
+}

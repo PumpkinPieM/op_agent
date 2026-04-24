@@ -1,0 +1,25 @@
+{
+  "bundle_id": "branch::replication_pad_1d_grad_op.yaml::ReplicationPad1DGrad",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::replication_pad_1d_grad_op.yaml::ReplicationPad1DGrad",
+    "unit_name": "ReplicationPad1DGrad",
+    "unit_type": "branch",
+    "op": "replication_pad_1d_grad",
+    "primitive": "ReplicationPad1DGrad",
+    "yaml_path": "mindspore/ops/op_def/yaml/replication_pad_1d_grad_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnReplicationPad1dBackward"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": false,
+      "bprop_units": []
+    }
+  },
+  "entries": []
+}

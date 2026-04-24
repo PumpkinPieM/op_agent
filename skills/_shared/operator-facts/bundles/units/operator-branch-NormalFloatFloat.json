@@ -1,0 +1,27 @@
+{
+  "bundle_id": "branch::normal_float_float_op.yaml::NormalFloatFloat",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::normal_float_float_op.yaml::NormalFloatFloat",
+    "unit_name": "NormalFloatFloat",
+    "unit_type": "branch",
+    "op": "normal_float_float",
+    "primitive": "NormalFloatFloat",
+    "yaml_path": "mindspore/ops/op_def/yaml/normal_float_float_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnNormalFloatFloat"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.normal"
+  ]
+}

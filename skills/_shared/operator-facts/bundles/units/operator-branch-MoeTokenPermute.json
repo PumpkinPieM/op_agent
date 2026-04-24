@@ -1,0 +1,29 @@
+{
+  "bundle_id": "branch::moe_token_permute_op.yaml::MoeTokenPermute",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::moe_token_permute_op.yaml::MoeTokenPermute",
+    "unit_name": "MoeTokenPermute",
+    "unit_type": "branch",
+    "op": "moe_token_permute",
+    "primitive": "MoeTokenPermute",
+    "yaml_path": "mindspore/ops/op_def/yaml/moe_token_permute_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnMoeTokenPermute"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": [
+        "MoeTokenPermuteGrad"
+      ]
+    }
+  },
+  "entries": [
+    "mindspore.ops.moe_token_permute"
+  ]
+}

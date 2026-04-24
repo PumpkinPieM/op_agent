@@ -1,0 +1,28 @@
+{
+  "bundle_id": "branch::randn_like_op.yaml::RandnLike",
+  "bundle_type": "unit",
+  "schema_version": "v2",
+  "generated_at": "2026-04-20T20:43:39+08:00",
+  "unit": {
+    "unit_id": "branch::randn_like_op.yaml::RandnLike",
+    "unit_name": "RandnLike",
+    "unit_type": "branch",
+    "op": "randn_like",
+    "primitive": "RandnLike",
+    "yaml_path": "mindspore/ops/op_def/yaml/randn_like_op.yaml",
+    "coverage": {
+      "aclnn": [
+        "aclnnInplaceNormal"
+      ],
+      "infer": true,
+      "kbk": true,
+      "pyboost": true,
+      "bprop": true,
+      "bprop_units": []
+    }
+  },
+  "entries": [
+    "mindspore.mint.randn_like",
+    "mindspore.ops.randn_like"
+  ]
+}
