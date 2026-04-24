@@ -28,6 +28,8 @@ operator-facts/
 │   │   ├── mindspore.Tensor.max.json          # one overload-entry bundle, contains multiple branch targets
 │   │   └── mindspore.Tensor.aminmax.json      # one composite-entry bundle, contains composite components
 │   └── units/                                 # MindSpore unit bundles, one unit per file
+│       ├── operator-branch-ArgSort.json       # one branch unit bundle
+│       └── func-split_ext.json                # one composite unit bundle
 ├── data/
 │   ├── ms_entry_identity.jsonl                # MS public entry identity index
 │   ├── ms_entry_unit_edges.jsonl              # MS entry -> unit routing index
