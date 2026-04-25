@@ -115,12 +115,14 @@ Optional helper assets:
 - A probe summary JSON and Markdown file containing, for each operator:
   - `forward_supported_dtypes`
   - `backward_supported_dtypes`
+  - `backward_not_applicable_dtypes`
   - `forward_unsupported_dtypes`
   - `backward_unsupported_dtypes`
   - `forward_issue_dtypes`
   - `backward_issue_dtypes`
 - Final dtype writeback recommendation for `op_database.py`
 - Or a `not_applicable_to_opinfo` decision with blocker notes and a recommended alternative validation path
+- If runtime probing is skipped, produce the same summary schema through the framework's doc-derived helper and mark `dtype_declaration_source=doc_derived`.
 
 <a id="dtype-support-probe-steps"></a>
 ## Runtime Probe Workflow
@@ -153,10 +155,12 @@ The probe summary must classify each dtype and direction as follows:
 
 - **Forward success**: record as `forward_supported_dtypes`
 - **Backward success**: record as `backward_supported_dtypes`
+- **Backward not applicable for this dtype/sample path**: record as `backward_not_applicable_dtypes`
 - **Error clearly indicates unsupported dtype**: record as `unsupported_dtype`
 - **Any other error**: record as `sample_or_function_issue`
 
 Do **not** convert a generic failure into "dtype unsupported" unless the error really says so.
+Do **not** fold "no gradient path" into `backward_supported_dtypes`; keep it separate as `backward_not_applicable_dtypes`.
 
 <a id="dtype-support-issues"></a>
 ## Handling Probe Failures
@@ -177,7 +181,7 @@ When the task or environment calls for the doc-based path:
 
 1. Check the aclnn interface declaration for the operator's supported dtype list.
 2. Check the corresponding MindSpore API documentation and existing similar OpInfo registrations.
-3. Produce a candidate dtype set and explicitly mark it as **doc-derived**.
+3. Produce a candidate dtype set and explicitly mark it as **doc-derived**. When you still want a structured summary artifact, use `build_doc_derived_operator_summary(...)` from `scripts/dtype_probe_execution_framework.py` so the doc-only path emits the same schema as the runtime probe path.
 4. If the task later allows runtime execution, rerun the probe and replace the doc-derived result with the runtime result.
 
 Documentation lookup is a valid supplemental path, but it is **not** the default source of truth.

@@ -53,6 +53,8 @@ For validation, the default path is local-only:
 - If the current machine is not an Ascend validation machine, stop and ask the user to provide a validation machine.
 - Do not silently switch to remote validation unless the user explicitly asks for remote validation.
 
+When the task needs faster iteration on one newly added operator, you may temporarily isolate that operator by following [patch_out_old_tests.md](patch_out_old_tests.md). Treat that patch as a short-lived local or remote debugging aid only. Remove it before final full validation and before leaving the repo in a reviewable state.
+
 **There are three scenarios:**
 
 | Applicable Scenario | Action |
@@ -180,6 +182,7 @@ If the operator supports `op_extra_reference_inputs_func` (extra accuracy scenar
 - [ ] `[MUST]` **Backoff-disabled validation**: all cases must pass under `export MS_DISABLE_KERNEL_BACKOFF=1` to prevent fallback to non-ACLNN paths.
 - [ ] `[MUST]` **Local Ascend precheck before validation**: validate locally by default, and run validation only after confirming the current machine is an Ascend environment. If not, stop and ask the user to provide a validation machine instead of silently switching to remote.
 - [ ] `[MUST]` **Coverage-gap accounting**: report `op_error_inputs_func is not set` and `op_dynamic_inputs_func is not set` as separate coverage gaps. A run with either gap cannot be reported as `fully_validated`.
+- [ ] `[SHOULD]` **Optional stability rerun for flaky-looking cases**: after the main matrix passes, rerun the same command with `--count=50` when the user explicitly asks for stability evidence or when the new case looks prone to intermittent failures.
 
 #### Failure Handling Order
 
