@@ -593,12 +593,19 @@ def _resolve_dtype_declaration_source(
     forward_diff: Mapping[str, Sequence[str]] | None,
     backward_diff: Mapping[str, Sequence[str]] | None,
 ) -> str:
+    if probe_backend == "doc":
+        return "doc_derived"
     if _has_probe_doc_conflict(forward_diff) or _has_probe_doc_conflict(backward_diff):
         return "probe_vs_doc_conflict"
     return "probe_verified"
 
 
 def _build_writeback_guidance(*, dtype_declaration_source: str, probe_backend: str) -> str:
+    if dtype_declaration_source == "doc_derived" or probe_backend == "doc":
+        return (
+            "Documentation-only fallback. Treat these dtypes as candidate writeback evidence "
+            "until runtime probing or OpInfo validation confirms them."
+        )
     if dtype_declaration_source == "probe_vs_doc_conflict":
         return "Review the declared-vs-probed dtype diff before writing dtypes_*."
     if probe_backend == "pta":
@@ -803,6 +810,52 @@ def execute_operator_probe(spec: OperatorProbeSpec) -> dict[str, Any]:
     }
 
 
+def build_doc_derived_operator_summary(
+    *,
+    op_name: str,
+    declared_doc_forward_dtypes: Sequence[str],
+    declared_doc_backward_dtypes: Sequence[str] = (),
+    candidate_dtypes: Sequence[str] | None = None,
+    supports_backward: bool = True,
+    notes: str = "",
+) -> dict[str, Any]:
+    """Build a probe-shaped summary for documentation-only fallback flows."""
+
+    forward_doc = _dedupe_preserve_order(declared_doc_forward_dtypes)
+    backward_doc = _dedupe_preserve_order(declared_doc_backward_dtypes)
+    candidate = _dedupe_preserve_order(candidate_dtypes or forward_doc or backward_doc)
+
+    return {
+        "op_name": op_name,
+        "probe_backend": "doc",
+        "dtype_declaration_source": _resolve_dtype_declaration_source(
+            probe_backend="doc",
+            forward_diff=None,
+            backward_diff=None,
+        ),
+        "writeback_guidance": _build_writeback_guidance(
+            dtype_declaration_source="doc_derived",
+            probe_backend="doc",
+        ),
+        "candidate_dtypes": candidate,
+        "declared_doc_forward_dtypes": forward_doc,
+        "declared_doc_backward_dtypes": backward_doc,
+        "supports_backward": supports_backward,
+        "notes": notes,
+        "runtime_probe_skipped": True,
+        "forward_supported_dtypes": forward_doc,
+        "backward_supported_dtypes": backward_doc if supports_backward else [],
+        "backward_not_applicable_dtypes": [] if supports_backward else candidate,
+        "forward_unsupported_dtypes": [],
+        "backward_unsupported_dtypes": [],
+        "forward_issue_dtypes": [],
+        "backward_issue_dtypes": [],
+        "doc_probe_forward_diff": None,
+        "doc_probe_backward_diff": None,
+        "dtype_records": [],
+    }
+
+
 def default_markdown_path(summary_out: Path) -> Path:
     return summary_out.with_suffix(".md")
 
@@ -856,6 +909,8 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
             lines.append(f"- notes: {operator['notes']}")
         if operator.get("writeback_guidance"):
             lines.append(f"- writeback guidance: {operator['writeback_guidance']}")
+        if operator.get("runtime_probe_skipped"):
+            lines.append("- runtime probe: skipped; summary is doc-derived")
 
         issue_records = []
         for dtype_record in operator["dtype_records"]:

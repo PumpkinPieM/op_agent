@@ -143,6 +143,19 @@ class DtypeProbeFrameworkSelfcheck(unittest.TestCase):
         self.assertEqual(issue, "sample_or_function_issue")
         self.assertEqual(unsupported, "unsupported_dtype")
 
+    def test_doc_derived_summary_helper_uses_unified_schema(self):
+        summary = self.framework.build_doc_derived_operator_summary(
+            op_name="fake_doc_only",
+            declared_doc_forward_dtypes=("float16", "float32"),
+            declared_doc_backward_dtypes=("float16",),
+            notes="doc-only fallback",
+        )
+        self.assertEqual(summary["probe_backend"], "doc")
+        self.assertEqual(summary["dtype_declaration_source"], "doc_derived")
+        self.assertTrue(summary["runtime_probe_skipped"])
+        self.assertEqual(summary["forward_supported_dtypes"], ["float16", "float32"])
+        self.assertEqual(summary["backward_supported_dtypes"], ["float16"])
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
