@@ -252,11 +252,11 @@ cases:
         isolation: "git-worktree"
         expected_changes:
           added: 
-            - "mindspore/ops/op_def/yaml/nan_median_op.yaml"
-            - "mindspore/ops/op_def/yaml/nan_median_dim_op.yaml"
-            - "mindspore/ops/api_def/nan_median.yaml"
-            - "mindspore/ops/api_def/method_doc/nan_median_doc.yaml"
-            - "mindspore/ops/api_def/function_doc/nan_median_doc.yaml"
+            - "mindspore/ops/op_def/yaml/nanmedian_op.yaml"
+            - "mindspore/ops/op_def/yaml/nanmedian_dim_op.yaml"
+            - "mindspore/ops/api_def/nanmedian.yaml"
+            - "mindspore/ops/api_def/method_doc/nanmedian_doc.yaml"
+            - "mindspore/ops/api_def/function_doc/nanmedian_doc.yaml"
             - "tests/ut/cpp/ops/test_ops_nanmedian.cc"
             - "tests/ut/cpp/ops/test_ops_nanmedian_dim.cc"
           modified:
@@ -264,4 +264,5 @@ cases:
             - "docs/api/api_python/mindspore.mint.rst"
             - "docs/api/api_python_en/mindspore.mint.rst"
             - "mindspore/python/mindspore/mint/__init__.py"
+            - "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
           deleted: []
