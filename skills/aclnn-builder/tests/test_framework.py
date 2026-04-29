@@ -40,6 +40,7 @@ from framework import (
     resolve_op_plugin_path,
     resolve_skill_path,
     resolve_repo_source,
+    skill_install_subdir_for_executor,
     stage_skills_for_case,
     write_task_session_slice,
 )
@@ -475,16 +476,16 @@ def test_cli_analyze_time_flag_defaults_off_and_can_be_enabled():
     assert enabled_args.analyze_time is True
 
 
-def test_cli_keep_sandboxes_defaults_on_and_cleanup_flag_disables_it():
+def test_cli_sandboxes_default_to_kept_and_cleanup_flag_disables_it():
     parser = build_argument_parser()
     default_args = parser.parse_args([])
     assert default_args.keep_sandboxes is True
 
-    explicit_keep_args = parser.parse_args(["--keep-sandboxes"])
-    assert explicit_keep_args.keep_sandboxes is True
-
     cleanup_args = parser.parse_args(["--cleanup-sandboxes"])
     assert cleanup_args.keep_sandboxes is False
+
+    with pytest.raises(SystemExit):
+        parser.parse_args(["--keep-sandboxes"])
 
 
 def test_cli_workers_defaults_to_one_and_accepts_explicit_value():
@@ -645,11 +646,57 @@ def test_stage_skills_copies_into_isolated_mindspore_checkout(tmp_path: Path):
         cleanup_prepared_repos(prepared)
 
 
+def test_stage_skills_uses_executor_specific_install_directory(tmp_path: Path):
+    repo_root = tmp_path / "mindspore"
+    skill_root = tmp_path / "skills"
+    init_repo(repo_root, {"tracked.txt": "base\n"})
+    (skill_root / "aclnn-builder").mkdir(parents=True, exist_ok=True)
+    (skill_root / "aclnn-builder" / "SKILL.md").write_text("skill\n", encoding="utf-8")
+    repo_spec = RepoSpec(name="mindspore", source=str(repo_root))
+    case = CaseSpec(case_id="skills_case", prompt="test", repos=(repo_spec,))
+    prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
+    try:
+        stage_skills_for_case(prepared, skill_root, skill_install_subdir=(".claude", "skills"))
+        copied = prepared["mindspore"].checkout_path / ".claude" / "skills" / "aclnn-builder" / "SKILL.md"
+        assert copied.read_text(encoding="utf-8") == "skill\n"
+        assert not (prepared["mindspore"].checkout_path / ".codex" / "skills").exists()
+    finally:
+        from framework import cleanup_prepared_repos
+
+        cleanup_prepared_repos(prepared)
+
+
 def test_resolve_skill_path_defaults_to_ms_root_codex_skills(tmp_path: Path):
     ms_root = tmp_path / "mindspore"
     skill_root = ms_root / ".codex" / "skills"
     skill_root.mkdir(parents=True, exist_ok=True)
     assert resolve_skill_path(None, ms_root=ms_root, path_root=tmp_path) == skill_root.resolve()
+
+
+def test_resolve_skill_path_prefers_working_dir_default(tmp_path: Path):
+    path_root = tmp_path / "op-agent"
+    ms_root = tmp_path / "mindspore"
+    path_root_skill_root = path_root / ".codex" / "skills"
+    ms_root_skill_root = ms_root / ".codex" / "skills"
+    path_root_skill_root.mkdir(parents=True, exist_ok=True)
+    ms_root_skill_root.mkdir(parents=True, exist_ok=True)
+
+    assert resolve_skill_path(None, ms_root=ms_root, path_root=path_root) == path_root_skill_root.resolve()
+
+
+def test_resolve_skill_path_uses_executor_specific_default(tmp_path: Path):
+    ms_root = tmp_path / "mindspore"
+    skill_root = ms_root / ".claude" / "skills"
+    skill_root.mkdir(parents=True, exist_ok=True)
+    assert (
+        resolve_skill_path(
+            None,
+            ms_root=ms_root,
+            path_root=tmp_path,
+            default_skill_subdir=skill_install_subdir_for_executor("claudecode"),
+        )
+        == skill_root.resolve()
+    )
 
 
 def test_resolve_skill_path_errors_when_default_missing(tmp_path: Path):

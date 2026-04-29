@@ -31,6 +31,9 @@ MS_ROOT_TOKENS = {"", "{{ms_root}}", "$MS_ROOT", "${MS_ROOT}"}
 PROMPT_OP_PLUGIN_TOKEN = "{{op_plugin_dir}}"
 CODEX_SKILL_TRIGGER_PREFIX = "$"
 SLASH_SKILL_TRIGGER_PREFIX = "/"
+CODEX_SKILLS_SUBDIR = (".codex", "skills")
+OPENCODE_SKILLS_SUBDIR = (".opencode", "skills")
+CLAUDECODE_SKILLS_SUBDIR = (".claude", "skills")
 CODEX_SESSION_MATCH_TOLERANCE_SEC = 300.0
 ACTIVITY_TIMELINE_SUMMARY_MIN_PHASES = 3
 ACTIVITY_TIMELINE_SUMMARY_MAX_PHASES = 6
@@ -41,6 +44,8 @@ class ManifestError(ValueError):
 
 
 class Executor(Protocol):
+    executor_name: str
+    skill_install_subdir: tuple[str, ...]
     skill_trigger_prefix: str
 
     def run(self, request: "ExecutionRequest") -> "ExecutionResult":
@@ -617,13 +622,33 @@ def _ensure_clean_directory(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
-def resolve_skill_path(skill_path: Path | None, ms_root: Path, path_root: Path) -> Path:
+def skill_install_subdir_for_executor(executor_name: str) -> tuple[str, ...]:
+    if executor_name == "codex":
+        return CODEX_SKILLS_SUBDIR
+    if executor_name == "opencode":
+        return OPENCODE_SKILLS_SUBDIR
+    if executor_name == "claudecode":
+        return CLAUDECODE_SKILLS_SUBDIR
+    raise ManifestError(f"Unsupported executor: {executor_name}")
+
+
+def resolve_skill_path(
+    skill_path: Path | None,
+    ms_root: Path,
+    path_root: Path,
+    default_skill_subdir: tuple[str, ...] = CODEX_SKILLS_SUBDIR,
+) -> Path:
     candidate = skill_path
     if candidate is None:
-        candidate = ms_root / ".codex" / "skills"
+        default_candidates = (
+            path_root.joinpath(*default_skill_subdir),
+            ms_root.joinpath(*default_skill_subdir),
+        )
+        candidate = next((path for path in default_candidates if path.exists()), default_candidates[-1])
         if not candidate.exists():
+            searched = ", ".join(str(path) for path in default_candidates)
             raise ManifestError(
-                f"Skill path not provided and default skills directory does not exist: {candidate}"
+                f"Skill path not provided and no default skills directory exists. Searched: {searched}"
             )
     elif not candidate.is_absolute():
         candidate = (path_root / candidate).resolve()
@@ -717,12 +742,21 @@ def cleanup_prepared_repos(prepared: dict[str, PreparedRepo]) -> None:
             shutil.rmtree(repo.checkout_path, ignore_errors=True)
 
 
-def stage_skills_for_case(prepared: dict[str, PreparedRepo], skill_path: Path) -> None:
+def stage_skills_for_case(
+    prepared: dict[str, PreparedRepo],
+    skill_path: Path,
+    skill_install_subdir: tuple[str, ...] = CODEX_SKILLS_SUBDIR,
+) -> None:
     if "mindspore" not in prepared:
         raise ManifestError("Cannot stage skills because the case does not define a `mindspore` repo")
-    codex_root = prepared["mindspore"].checkout_path / ".codex"
-    target_skill_dir = codex_root / "skills"
-    codex_root.mkdir(parents=True, exist_ok=True)
+    invalid_part = any(
+        not part or Path(part).is_absolute() or part == ".."
+        for part in skill_install_subdir
+    )
+    if not skill_install_subdir or invalid_part:
+        raise ManifestError(f"Invalid skill install subdirectory: {skill_install_subdir!r}")
+    target_skill_dir = prepared["mindspore"].checkout_path.joinpath(*skill_install_subdir)
+    target_skill_dir.parent.mkdir(parents=True, exist_ok=True)
     if target_skill_dir.exists():
         shutil.rmtree(target_skill_dir)
     shutil.copytree(skill_path, target_skill_dir, symlinks=True)
@@ -803,7 +837,17 @@ def compare_expected_changes(expected: ExpectedChangeSet, actual: ExpectedChange
     return problems
 
 
+def execution_cwd_for_request(request: ExecutionRequest) -> Path:
+    if "mindspore" in request.prepared_repos:
+        return request.prepared_repos["mindspore"].checkout_path
+    if request.prepared_repos:
+        return next(iter(request.prepared_repos.values())).checkout_path
+    return request.case_dir
+
+
 class CodexExecutor:
+    executor_name = "codex"
+    skill_install_subdir = CODEX_SKILLS_SUBDIR
     skill_trigger_prefix = CODEX_SKILL_TRIGGER_PREFIX
 
     def __init__(
@@ -826,11 +870,7 @@ class CodexExecutor:
 
     @staticmethod
     def execution_cwd_for(request: ExecutionRequest) -> Path:
-        if "mindspore" in request.prepared_repos:
-            return request.prepared_repos["mindspore"].checkout_path
-        if request.prepared_repos:
-            return next(iter(request.prepared_repos.values())).checkout_path
-        return request.case_dir
+        return execution_cwd_for_request(request)
 
     def build_command(self, request: ExecutionRequest) -> list[str]:
         execution_cwd = self.execution_cwd_for(request)
@@ -1029,6 +1069,8 @@ class CodexExecutor:
 
 
 class OpenCodeExecutor:
+    executor_name = "opencode"
+    skill_install_subdir = OPENCODE_SKILLS_SUBDIR
     skill_trigger_prefix = SLASH_SKILL_TRIGGER_PREFIX
 
     def __init__(
@@ -1041,7 +1083,7 @@ class OpenCodeExecutor:
 
     @staticmethod
     def execution_cwd_for(request: ExecutionRequest) -> Path:
-        return CodexExecutor.execution_cwd_for(request)
+        return execution_cwd_for_request(request)
 
     def build_command(self, request: ExecutionRequest) -> list[str]:
         execution_cwd = self.execution_cwd_for(request)
@@ -1106,6 +1148,8 @@ class OpenCodeExecutor:
 
 
 class ClaudeCodeExecutor:
+    executor_name = "claudecode"
+    skill_install_subdir = CLAUDECODE_SKILLS_SUBDIR
     skill_trigger_prefix = SLASH_SKILL_TRIGGER_PREFIX
 
     def __init__(
@@ -1118,7 +1162,7 @@ class ClaudeCodeExecutor:
 
     @staticmethod
     def execution_cwd_for(request: ExecutionRequest) -> Path:
-        return CodexExecutor.execution_cwd_for(request)
+        return execution_cwd_for_request(request)
 
     def build_command(self, request: ExecutionRequest) -> list[str]:
         execution_cwd = self.execution_cwd_for(request)
@@ -1253,8 +1297,10 @@ class SkillTestRunner:
                 lock.release()
 
         try:
-            log_progress(f"{case.case_id}: staging skills into isolated checkout")
-            stage_skills_for_case(prepared, self.skill_path)
+            skill_install_subdir = getattr(self.executor, "skill_install_subdir", CODEX_SKILLS_SUBDIR)
+            skill_install_path = "/".join(skill_install_subdir)
+            log_progress(f"{case.case_id}: staging skills into isolated checkout at {skill_install_path}")
+            stage_skills_for_case(prepared, self.skill_path, skill_install_subdir=skill_install_subdir)
             log_progress(f"{case.case_id}: rendering prompt")
             prompt = render_prompt(
                 case.prompt,
@@ -1270,7 +1316,8 @@ class SkillTestRunner:
             prompt_path.write_text(prompt, encoding="utf-8")
 
             if dry_run:
-                log_progress(f"{case.case_id}: dry-run mode, skipping codex execution")
+                executor_name = getattr(self.executor, "executor_name", "executor")
+                log_progress(f"{case.case_id}: dry-run mode, skipping {executor_name} execution")
             execution_result = None if dry_run else self.executor.run(
                 ExecutionRequest(
                     case=case,
@@ -1374,20 +1421,11 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dry-run", action="store_true")
     parser.set_defaults(keep_sandboxes=True)
     parser.add_argument(
-        "--keep-sandboxes",
-        dest="keep_sandboxes",
-        action="store_true",
-        help="Keep isolated sandboxes after the run. This is the default.",
-    )
-    parser.add_argument(
         "--cleanup-sandboxes",
         dest="keep_sandboxes",
         action="store_false",
         help="Delete isolated sandboxes after the run completes.",
     )
-    parser.add_argument("--codex-bin", default="codex")
-    parser.add_argument("--opencode-bin", default="opencode")
-    parser.add_argument("--claudecode-bin", default="claude")
     parser.add_argument("--model", default="")
     parser.add_argument("--sandbox", default="workspace-write")
     parser.add_argument(
@@ -1408,16 +1446,21 @@ def main(argv: list[str] | None = None) -> int:
     args = build_argument_parser().parse_args(argv)
     ms_root = (args.ms_root or Path.cwd()).resolve()
     path_root = Path.cwd().resolve()
-    skill_path = resolve_skill_path(args.skill_path, ms_root=ms_root, path_root=path_root)
-    op_plugin_dir = resolve_op_plugin_path(args.op_plugin, path_root=path_root)
-    runs_root = (args.runs_root or (ms_root / "aclnn_skill_test_runs")).resolve()
     try:
+        default_skill_subdir = skill_install_subdir_for_executor(args.executor)
+        skill_path = resolve_skill_path(
+            args.skill_path,
+            ms_root=ms_root,
+            path_root=path_root,
+            default_skill_subdir=default_skill_subdir,
+        )
+        op_plugin_dir = resolve_op_plugin_path(args.op_plugin, path_root=path_root)
+        runs_root = (args.runs_root or (ms_root / "aclnn_skill_test_runs")).resolve()
         if not args.dry_run and op_plugin_dir is None:
             raise ManifestError("--op-plugin is required when running non-dry-run cases")
         manifest = load_manifest(args.manifest)
         if args.executor == "codex":
             executor = CodexExecutor(
-                codex_bin=args.codex_bin,
                 model=args.model or None,
                 sandbox=args.sandbox,
                 analyze_time=args.analyze_time,
@@ -1425,12 +1468,10 @@ def main(argv: list[str] | None = None) -> int:
             )
         elif args.executor == "opencode":
             executor = OpenCodeExecutor(
-                opencode_bin=args.opencode_bin,
                 model=args.model or None,
             )
         else:
             executor = ClaudeCodeExecutor(
-                claudecode_bin=args.claudecode_bin,
                 model=args.model or None,
             )
         runner = SkillTestRunner(
