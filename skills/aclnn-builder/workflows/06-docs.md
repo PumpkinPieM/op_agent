@@ -16,7 +16,7 @@ Each language should still follow its own documentation conventions; literal sen
 ## Outputs (Two Documentation Types + Interface Lists, Confirmed One By One)
 
 | Type | File Location |
-| --- | --- | --- | --- |
+| --- | --- |
 | **English `function_doc`** | `ops/op_def/yaml/doc/{op}_doc.yaml` |
 | **Chinese RST** | `docs/api/api_python/ops/*.rst` (or the matching `mint` / `nn` directory) |
 | **Interface Registration List** | `docs/api/api_python/mindspore.xxx.rst`, `docs/api/api_python_en/mindspore.xxx.rst` |
@@ -45,7 +45,7 @@ Make sure the doc contains following sections:
 - `returns`: return-value description
 - `examples`: a complete runnable example including imports
 
-### Step 2: Chinese RST (`docs/api/api_python`)
+### Step 3: Chinese RST (`docs/api/api_python`)
 
 - file location: under `docs/api/api_python/mint/`
 - **first inspect existing Chinese RST files for similar operators** to confirm the format and directory structure
@@ -53,7 +53,7 @@ Make sure the doc contains following sections:
 - the underline of `=` below the title must be at least as long as the title itself
 - update interface index files in alphabetical order
 
-### Step 3: Consistency Check (`reference.md#documentation-general-principles`)
+### Step 4: Consistency Check (`reference.md#documentation-general-principles`)
 
 | Check Item | English | Chinese |
 | --- | --- | --- |

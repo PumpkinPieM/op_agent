@@ -23,8 +23,6 @@ When using this skill to develop an ACLNN operator, **create a TODOLIST** and ex
 **Steps marked `🔒 must not be skipped` are mandatory in every scenario.**
 **Places marked `⛔ HARD GATE` must be completed before you continue, otherwise stop and wait for user confirmation.**
 
-> the `feature-document.md` can be found under path ``
-
 - [ ] **[Pre](workflows/00-pre-checks.md)** `🔒 must not be skipped`: pre-checks (Pre-A inventory check + Pre-B solution design + Pre-C call-chain analysis)
   - Input: operator name, PTA reference interface
   - **Required outputs**: PTA source review report, initialized Feature document
@@ -86,3 +84,7 @@ Item-by-item success criteria check:
 Open issues / risks / next step:
 - ...
 ```
+
+## Review
+
+After all steps are done, review generated code against workflow requirements, with feature document and pta analysis report as reference. Don't do code searching unless potential problems are found. For any problems found, fix them.
