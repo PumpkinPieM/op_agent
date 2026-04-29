@@ -246,6 +246,38 @@ def test_extra_changes_are_allowed_if_expected_bucketed_changes_exist(tmp_path: 
         cleanup_prepared_repos(prepared)
 
 
+def test_classify_repo_changes_can_skip_expected_change_comparison(tmp_path: Path):
+    repo_root = tmp_path / "repo"
+    init_repo(repo_root, {"tracked.txt": "base\n"})
+    repo_spec = RepoSpec(
+        name="mindspore",
+        source=str(repo_root),
+        expected_changes=ExpectedChangeSet(added=("missing.cc",)),
+    )
+    case = CaseSpec(case_id="skip_compare_case", prompt="unused", repos=(repo_spec,))
+    prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
+    try:
+        checkout = prepared["mindspore"].checkout_path
+        (checkout / "actual.cc").write_text("actual\n", encoding="utf-8")
+
+        checked = classify_repo_changes(prepared["mindspore"])
+        skipped = classify_repo_changes(
+            prepared["mindspore"],
+            compare_expected_changes_enabled=False,
+        )
+
+        assert checked.valid is False
+        assert "Missing added paths: ['missing.cc']" in checked.problems
+        assert skipped.valid is True
+        assert skipped.problems == ()
+        assert skipped.source_changes.added == ("actual.cc",)
+        assert skipped.expected_changes.added == ("missing.cc",)
+    finally:
+        from framework import cleanup_prepared_repos
+
+        cleanup_prepared_repos(prepared)
+
+
 def test_runner_executes_multiple_cases_with_isolation(tmp_path: Path):
     source_repo = tmp_path / "mindspore"
     skill_root = tmp_path / ".codex" / "skills"
@@ -319,6 +351,101 @@ def test_runner_executes_multiple_cases_with_isolation(tmp_path: Path):
     assert [item["case_id"] for item in summary["case_outcomes"]] == ["case_one", "case_two"]
     assert summary["case_outcomes"][0]["repo_outcomes"][0]["expected_changes"]["added"] == ["alpha.txt"]
     assert summary["case_outcomes"][0]["execution_result"]["elapsed_time"] == format_elapsed_minutes(1.0)
+    assert summary["expected_change_comparison_enabled"] is True
+
+
+def test_runner_can_skip_expected_change_comparison(tmp_path: Path):
+    source_repo = tmp_path / "mindspore"
+    skill_root = tmp_path / ".codex" / "skills"
+    op_plugin_root = tmp_path / "op-plugin"
+    init_repo(source_repo, {"base.txt": "base\n"})
+    op_plugin_root.mkdir(parents=True, exist_ok=True)
+    (skill_root / "aclnn-builder").mkdir(parents=True, exist_ok=True)
+    (skill_root / "aclnn-builder" / "SKILL.md").write_text("skill\n", encoding="utf-8")
+    manifest = Manifest(
+        schema_version="1.0.0",
+        default_artifact_globs=(),
+        cases=(
+            CaseSpec(
+                case_id="case_one",
+                prompt="first",
+                repos=(
+                    RepoSpec(
+                        name="mindspore",
+                        source=str(source_repo),
+                        expected_changes=ExpectedChangeSet(added=("expected.txt",)),
+                    ),
+                ),
+            ),
+        ),
+    )
+    executor = FakeExecutor({"case_one": [("add", "mindspore", "actual.txt")]})
+    runner = SkillTestRunner(
+        manifest=manifest,
+        executor=executor,
+        ms_root=source_repo,
+        path_root=tmp_path,
+        skill_path=skill_root,
+        op_plugin_dir=op_plugin_root,
+        runs_root=tmp_path / "runs",
+        compare_expected_changes_enabled=False,
+    )
+    run_dir, outcomes = runner.run()
+
+    assert len(outcomes) == 1
+    assert outcomes[0].valid is True
+    assert outcomes[0].repo_outcomes[0].source_changes.added == ("actual.txt",)
+    assert outcomes[0].repo_outcomes[0].expected_changes.added == ("expected.txt",)
+    assert outcomes[0].repo_outcomes[0].problems == ()
+    summary = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
+    assert summary["expected_change_comparison_enabled"] is False
+
+
+def test_runner_skip_expected_changes_allows_manifest_without_expected_changes(tmp_path: Path):
+    source_repo = tmp_path / "mindspore"
+    skill_root = tmp_path / ".codex" / "skills"
+    op_plugin_root = tmp_path / "op-plugin"
+    manifest_path = tmp_path / "cases.yaml"
+    init_repo(source_repo, {"base.txt": "base\n"})
+    op_plugin_root.mkdir(parents=True, exist_ok=True)
+    (skill_root / "aclnn-builder").mkdir(parents=True, exist_ok=True)
+    (skill_root / "aclnn-builder" / "SKILL.md").write_text("skill\n", encoding="utf-8")
+    manifest_path.write_text(
+        f"""
+schema_version: "1.0.0"
+cases:
+  - id: "case_without_expected_changes"
+    prompt: "first"
+    repos:
+      - name: "mindspore"
+        source: "{source_repo}"
+""".strip(),
+        encoding="utf-8",
+    )
+    manifest = load_manifest(manifest_path)
+    executor = FakeExecutor({"case_without_expected_changes": [("add", "mindspore", "actual.txt")]})
+    runner = SkillTestRunner(
+        manifest=manifest,
+        executor=executor,
+        ms_root=source_repo,
+        path_root=tmp_path,
+        skill_path=skill_root,
+        op_plugin_dir=op_plugin_root,
+        runs_root=tmp_path / "runs",
+        compare_expected_changes_enabled=False,
+    )
+    run_dir, outcomes = runner.run()
+
+    assert len(outcomes) == 1
+    assert outcomes[0].valid is True
+    assert outcomes[0].repo_outcomes[0].expected_changes.as_dict() == {
+        "added": [],
+        "modified": [],
+        "deleted": [],
+    }
+    assert outcomes[0].repo_outcomes[0].source_changes.added == ("actual.txt",)
+    summary = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
+    assert summary["expected_change_comparison_enabled"] is False
 
 
 def test_runner_executes_multiple_cases_in_parallel(tmp_path: Path):

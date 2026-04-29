@@ -788,7 +788,7 @@ def _collect_git_source_changes(checkout_path: Path) -> list[tuple[str, str]]:
     return changes
 
 
-def classify_repo_changes(prepared_repo: PreparedRepo) -> RepoOutcome:
+def classify_repo_changes(prepared_repo: PreparedRepo, compare_expected_changes_enabled: bool = True) -> RepoOutcome:
     raw_changes = _collect_git_source_changes(prepared_repo.checkout_path)
     source_buckets = {"A": set(), "M": set(), "D": set()}
     artifact_changes: list[str] = []
@@ -815,7 +815,8 @@ def classify_repo_changes(prepared_repo: PreparedRepo) -> RepoOutcome:
         deleted=tuple(sorted(source_buckets["D"])),
     )
     expected = prepared_repo.spec.expected_changes
-    problems.extend(compare_expected_changes(expected, actual))
+    if compare_expected_changes_enabled:
+        problems.extend(compare_expected_changes(expected, actual))
     return RepoOutcome(
         name=prepared_repo.spec.name,
         expected_changes=expected,
@@ -1244,6 +1245,7 @@ class SkillTestRunner:
         op_plugin_dir: Path | None,
         runs_root: Path,
         keep_sandboxes: bool = True,
+        compare_expected_changes_enabled: bool = True,
     ) -> None:
         self.manifest = manifest
         self.executor = executor
@@ -1253,6 +1255,7 @@ class SkillTestRunner:
         self.op_plugin_dir = op_plugin_dir
         self.runs_root = runs_root
         self.keep_sandboxes = keep_sandboxes
+        self.compare_expected_changes_enabled = compare_expected_changes_enabled
         self._worktree_locks: dict[Path, threading.Lock] = {}
         self._worktree_locks_guard = threading.Lock()
 
@@ -1330,8 +1333,17 @@ class SkillTestRunner:
                     prepared_repos=prepared,
                 )
             )
-            log_progress(f"{case.case_id}: validating repository changes")
-            repo_outcomes = tuple(classify_repo_changes(repo) for repo in prepared.values())
+            if self.compare_expected_changes_enabled:
+                log_progress(f"{case.case_id}: validating repository changes")
+            else:
+                log_progress(f"{case.case_id}: collecting repository changes without expected-change comparison")
+            repo_outcomes = tuple(
+                classify_repo_changes(
+                    repo,
+                    compare_expected_changes_enabled=self.compare_expected_changes_enabled,
+                )
+                for repo in prepared.values()
+            )
             case_valid = all(repo.valid for repo in repo_outcomes) and (
                 execution_result is None
                 or (execution_result.returncode == 0 and not execution_result.timed_out)
@@ -1388,6 +1400,7 @@ class SkillTestRunner:
             "elapsed_time": format_elapsed_minutes(run_finished_at - run_started_at),
             "run_id": run_id,
             "manifest_schema_version": self.manifest.schema_version,
+            "expected_change_comparison_enabled": self.compare_expected_changes_enabled,
             "run_dir": str(run_dir),
             "case_outcomes": [outcome.as_dict() for outcome in outcomes],
         }
@@ -1419,6 +1432,11 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--case", dest="cases", action="append", default=[])
     parser.add_argument("--include-disabled", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--skip-expected-changes",
+        action="store_true",
+        help="Collect generated file changes but skip comparing them with manifest expected_changes.",
+    )
     parser.set_defaults(keep_sandboxes=True)
     parser.add_argument(
         "--cleanup-sandboxes",
@@ -1483,6 +1501,7 @@ def main(argv: list[str] | None = None) -> int:
             op_plugin_dir=op_plugin_dir,
             runs_root=runs_root,
             keep_sandboxes=args.keep_sandboxes,
+            compare_expected_changes_enabled=not args.skip_expected_changes,
         )
         run_dir, outcomes = runner.run(
             case_ids=args.cases or None,

@@ -44,7 +44,7 @@ Important fields:
 - `prompt`: the exact task prompt
 - `{{skill:<name>}}`: skill invocation placeholder; renders as `$<name>` for Codex and `/<name>` for OpenCode/Claude Code
 - `repos[*].source`: source repo path; for the primary `mindspore` repo this may be omitted and will default to the invocation cwd or `--ms-root`
-- `repos[*].expected_changes`: required source file contract; every listed path must appear in the matching add/modify/delete bucket, while extra diff entries are allowed
+- `repos[*].expected_changes`: optional source file contract; every listed path must appear in the matching add/modify/delete bucket unless `--skip-expected-changes` is passed, while extra diff entries are allowed
 - `artifact_globs`: files that may appear but should not count as source changes
 - `enabled: false`: useful for templates or expensive live cases that should not run by default
 
@@ -110,6 +110,7 @@ The CLI is defined in `framework.py` and exposed through `run_skill_cases.py`.
 | `--case CASE_ID` | all selected cases | Run only the named case. Repeat the argument to run multiple cases. |
 | `--include-disabled` | disabled | Include cases whose manifest entry has `enabled: false`. |
 | `--dry-run` | disabled | Prepare repos, stage skills, render prompts, and validate setup without invoking an agent. Does not require `--op-plugin` unless the prompt renders `{{op_plugin_dir}}`. |
+| `--skip-expected-changes` | disabled | Collect generated file changes but skip comparing them with manifest `expected_changes`. This allows cases to omit `expected_changes`. Executor failures and timeouts still fail the case. |
 | `--cleanup-sandboxes` | disabled | Remove isolated repo sandboxes after each case finishes. |
 | `--model MODEL` | none | Optional model name passed to the selected executor. |
 | `--sandbox MODE` | `workspace-write` | Codex sandbox mode passed to `codex exec`; only used by the Codex executor. |
@@ -171,7 +172,7 @@ Prompt placeholders:
 | `{{op_plugin_dir}}` | Resolved `--op-plugin` path. |
 | `{{skill:<name>}}` | `$<name>` for Codex or `/<name>` for OpenCode and Claude Code. |
 
-Validation requires every listed expected path to appear in the matching git diff bucket. Extra source changes are reported in `summary.json` but are not currently treated as validation failures. Paths cannot be repeated across `added`, `modified`, and `deleted` for the same repo.
+Validation requires every listed expected path to appear in the matching git diff bucket unless `--skip-expected-changes` is passed. Extra source changes are reported in `summary.json` but are not currently treated as validation failures. Paths cannot be repeated across `added`, `modified`, and `deleted` for the same repo.
 
 ## Plan
 
