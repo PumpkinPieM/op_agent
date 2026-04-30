@@ -9,27 +9,9 @@
 - **Reference interface**:  `torch.xxx`
 - **Functionality**: {One-sentence description}
 - **MindSpore interfaces**:
-  - functional: `mindspore.ops.xxx` / `mindspore.mint.xxx`
+  - functional: `mindspore.mint.xxx`
   - nn: `mindspore.mint.nn.xxx` (if needed)
   - Tensor: `Tensor.xxx` (if needed)
-
-<a id="feature-task-list"></a>
-## 2. Task List `[Initialized In Pre-B, Updated During Development]`
-
-| No. | Task Category | Subtask | Status (new/modified/no change/not involved) | Notes |
-| ---- | ------ | -------- | ------------------------------ | ---- |
-| 1 | Basic interface functionality | Primitive | | |
-| | | functional | | |
-| | | nn | | |
-| | | tensor | | |
-| 2 | Backend support | Ascend | | |
-| 3 | Dynamic support | Dynamic shape | | |
-| | | Dynamic rank | | |
-| 4 | Backward support | bprop function | | |
-| 5 | Supporting materials | API mapping | | |
-| | | English/Chinese interface docs | | |
-| 6 | C++ UT Test completion | UT | | |
-| 7 | Safety and exceptions | Error cases and error-message conventions | | |
 
 <a id="feature-functional-spec"></a>
 ## 3. Functional And API Specification `[Pre-B Stage]`
@@ -137,12 +119,12 @@ xxx:
 
 | Category | File Path |
 | ---- | -------- |
+| Python API | `mindspore/python/mindspore/mint/xxx/yyy.py` |
 | YAML | `mindspore/ops/op_def/yaml/xxx_op.yaml`, `mindspore/ops/api_def/xxx.yaml` |
 | Infer | `mindspore/ops/infer/ops_func_impl/xxx.cc/.h` |
 | PyBoost | `mindspore/ops/kernel/.../customize/xxx.cc/.h` |
 | KBK | `mindspore/ops/kernel/.../customize/xxx_aclnn_kernel.cc/.h` |
 | BPROP | {Path or "not involved"} |
-| API export | `mindspore/python/mindspore/mint/xxx/yyy.py` |
 | Docs (EN) | `mindspore/ops/op_def/yaml/doc/xxx_doc.yaml`, `api_def/function_doc/` |
 | Docs (CN) | `docs/api/api_python/ops/mindspore.ops.xxx.rst` |
 | Tests (UT) | `tests/ut/cpp/ops/test_ops_xxx.cc` |

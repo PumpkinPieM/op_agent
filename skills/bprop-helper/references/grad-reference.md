@@ -78,6 +78,56 @@ Use inherited `Emitter` helpers for graph construction:
 
 Prefer the high-level helper when it exists. Fall back to `Emit("PrimitiveName", ...)` only when the builder API does not expose the exact primitive you need.
 
+## Dynamic Shape Patterns
+
+Dynamic bprop definitions usually fall into one of these patterns:
+
+- **Static metadata first, runtime shape when needed.**
+  `ib->GetShape(node)` and `ib->GetRank(node)` read inferred metadata. If `IsDynamic(...)`, `IsDynamicRank(...)`, or unknown scalar/sequence inputs make that metadata insufficient, switch to graph nodes such as `ib->Shape(node)`, `ib->DynSize(node)`, `ib->Emit("Rank", {node})`, or `ib->ShapeCalc(...)`.
+- **Use `ShapeCalc` for shape arithmetic.**
+  Put non-trivial shape math in a `DEF_PURE_SHAPE_CALC(...)` or `ShapeCalcFunctor` rather than rebuilding shape tuples with ad hoc IR. The `SetCalc` body computes concrete shape values when they are known; `SetInfer` describes the rank or output arity when the inputs are dynamic. Pass value-dependent inputs by index in the third `ShapeCalc` argument, for example `{1}` when an `axis`, `perm`, or `repeats` value affects the result.
+- **Reshape, slice, tile, fill, and transpose with runtime shape nodes.**
+  Prefer `ib->Reshape(x, ib->Shape(input))`, `ib->Slice(dout, offset, ib->Shape(input))`, `ib->Fill(..., ib->Shape(x), ...)`, or a perm produced by `ShapeCalc` when the target shape or permutation can be dynamic.
+- **Dynamic rank needs graph control flow.**
+  If static C++ branching depends on a rank, size, boolean input, or mutable sequence length that is not known at build time, use `ib->Conditional(...)` or `ib->While(...)` with branch/body lambdas that return `NodePtrList`. Examples include zero-rank reduction handling, dynamic sequence `Concat`/`Meshgrid`, and `Repeat` paths that skip empty reductions.
+- **Broadcast gradients should reuse the shared helpers.**
+  For binary grads, call `BinopGradCommon`; for `Select`/`Where`-style grads, call `BinopGradSelect`. These helpers inspect static shapes first and fall back to runtime broadcast axes via `BroadcastGradientArgs` or shape calculators, then reduce and reshape gradients back to input shapes.
+- **Distinguish dynamic dimension from dynamic rank.**
+  A shape like `{2, -1}` can often keep a static-rank path with runtime dimensions. Dynamic rank (`IsDynamicRank`) usually needs `ShapeCalc`, `Rank`, `Conditional`, or rank-agnostic primitives.
+
+Representative examples:
+
+```cpp
+if (IsDynamic(ib->GetShape(x))) {
+  auto shape = ib->ShapeCalc(g_some_shape_calc, {x, axis}, {1})[0];
+  dx = ib->Reshape(dx, shape);
+} else {
+  dx = ib->Reshape(dx, ib->GetShape(x));
+}
+```
+
+```cpp
+auto axes = ib->BroadcastGradientArgs(dout, x)[1];
+auto dx = ib->ReduceSum(dout, axes, false, true);
+dx = ib->Reshape(dx, ib->Shape(x));
+```
+
+Useful examples in-tree:
+
+- `grad_utils.cc`: `DynBinopGradCommon`, `BinopGradCommon`, `ReduceShapeShapeCalc`, `SumGrad`, `VarGrad`.
+- `grad_array_ops.cc`: `GatherDropNegatives`, `BinopGather`, `Concat`, `Transpose`, `Repeat`.
+- `grad_math_ops.cc`: `MatMulBackwardDynamic`, FFT/DCT shape calculators, reduce-product and diagonal dynamic paths.
+- `grad_linalg_ops.cc`: SVD and QR dynamic helpers that combine `ShapeCalc`, runtime rank checks, and `Conditional`.
+- `grad_nn_ops.cc`: dense/top-k/pooling shape calculators and dynamic output-size handling.
+
+Dynamic shape authoring rules:
+
+1. Guard every direct use of `shape.size()` or `shape[i]` with `!IsDynamicRank(shape)` and any required rank checks.
+2. Do not call `GetIntValue` or `GetScalarValue(...).value()` on mutable or unknown inputs unless the op contract guarantees a constant value. If the value can be unknown, move the dependent computation into `ShapeCalc` or graph control flow.
+3. Use `ib->Shape(input)` as the final reshape target when restoring a gradient to an original input shape.
+4. For runtime reduce axes, prefer `ReduceSum(..., skip_mode=true)` when the code must tolerate dynamic rank or empty-axis behavior.
+5. Keep zero gradients dynamic-safe with `ib->OutZeros(input)` or `ib->Zeros(ib->Shape(input), dtype_node)` instead of static shape literals.
+
 ## Common `grad_utils.*` Helpers
 
 Use these first before reimplementing shared logic:
@@ -172,6 +222,12 @@ auto dfirst = ib->TupleGetItem(dout, i0);
   `rg -n 'FreeUselessValues|CloneInplaceInput|SetUnusedInputs' mindspore/ccsrc/frontend/expander/grad`
 - Find tuple-output handling:
   `rg -n 'TupleGetItem\\(out|TupleGetItem\\(dout' mindspore/ccsrc/frontend/expander/grad`
+- Find dynamic-shape branches:
+  `rg -n 'IsDynamic\\(|IsDynamicRank\\(|IsDynamicShape\\(' mindspore/ccsrc/frontend/expander/grad`
+- Find shape calculators:
+  `rg -n 'DEF_PURE_SHAPE_CALC|ShapeCalc\\(' mindspore/ccsrc/frontend/expander/grad`
+- Find graph control flow in bprop definitions:
+  `rg -n 'Conditional\\(|While\\(' mindspore/ccsrc/frontend/expander/grad`
 
 ## Authoring Checklist
 

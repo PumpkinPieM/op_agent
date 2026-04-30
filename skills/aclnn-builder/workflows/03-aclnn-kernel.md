@@ -69,6 +69,7 @@ Check `mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_add_ext.
 - `Launch()`: call `RunOp` or the equivalent execution path
 - For unneeded outputs, override `GetUseLessOutputIdx()`
 - non-Tensor type should be extracted from `KernelTensor` to primitive c++ type using `device::ascend::ConvertKernelTensor<>`
+- for inplace op, pass input tensor to aclnn interface as the selfRef tensor.
 - registration: `MS_ACLNN_KERNEL_FACTORY_REG`
 
 ##### Composite Operator Pattern (Meta DSL, `reference.md#composite-kbk-pattern`)

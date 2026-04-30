@@ -1,15 +1,13 @@
 # Workflow 5: Export And Placeholder Behavior
 
-Path convention: unless stated otherwise, `reference.md` means `../_shared/reference.md` and `aclnn_doc` means `../_shared/aclnn_doc/`.
-
 ## Goal
 
-Ensure the operator is exported correctly through the `mint` package, and that the interface matches PyTorch as required.
+Ensure the operator is exported correctly through the `mint` package, and that the interface matches PTA.
 
 ## Outputs
 
 - **`mint` package exports**: updates to `__init__.py` / `__all__`
-- **Interface files**: functional / nn / Tensor methods as needed
+- **Interface files**: functional / nn as needed
 
 **Interface alignment constraint**: interface name, parameter names, parameter order and defaults, and input dtype/range constraints must match PTA.
 
@@ -22,10 +20,13 @@ Ensure the operator is exported correctly through the `mint` package, and that t
 
 Interfaces named `xxxExt` or `xxx_ext` are internal only. When exporting them publicly, always use `import xxx_ext as xxx` and remove the `ext` suffix. Never expose an `ext` interface directly as the public API.
 
+Fill the `Python API` field in the Feature document.
+
 ---
 
 ## Success Criteria
 
-- [ ] The operator can be imported normally from `mindspore.mint`
+- [ ] For public interfaces, exported them in `mindspore.mint`
+- [ ] Filled the `Python API` field in the Feature document.
 
 ---

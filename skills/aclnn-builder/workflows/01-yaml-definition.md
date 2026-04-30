@@ -1,7 +1,5 @@
 # Workflow 1: YAML Definition
 
-Path convention: unless stated otherwise, `reference.md` means `../_shared/reference.md` and `aclnn_doc` means `../_shared/aclnn_doc/`.
-
 ## Goal
 
 Define the required YAML for the operator (`op_def` + `api_def` + `function_doc`).
@@ -14,7 +12,7 @@ Define the required YAML for the operator (`op_def` + `api_def` + `function_doc`
 ## Outputs
 
 - **YAML file**: `mindspore/ops/op_def/yaml/{op_name}_op.yaml`
-- **Documentation YAML**: `mindspore/ops/op_def/yaml/doc`
+- **Documentation YAML**: `mindspore/ops/op_def/yaml/doc/`, `mindspore/ops/api_def/function_doc/`, `mindspore/ops/api_def/method_doc/`
 
 ---
 
@@ -35,7 +33,7 @@ dispatch:
 ```yaml
 dispatch:
   enable: True
-  Ascend: OpNameAscend    # specify the customize kernel function name
+  Ascend: {OpNameAscend}    # specify the customize kernel function name
 ```
 
 ## API Yaml

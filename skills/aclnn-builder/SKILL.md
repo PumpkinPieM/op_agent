@@ -7,7 +7,7 @@ description: Guides end-to-end ACLNN custom operator development and adaptation 
 
 ## Goal
 
-Land an ACLNN operator on the Ascend platform in MindSpore **end to end**: forward and backward paths, both PyBoost (Pynative) and KBK (Graph), dynamic shape/rank support, UT, documentation, export, and the required quality checks and validation.
+Land an ACLNN operator on the Ascend platform in MindSpore **end to end**: forward and backward paths, both mode: PyBoost (Pynative) and KBK (Graph), dynamic shape/rank support, UT, documentation, export, and the required quality checks and validation.
 
 ## How To Use This Skill
 
@@ -48,7 +48,7 @@ When using this skill to develop an ACLNN operator, **create a TODOLIST** and ex
 - [ ] **[Step 6](workflows/06-docs.md)**: documentation
   - Input: operator, yaml definition
   - Output: English doc and Chinese doc for newly added operators, plus index updates for public interfaces
-- [ ] **[Step 7] Feature document finalization** `🔒 must not be skipped`: complete (`feature-document.md#feature-code-change-summary`) and update (`feature-document.md#feature-task-list`)
+- [ ] **[Step 7] Feature document finalization** `🔒 must not be skipped`: complete (`feature-document.md#feature-code-change-summary`)
   - Even if intermediate steps are skipped or deferred, the Feature document must still be completed and delivered to the user.
 
 ## Validation Loop (Evidence Required At Every Step) `🔒 must not be skipped`

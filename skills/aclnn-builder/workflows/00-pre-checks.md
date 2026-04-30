@@ -8,7 +8,7 @@ Before writing code, complete the repository inventory check, reference analysis
 
 ## Inputs
 
-- **Operator name**: the API name, Primitive name, and ACLNN interface name
+- **Interface name**: the API name, and optinoally the target ACLNN interface name
 - **PTA reference interface**: `torch_npu.npu_xxx` or `torch.xxx`
 
 ## Outputs
@@ -21,11 +21,12 @@ Before writing code, complete the repository inventory check, reference analysis
 
 ## Pre-A: Inventory Check
 
-When the user asks you to "add" or "adapt" an operator, **search first** to confirm whether the operator already exists in the repository.
+Check current codebase for relevant information of api and operators.
 
 ### Steps
 
-**Search YAML**: search for the operator name under `mindspore/ops/op_def/yaml/` and `mindspore/ops/api_def/yaml/`
+**Search Python Interface**: for `mint.xxx` interface, search under `mindspore/python/mindspore/mint`. For tensor method, search in `mindspore/python/mindspore/common/tensor.py`.
+**Search YAML**: search for the operator name under `mindspore/ops/op_def/yaml/` and `mindspore/ops/api_def/yaml/`. `op_def` defines the underlying c++ primitive, and `api_def` defines the api. 
 
 ### Output Template
 
@@ -34,6 +35,7 @@ Operator inventory check: {OpName}
 
 | Component | Status | File Path | Notes |
 | ---- | ---- | -------- | ---- |
+| Python API | ✅/❌ | ... | |
 | YAML (op_def) | ✅/❌ | ... | |
 | YAML (api_def) | ✅/❌ | ... | |
 
@@ -47,34 +49,29 @@ Analyze the differences between the MindSpore, PTA, and ACLNN interfaces, decide
 
 ### Steps
 
-1. **PTA source review (mandatory)**: review the three key file categories in `op-plugin` (see `reference.md#pta-source-review`)
+1. **PTA source review**: review the three key file categories in `op-plugin` repo (see `reference.md#pta-source-review`)
    - `op_plugin_functions.yaml`: function signatures, parameter types/defaults
    - `derivatives.yaml`: backward registration and differentiable inputs
    - `XxxKernelNpuOpApi.cpp`: actual ACLNN call and parameter preprocessing
    - Check whether PTA has **overloads with the same name** but different signatures
-   - **ACLNN interface definition**: look up the corresponding ACLNN document in `aclnn_doc` (for example `aclnnAbs.md`)
-2. **Five-factor interface analysis (mandatory)** (`reference.md#api-analysis-five-factors`)
-   - Check whether functionality, parameter definitions, and dtypes match
+2. **ACLNN interface definition**: look up the corresponding ACLNN document in `_shared/aclnn_doc/` (for example `aclnnAbs.md`)
+3. **Five-factor interface analysis** (`reference.md#api-analysis-five-factors`)
+   - If there's existing interface and operator in MindSpore, check whether functionality, parameter definitions, and dtypes match with pta
    - Decide **whether a new primitive is needed** and **whether to add a new interface or reuse an existing one**
-3. **Choose the YAML strategy** (`reference.md#yaml-three-scenarios`)
+4. **Choose the YAML strategy** (`reference.md#yaml-three-scenarios`)
    - YAML interface definitions are described in `mindspore/ops/op_def/yaml/README.md`
    - Existing YAML + reuse existing primitive -> add a `dispatch` field
    - Existing YAML + new primitive -> create a new YAML with the `_ext` suffix
    - No YAML exists -> create a new one
-   - If an existing primitive signature must be changed, refer to similar operators in the MindSpore repository and analyze compatibility in detail (`reference.md#existing-primitive-signature-change`)
-   > Clarify the relationship among YAML, primitive, and function interface:
-   > YAML is tightly bound to the primitive, and the defined interface generates the primitive interface.
-   > The YAML flow can also auto-generate function interfaces that directly call the generated primitive instance, which simplifies implementation. This is controlled by the `function`-related fields in YAML.
-   > Primitive and function interfaces are related, but not strictly identical.
-   > When the backend interface and primitive interface match, prefer a primitive name **without** the `Ext` suffix. Use `Ext` only when a primitive with the same name already exists and cannot be reused. If a function interface with the same name already exists but no primitive does, still prefer the primitive name without `Ext`; primitives and function interfaces are distinct.
-4. **Choose the integration path (core decision)** (`reference.md#dispatch-path-selection`)
+   - **Do not** edit the signature of existing primitive.
+5. **Choose the integration path (core decision)** (`reference.md#dispatch-path-selection`)
    - Determine whether the MindSpore API parameters can be **passed through unchanged** to the ACLNN interface
-   - **Path 1 (auto-generated)**: direct passthrough -> omit the `Ascend` field in YAML -> PyBoost and ACLNN kernelmod are auto-generated
-   - **Path 2 (Customize)**: parameters require preprocessing -> write `Ascend: XxxAscend` in YAML -> PyBoost and ACLNN kernelmod must be handwritten
+   - **Path 1 (auto-generated)**: direct passthrough -> PyBoost and ACLNN kernelmod are auto-generated
+   - **Path 2 (Customize)**: parameters require preprocessing -> customized PyBoost and ACLNN kernelmod must be generated
    - Common preprocessing cases: scalar extraction, argument reordering, manual output allocation
    - **This decision determines the implementation workload for all later steps and must be finalized in Pre-B**
-   - YAML also supports `type_cast` for simple input type conversion. If the converted parameters then match the ACLNN interface, Path 1 can still be used.
-5. **Produce a PTA difference record**: use the `templates/pta-analysis-report.md` template and generate a file such as `{op_name}_pta_analysis.md`
+   - YAML also supports `type_cast` for simple input type conversion(mainly conversion between scalar<->tensor). If the converted parameters then match the ACLNN interface, Path 1 can still be used.
+6. **Produce a PTA difference record**: use the `templates/pta-analysis-report.md` template and generate a file such as `{op_name}_pta_analysis.md`
 
 ---
 
@@ -87,10 +84,9 @@ Analyze the differences between the MindSpore, PTA, and ACLNN interfaces, decide
 1. Copy `templates/feature-document.md` and name it `{operator_name}_Feature.md`
 2. Fill the following sections based on the Pre-B analysis results:
    - [1. APIs and Benchmarks](../templates/feature-document.md#feature-benchmark-api)
-   - [2. Task List](../templates/feature-document.md#feature-task-list)
-   - [3. Functional And API Specification](../templates/feature-document.md#feature-functional-spec) (interface signature and parameter descriptions)
-   - [5. Constraints And Types](../templates/feature-document.md#feature-constraints) (device, dtype, and shape constraints)
-   - [7. Differences From PTA And Alignment Status](../templates/feature-document.md#feature-pta-alignment) (initial version)
+   - [2. Functional And API Specification](../templates/feature-document.md#feature-functional-spec) (interface signature and parameter descriptions)
+   - [3. Constraints And Types](../templates/feature-document.md#feature-constraints) (device, dtype, and shape constraints)
+   - [4. Differences From PTA And Alignment Status](../templates/feature-document.md#feature-pta-alignment) (initial version)
 
 ---
 
