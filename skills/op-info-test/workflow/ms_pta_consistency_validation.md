@@ -215,8 +215,8 @@ python <skill_root>/scripts/ms_pta_consistency_output_comparator.py \
   --case_spec ./ms_pta_consistency_case_spec.json
 ```
 
-`<skill_root>` means the active `op-info-test` skill directory, regardless of whether
-it is loaded from a local checkout, Cursor, Codex, Claude, or another agent runtime.
+`<skill_root>` means the active `op-info-test` skill directory, regardless of which
+editor, assistant runtime, or local integration is loading it.
 
 8. Inspect the generated summary and record:
    - which case or cases were compared
