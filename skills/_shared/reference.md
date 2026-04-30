@@ -1,417 +1,412 @@
-# ACLNN 算子开发全流程参考（细节版）
+# ACLNN Operator Development Reference
 
-本文件给 `mindspore-aclnn-operator-devflow` 提供"可按图索骥"的细节与模板。需要时再读取，避免把 `SKILL.md` 撑得过长。
+This file provides detailed reference material and copyable templates for `aclnn-builder`.
+Load it only when needed so `SKILL.md` can stay concise.
 
 <a id="reference-index"></a>
-## 目录
+## Table Of Contents
 
-- [1. 目录/文件定位](#1-目录文件定位建议用搜索而非硬编码路径)
-- [2. YAML 设计模板](#2-yaml-设计模板前向反向各一份)
-- [3. gen_ops.py 常见问题定位](#gen-ops-py-troubleshooting)
-- [4. GeneralInfer（C++）推导约定](#4-generalinferc推导约定)
-- [5. PyBoost（Pynative）实现要点](#5-pyboostpynative实现要点)
-- [6. KBK（Graph）kernel 要点](#6-kbkgraphkernel-要点)
-- [7. BPROP 接线要点](#7-bprop-接线要点)
-- [8. 测试策略（UT + ST）](#8-测试策略ut--st)
-- [9. 交付/转测共识要点](#9-交付转测共识要点)
-- [10. 文档与资料开发要点](#10-文档与资料开发要点)
-- [11. 性能自验工具 apitimewrapper](#11-性能自验工具-apitimewrapper)
-- [12. 反向实现注意事项](#12-反向实现注意事项)
-- [13. Resize/Launch 优化要点](#13-resizelaunch-优化要点)
-- [14. 精度零偏差与显存对齐自验](#14-精度零偏差与显存对齐自验)
-- [15. 接口开发要点（functional / nn / Tensor）](#15-接口开发要点functional--nn--tensor)
-- [16. 当 ACLNN/PTA 文档不完善：用"探测脚本"补齐事实范围](#16-当-aclnnpta-文档不完善用探测脚本补齐事实范围)
-- [17. vmap 支持（按需）](#17-vmap-支持按需)
-- [18. 代码骨架模板（可直接复制改造）](#18-代码骨架模板可直接复制改造)
-- [19. PTA 源码审查方法（必做）](#19-pta-源码审查方法必做)
-- [20. InferValue 常量折叠（可选优化）](#20-infervalue-常量折叠可选优化)
-- [21. 动态 shape 分类与处理策略](#21-动态-shape-分类与处理策略)
-- [22. ACLNN 调用链分析与子算子盘点（组合场景）](#22-aclnn-调用链分析与子算子盘点组合场景)
-- [23. 组合实现模式（C++ 小算子拼接 + Meta DSL）](#23-组合实现模式c-小算子拼接--meta-dsl)
-- [24. Feature 文档（评审与交付必须产物）](#24-feature-文档评审与交付必须产物)
-- [25. 接口重载适配（Tensor/functional 同名多签名）](#25-接口重载适配tensorfunctional-同名多签名)
-- [26. View 算子开发（零拷贝 shape/strides 变换）](#26-view-算子开发零拷贝-shapestrides-变换)
+- [1. Directory and File Discovery](#directory-and-file-discovery)
+- [2. YAML Design Templates](#yaml-design)
+- [3. gen_ops.py Troubleshooting](#gen-ops-py-troubleshooting)
+- [4. GeneralInfer C++ Conventions](#general-infer)
+- [5. PyBoost Pynative Implementation Notes](#pyboost-reference)
+- [6. KBK Graph Kernel Notes](#kbk-reference)
+- [7. BPROP Wiring Notes](#bprop-reference)
+- [8. Test Strategy](#testing-reference)
+- [9. Documentation Notes](#documentation-reference)
+- [10. Backward Implementation Notes](#bprop-advanced-notes)
+- [11. Resize/Launch Optimization Notes](#resize-launch-optimization)
+- [12. Interface Development Notes](#api-development)
+- [13. Code Skeletons](#code-skeletons)
+- [14. PTA Source Review](#pta-source-review)
+- [15. InferValue Constant Folding](#infervalue-constant-folding)
+- [16. Dynamic Shape Categories And Strategies](#dynamic-shape-strategy)
+- [17. ACLNN Call Chain Analysis](#aclnn-callchain-analysis)
+- [18. Composite Implementation Patterns](#composite-implementation)
+- [19. Feature Document](#feature-document-reference)
+- [20. API Overload Adaptation](#api-overload-adaptation)
 
 ---
 
-## 1. 目录/文件定位（建议用搜索而非硬编码路径）
-
 <a id="directory-and-file-discovery"></a>
-MindSpore / op-plugin 的目录在不同分支可能不一致，优先用搜索定位：
-- 通过字符串搜索：`gen_ops.py`、`LAUNCH_ACLNN`、`MS_ACLNN_KERNEL_FACTORY_REG`、`REG_BPROP_BUILDER`。
-- 通过相似算子对照：按目标算子特征分类，在仓库中搜索已接入的同类算子（详见 [`2.4 相似算子查找策略`](#similar-operator-search)）。
+## 1. Directory And File Discovery
 
-常见的"目标区域"（仅作方向提示）：
-- **YAML**：`mindspore/ops/op_def/yaml/`
-- **推导/元实现**：`mindspore/` 下 `ops` / `infer` / `ops_func_impl` 等目录（以实际仓库为准）
-- **Ascend kernel / PyBoost / KBK**：`mindspore/ccsrc/` 与 `op-plugin-*/` 内的 `ascend`/`kernel`/`aclnn`/`customize`
-- **bprop**：`mindspore/ccsrc/` 下 `bprop` / `grad_*ops.cc`
-- **测试**：`tests/ut/`、`tests/st/`
-- **文档**：英文 function_doc 的 YAML + 中文 `docs/api/api_python/ops/*.rst`
+MindSpore and op-plugin directory layouts may vary by branch. Prefer search over hard-coded paths.
+
+Useful search keys:
+- `gen_ops.py`
+- `LAUNCH_ACLNN`
+- `MS_ACLNN_KERNEL_FACTORY_REG`
+- `REG_BPROP_BUILDER`
+
+Common target areas:
+- **YAML**: `mindspore/ops/op_def/yaml/`
+- **Infer/meta implementation**: directories under `mindspore/` such as `ops`, `infer`, and `ops_func_impl`
+- **Ascend kernel / PyBoost / KBK**: `mindspore/ccsrc/` and `op-plugin-*/` directories containing `ascend`, `kernel`, `aclnn`, or `customize`
+- **bprop**: `bprop` and `grad_*ops.cc` under `mindspore/ccsrc/`
+- **Tests**: `tests/ut/` and `tests/st/`
+- **Docs**: English function_doc YAML and Chinese `docs/api/api_python/ops/*.rst`
+
+For similar operator search, see [2.4 Similar Operator Search Strategy](#similar-operator-search).
 
 <a id="yaml-design"></a>
-## 2. YAML 设计模板（前向/反向各一份）
+## 2. YAML Design Templates
 
 <a id="yaml-minimal-consistency"></a>
-### 2.1 最小一致性原则
-同一个参数（例如 `actual_seq_len`）必须在以下位置**一致**：
-- YAML（op_def + api_def + function_doc）
-- GeneralInfer（C++ 推导）
-- PyBoost（Pynative 调用）
-- KBK（Graph kernel 取参/Launch）
-- 文档（中英文）
-- UT/ST（覆盖参数边界与异常路径）
+### 2.1 Minimal Consistency Rule
+
+The same argument, such as `actual_seq_len`, must be consistent across:
+- YAML (`op_def`, `api_def`, and `function_doc`)
+- GeneralInfer C++ inference
+- PyBoost Pynative call path
+- KBK Graph kernel argument extraction and launch
+- English and Chinese documentation
+- UT/ST coverage for boundary cases and error paths
 
 <a id="customize-suffix"></a>
-### 2.2 Customize 后缀
-若你走的是项目默认 ACLNN kernel 机制，**一般不需要在 YAML 手工加 Customize 后缀**（框架会自动处理）。
+### 2.2 Customize Suffix
+
+If the operator uses the default ACLNN kernel mechanism, you usually do not need to add a `Customize` suffix manually in YAML. The framework handles it.
 
 <a id="dispatch-path-selection"></a>
-### 2.3 两条接入路径（核心决策——决定整个开发工作量）
+### 2.3 Dispatch Path Selection
 
-ACLNN 算子接入的**最关键决策**是：MindSpore API 的参数能否原样透传给 ACLNN 接口？
-这决定了走**自动生成路径**还是**手动 Customize 路径**，直接影响需要写哪些文件。
+The key integration decision is whether the MindSpore API arguments can be passed through to the ACLNN API unchanged. This determines whether to use the auto-generated path or the manual Customize path.
 
 <a id="dispatch-path-1-auto-generated"></a>
-#### 路径 1：自动生成（参数直通，不需要 Customize）
+#### Path 1: Auto-Generated Direct Passthrough
 
-**适用条件**：MindSpore API 参数与 ACLNN 接口参数完全一致——
-参数个数、顺序、类型、默认值都不需要在调用前做任何转换。
+Use this path when MindSpore API arguments and ACLNN API arguments match exactly: argument count, order, type, and defaults require no pre-call conversion.
 
-**YAML 配置关键**：`op_def` 中 `dispatch: enable: True`，**不写** `Ascend:` 字段。
-框架内部 `Ascend` 默认为 `'default'`，走自动生成路径。
+YAML key: set `dispatch.enable: True` in `op_def`, and omit the `Ascend` field. Internally, `Ascend` defaults to `default`, which triggers auto generation.
 
 ```yaml
-# 路径 1 示例（如 abs、mul、trunc）
+# Path 1 example, such as abs, mul, trunc.
 dispatch:
   enable: True
-  # 不写 Ascend 字段 → 自动生成
+  # omit Ascend -> auto-generated path
 ```
 
-**编译时自动生成**：
-- PyBoost 调用代码（`pyboost_ascend_call_template.tpl` → `LAUNCH_ACLNN(aclnnXxx, ...)`）
-- KBK 注册（`MS_ACLNN_COMMON_KERNEL_FACTORY_REG` → `aclnn_kernel_register_auto.cc`）
-- Python 接口包装（`functional_overload.py` 等）
+Generated at build time:
+- PyBoost call code from `pyboost_ascend_call_template.tpl`, usually using `LAUNCH_ACLNN(aclnnXxx, ...)`
+- KBK registration through `MS_ACLNN_COMMON_KERNEL_FACTORY_REG` in `aclnn_kernel_register_auto.cc`
+- Python wrappers such as `functional_overload.py`
 
-**开发者需要手写的文件**：
-| 文件 | 对应步骤 |
+Files developers usually write:
+
+| File | Step |
 | --- | --- |
 | `op_def/yaml/xxx_op.yaml` | Step 1 |
 | `api_def/xxx.yaml` | Step 1 |
-| `op_def/yaml/doc/xxx_doc.yaml`（`_ext` 风格）或 `api_def/function_doc/xxx_doc.yaml`（旧风格） | Step 1 |
-| `infer/ops_func_impl/xxx.h` + `.cc` | Step 3 |
-| `aclnn_config.yaml` 添加映射（修改，**仅路径 1**） | Step 2 |
-| `math_func.py` / `mint/__init__.py` / `tensor_method.py` 导出（修改） | Step 7 |
+| `op_def/yaml/doc/xxx_doc.yaml` in `_ext` style, or old-style `api_def/function_doc/xxx_doc.yaml` | Step 1 |
+| `infer/ops_func_impl/xxx.h` and `.cc` | Step 3 |
+| Add mapping to `aclnn_config.yaml` for Path 1 only | Step 2 |
+| Export from `math_func.py`, `mint/__init__.py`, or `tensor_method.py` | Step 7 |
 | `tests/ut/cpp/ops/test_xxx.cc` | Step 8 |
-| `tests/st/ops/share/_op_info/op_database.py`（OpInfo 注册）+ 对应 `test_xxx_ops.py` | Step 8 |
-| 英文 function_doc + 中文 RST（每个接口形态一份） | Step 9 |
+| `tests/st/ops/share/_op_info/op_database.py` plus corresponding `test_xxx_ops.py` | Step 8 |
+| English function_doc and Chinese RST for each interface form | Step 9 |
 
-**不需要写**：PyBoost customize 文件、KBK customize 文件（**跳过 Step 4 和 Step 5**）。
+You do not need PyBoost customize files or KBK customize files. Skip Step 4 and Step 5.
 
-**实例**：`abs`、`mul`、`trunc`、`xlogy`、`div`（基础算术）。
+Examples: `abs`, `mul`, `trunc`, `xlogy`, and `div`.
 
 <a id="dispatch-path-2-customize"></a>
-#### 路径 2：手动 Customize（参数需要预处理）
+#### Path 2: Manual Customize
 
-**适用条件**：调用 ACLNN 前需要做参数转换，常见情况：
-- `tuple[int]` → `std::vector<int64_t>`（如 `actual_seq_qlen`）
-- `Optional[Tensor]` 的 None 语义需特殊处理
-- `str` → enum/int 转换（如 `layout: "BSND"` → 整型编码）
-- 标量参数提取（从 Value 中取值）
-- 多个输入需要重排序/合并后传入 ACLNN
-- 输出 Tensor 需要手动分配（shape 与输入不同）
+Use this path when arguments must be converted before calling ACLNN. Common cases:
+- `tuple[int]` to `std::vector<int64_t>`, such as `actual_seq_qlen`
+- special `None` semantics for `Optional[Tensor]`
+- string to enum or integer conversion, such as `layout: "BSND"` to an integer code
+- scalar extraction from `Value`
+- input reordering or merging
+- manual output tensor allocation when output shape differs from input shape
 
-**YAML 配置关键**：`dispatch: enable: True` + `Ascend: XxxAscend`（显式指定 Customize 类名）。
+YAML key: set `dispatch.enable: True` and specify `Ascend: XxxAscend`.
 
 ```yaml
-# 路径 2 示例（如 dense_lightning_indexer_grad_kl_loss）
+# Path 2 example.
 dispatch:
   enable: True
   Ascend: DenseLightningIndexerGradKlLossAscend
 ```
 
-**编译时**：gen_ops.py 生成包装代码，该包装代码调用你手写的 Customize 类
-（`pyboost_ascend_customize_call_template.tpl` → `XxxAscendCustomize(...)`）。
+At build time, `gen_ops.py` generates wrapper code that calls the handwritten Customize class through `pyboost_ascend_customize_call_template.tpl`, such as `XxxAscendCustomize(...)`.
 
-**开发者需要额外手写的文件**（在路径 1 基础上）：
-| 文件 | 对应步骤 |
+Extra files on top of Path 1:
+
+| File | Step |
 | --- | --- |
-| `kernel/.../pyboost_impl/customize/xxx.h` + `.cc` | Step 4 |
-| `kernel/.../kernel_mod_impl/customize/xxx_aclnn_kernel.h` + `.cc` | Step 5 |
-| （如有反向）上述文件的 `_grad` 版本 | Step 4/5 |
+| `kernel/.../pyboost_impl/customize/xxx.h` and `.cc` | Step 4 |
+| `kernel/.../kernel_mod_impl/customize/xxx_aclnn_kernel.h` and `.cc` | Step 5 |
+| `_grad` variants for the files above when backward is required | Step 4/5 |
 
-**实例**：`dense_lightning_indexer_grad_kl_loss`、`multi_scale_deformable_attn`、`conv2d_ext`、`add`。
+Examples: `dense_lightning_indexer_grad_kl_loss`, `multi_scale_deformable_attn`, `conv2d_ext`, and `add`.
 
 <a id="dispatch-path-decision-flow"></a>
-#### 路径决策流程图
+#### Path Decision Flow
 
-```
-分析 MindSpore API 参数 vs ACLNN 接口参数
-                │
-      参数能否原样透传？
-       ╱              ╲
-      是               否
-      │                │
-  路径 1（自动）    路径 2（Customize）
-      │                │
-  YAML 不写           YAML 写
-  Ascend 字段     Ascend: XxxAscend
-      │                │
-  跳过 Step 4/5    必须写 Step 4/5
-      │                │
-  编译自动生成     编译调用你的
-  PyBoost/KBK      Customize 类
+```text
+Compare MindSpore API arguments with ACLNN API arguments
+                |
+      Can arguments pass through unchanged?
+       /                              \
+      Yes                              No
+      |                                |
+  Path 1 auto-generated            Path 2 Customize
+      |                                |
+  Omit Ascend in YAML              Add Ascend: XxxAscend
+      |                                |
+  Skip Step 4/5                    Implement Step 4/5
+      |                                |
+  Build generates PyBoost/KBK      Build calls your Customize class
 ```
 
 <a id="integration-type-mapping"></a>
-#### "对接类型"三分类与路径的对应关系
+#### Integration Types
 
-| 对接类型 | 描述 | 对应路径 |
+| Integration type | Description | Path |
 | --- | --- | --- |
-| **类型 1** | API 定义与 ACLNN 完全一致 | **路径 1**（自动生成） |
-| **类型 2** | 名称不同但功能一致 | 通常**路径 1**（通过 YAML 的 `class` 字段做名称映射） |
-| **类型 3** | 原型/语义不一致 | **路径 2**（必须手动 Customize） |
+| **Type 1** | API definition exactly matches ACLNN | **Path 1** |
+| **Type 2** | Different name but same function | Usually **Path 1**, using the YAML `class` field for name mapping |
+| **Type 3** | Prototype or semantics differ | **Path 2** |
 
-> **注意**：类型 2 是否需要 Customize 取决于"名称不同"是否仅限于算子名映射。
-> 如果只是名字不同但参数完全一致，路径 1 即可（YAML 的 `class` 字段做映射）；
-> 如果还涉及参数顺序/类型差异，仍需走路径 2。
+Type 2 only avoids Customize when the difference is limited to operator name mapping. If argument order or types differ, use Path 2.
 
 <a id="similar-operator-search"></a>
-### 2.4 相似算子查找策略（不要硬编码算子名）
+### 2.4 Similar Operator Search Strategy
 
-开发中需要参照"已接入的相似算子"来确认代码风格、目录结构、宏用法。**不要默认指定某几个算子名**，
-而是先分析目标算子的特征，再在仓库中搜索匹配的同类算子。
+Use similar integrated operators to confirm code style, directory layout, macro usage, registration style, and test patterns. Do not assume a fixed list of reference operators. Classify the target operator first, then search for matching operators.
 
-#### 分类维度（按优先级排列）
+#### A. Functional Or Algorithm Family
 
-#### A. 功能/算法类别（最直觉的分类——同一类算子的实现模式往往高度相似）
-
-| 类别 | 典型算子 | 共性特征 |
+| Family | Typical operators | Common traits |
 | --- | --- | --- |
-| **Attention 族** | flash_attention、nsa_compress_attention、paged_attention、incre_flash_attention | TND/BSND 布局、多输出（softmax_max/sum）、带 mask/actual_seq_len、独立 Grad 算子 |
-| **Loss 族** | cross_entropy、cosine_embedding_loss、ctc_loss、nll_loss | 前向输出 loss + 中间缓存（log_sum_exp 等）、reduction 参数（none/mean/sum）、反向需中间值 |
-| **Norm 族** | layer_norm、group_norm、rms_norm、batch_norm | 输入 + weight + bias 三件套、running_mean/var 状态、rstd 中间输出、反向输出 dx/dw/db |
-| **Optimizer 族** | adam、sgd、lamb、adamw | 就地更新（副作用算子）、lr/beta/epsilon 标量参数、多 Tensor 输入（param/grad/m/v）、通常无反向 |
-| **激活函数族** | relu、gelu、silu、swish、leaky_relu | 逐元素、单输入单输出、反向简单（乘 mask 或导函数）、通常类型 1 直连 |
-| **逐元素算术族** | add、mul、div、eq、ne、gt | 逐元素、支持广播、支持 Tensor-Scalar 重载、符号重载（`__add__`/`__eq__`）、多态分发 |
-| **Reduce 族** | sum、mean、prod、amax、argmax | 沿指定 axis 缩减、keepdim 参数、输出 shape 少一个或多个维度、部分有反向（sum/mean）部分无（argmax） |
-| **矩阵运算族** | matmul、bmm、linear、baddbmm | 2D/3D 矩阵乘、transpose 参数、alpha/beta 系数、输出 shape 由矩阵乘法规则决定 |
-| **索引/gather 族** | index_select、gather、scatter、embedding | 索引 Tensor 输入、不规则 shape 推导、反向是 scatter/zero-fill 模式 |
-| **变形/排列族** | reshape、transpose、permute、contiguous | 通常不涉及 ACLNN 计算（纯 shape 变换）、不需要反向或反向是逆变换 |
-| **卷积/池化族** | conv2d、avg_pool2d、max_pool2d | kernel_size/stride/padding/dilation 四参数组、NCHW/NHWC 布局、反向有独立 Grad 算子 |
-| **通信/并行族** | all_reduce、all_gather、reduce_scatter | 集合通信、group 参数、副作用算子、通常无标准 ACLNN（走 HCCL） |
+| **Attention** | `flash_attention`, `nsa_compress_attention`, `paged_attention`, `incre_flash_attention` | TND/BSND layout, multiple outputs, mask or `actual_seq_len`, independent Grad operator |
+| **Loss** | `cross_entropy`, `cosine_embedding_loss`, `ctc_loss`, `nll_loss` | loss plus cache outputs, `reduction`, backward needs intermediate values |
+| **Norm** | `layer_norm`, `group_norm`, `rms_norm`, `batch_norm` | input/weight/bias, running stats, `rstd`, backward returns dx/dw/db |
+| **Optimizer** | `adam`, `sgd`, `lamb`, `adamw` | in-place updates, scalar hyperparameters, many Tensor inputs, usually no backward |
+| **Activation** | `relu`, `gelu`, `silu`, `swish`, `leaky_relu` | elementwise, one input and one output, simple backward, usually Type 1 |
+| **Elementwise arithmetic** | `add`, `mul`, `div`, `eq`, `ne`, `gt` | broadcasting, Tensor-Scalar overloads, symbol overloads |
+| **Reduce** | `sum`, `mean`, `prod`, `amax`, `argmax` | axis reduction, `keepdim`, output rank changes, mixed backward support |
+| **Matrix** | `matmul`, `bmm`, `linear`, `baddbmm` | 2D/3D matrix multiplication, transpose flags, alpha/beta factors |
+| **Index/gather** | `index_select`, `gather`, `scatter`, `embedding` | index Tensor input, irregular shape inference, scatter or zero-fill backward |
+| **View/permute** | `reshape`, `transpose`, `permute`, `contiguous` | often pure shape transform, usually no ACLNN compute |
+| **Convolution/pooling** | `conv2d`, `avg_pool2d`, `max_pool2d` | kernel/stride/padding/dilation tuples, NCHW/NHWC, separate Grad operators |
+| **Communication** | `all_reduce`, `all_gather`, `reduce_scatter` | collective communication, group argument, side effects, usually HCCL instead of standard ACLNN |
 
-> **用法**：先判断目标算子属于哪个族，然后在仓库中搜索同族已接入的算子。
-> 同族算子的 Infer 推导逻辑、PyBoost/KBK 调用模式、bprop 接线方式、测试覆盖策略往往高度相似，
-> 是最有价值的参照对象。
+#### B. Technical Traits
 
-#### B. 技术实现特征（辅助筛选——在同族内进一步缩小范围）
-
-| 维度 | 典型分类 | 搜索关键词/方法 |
+| Dimension | Typical categories | Search method |
 | --- | --- | --- |
-| **输入布局** | TND / BSND / BNSD / 标准逐元素 | 在 `op_def/yaml/` 中 grep 相同 shape 注释 |
-| **ACLNN 对接方式** | 单 ACLNN 直连 / 多 ACLNN 组合 / 无 ACLNN（纯 Python 组合） | grep `LAUNCH_ACLNN` 数量；组合算子看 customize 目录 |
-| **是否有反向** | 有独立 Grad 算子 / 自动微分 / 无反向 | grep `REG_BPROP_BUILDER` + grep `_grad` YAML |
-| **接口形态** | functional only / functional + nn / functional + tensor / 符号重载 | 看 api_def YAML 的 `interface` 字段 |
-| **参数特殊性** | 含 Optional[Tensor] / tuple[int] / 枚举(layout/mode) / 标量 | 看 YAML 的 `default: None` / `type_cast` / `arg_handler` |
-| **对接类型** | 类型 1（完全一致）/ 类型 2（名称映射）/ 类型 3（需 customize） | 对照 [`2.3 两条接入路径`](#dispatch-path-selection) 判断 |
+| **Input layout** | TND, BSND, BNSD, standard elementwise | Search the same shape comments in `op_def/yaml/` |
+| **ACLNN integration** | single ACLNN passthrough, multi-ACLNN composite, no ACLNN | Search `LAUNCH_ACLNN`; inspect `customize` directories |
+| **Backward** | independent Grad op, automatic differentiation, no backward | Search `REG_BPROP_BUILDER` and `_grad` YAML |
+| **Interface form** | functional only, functional + nn, functional + tensor, symbol overload | Inspect `interface` in `api_def` YAML |
+| **Special arguments** | `Optional[Tensor]`, `tuple[int]`, enum strings, scalar values | Search `default: None`, `type_cast`, `arg_handler` |
+| **Integration type** | Type 1, Type 2, Type 3 | Decide using [2.3 Dispatch Path Selection](#dispatch-path-selection) |
 
-<a id="similar-operator-search-flow"></a>
-#### 查找流程
+#### Search Flow
 
-1. **判断功能/算法类别**：目标算子属于上面哪个族？
-   - 例：`nsa_compress_attention` → **Attention 族**
-   - 例：`cosine_embedding_loss` → **Loss 族**
-   - 例：`eq`（== 重载）→ **逐元素算术族**
+1. Determine the functional family.
+   - `nsa_compress_attention` -> Attention
+   - `cosine_embedding_loss` -> Loss
+   - `eq` and `==` overload -> Elementwise arithmetic
 
-2. **确定技术特征标签**：从 B 表中选出 2-3 个显著特征，在同族内进一步筛选。
-   - 例：`nsa_compress_attention` → Attention 族 + TND 布局 + 单 ACLNN 直连 + 有独立 Grad + 含 tuple[int]
-   - 例：`cosine_embedding_loss` → Loss 族 + 多 ACLNN 组合 + 无单独 Primitive + functional + nn + reduction 参数
-   - 例：`adamw` → Optimizer 族 + 就地更新（副作用）+ 多 Tensor 输入 + 无反向
+2. Choose two or three technical traits for filtering.
+   - `nsa_compress_attention` -> Attention + TND layout + single ACLNN + independent Grad + tuple argument
+   - `cosine_embedding_loss` -> Loss + multi-ACLNN composite + functional + nn + `reduction`
+   - `adamw` -> Optimizer + in-place update + many Tensor inputs + no backward
 
-3. **在仓库中搜索同类**：
+3. Search the repository.
+
    ```bash
-   # 按功能族名找：搜索同族算子（如 attention 族）
-   grep -rl "attention" mindspore/ops/op_def/yaml/ --include="*.yaml"
+   # Search by family.
+   rg -l "attention" mindspore/ops/op_def/yaml/
 
-   # 按布局找：搜索含相同 shape 模式的算子
-   grep -r "TND" mindspore/ops/op_def/yaml/ --include="*.yaml" -l
+   # Search by layout.
+   rg -l "TND" mindspore/ops/op_def/yaml/
 
-   # 按 ACLNN 组合找：搜索 customize 目录下含多个 LAUNCH_ACLNN 的文件
-   grep -rl "LAUNCH_ACLNN" mindspore/ops/kernel/.../customize/
+   # Search composite ACLNN code.
+   rg -l "LAUNCH_ACLNN" mindspore/ops/kernel
 
-   # 按反向模式找：搜索有 Grad 后缀 YAML 的算子
-   ls mindspore/ops/op_def/yaml/*_grad_op.yaml
+   # Search Grad YAML.
+   rg --files mindspore/ops/op_def/yaml | rg "_grad_op\.yaml$"
 
-   # 按接口形态找：搜索同时有 tensor + function 接口的算子
-   grep -l "interface:.*tensor.*function" mindspore/ops/api_def/*.yaml
+   # Search tensor + function interfaces.
+   rg -l "interface:.*tensor.*function" mindspore/ops/api_def/
 
-   # 按 reduction 参数找（loss 族常见）
-   grep -l "reduction" mindspore/ops/op_def/yaml/*.yaml
+   # Search reduction-style operators.
+   rg -l "reduction" mindspore/ops/op_def/yaml/
    ```
 
-4. **选择 2-3 个最匹配的算子**，逐目录对照其 YAML/Infer/PyBoost/KBK/bprop/测试/文档的写法。
-   优先选**同族 + 技术特征最接近**的；其次选**不同族但技术特征（对接类型/参数模式）相似**的。
+4. Pick two or three closest matches and compare their YAML, Infer, PyBoost, KBK, bprop, tests, and docs. Prefer same family plus close technical traits. If no close family exists, use operators with the same integration type and argument pattern.
 
-5. **如果搜不到高度匹配的同类**（全新类型算子），退而选择"对接类型"（[`2.3 两条接入路径`](#dispatch-path-selection)）相同的任意算子作为
-   代码风格参考，同时在实现过程中更谨慎地逐步验证。
-
-> **原则**：相似算子是"代码风格和结构的参照"，不是"功能逻辑的抄写对象"。
-> 功能逻辑以 PTA 源码 + ACLNN 文档为准，相似算子只用来确认目录结构、宏名、注册方式、测试写法等。
+Principle: similar operators are references for structure and style, not sources for functional logic. Functional logic comes from PTA source plus ACLNN documentation.
 
 <a id="dispatch-bootstrap-pattern"></a>
-### 2.5 dispatch + "先自动生成，再拷贝改造"的实用套路
-当你需要自定义 PyBoost/KBK 时，一个高效做法是：
-1. 在 YAML 里打开 `dispatch.enable: True`。
-2. **临时注释掉** YAML 中 `dispatch.Ascend: XxxAscend` 这类自定义声明，让 `gen_ops.py` 先生成一份可编译骨架。
-3. 将生成目录里的 `.h/.cc` **拷贝**到 `customize` 目录（或对应自定义目录）。
-4. 按 ACLNN 实际签名调整入参（例如删除 ACLNN 不需要的 dtype、处理 tuple→vector 等）。
-5. 按项目约定重命名入口（常见模式：`OpNameAscendCustomize` / `OpNameGradAscendCustomize`），恢复 YAML 声明。
-6. 删除临时自动生成文件，只保留自定义实现。
+### 2.5 Practical Bootstrap: Auto Generate First, Then Customize
+
+When PyBoost or KBK must be customized:
+
+1. Enable `dispatch.enable: True` in YAML.
+2. Temporarily comment out `dispatch.Ascend: XxxAscend` so `gen_ops.py` generates a compilable skeleton.
+3. Copy generated `.h/.cc` files into the `customize` directory or the corresponding custom directory.
+4. Adjust arguments according to the ACLNN signature, such as removing an unused dtype or converting tuple to vector.
+5. Rename the entrypoint following project conventions, such as `OpNameAscendCustomize` or `OpNameGradAscendCustomize`, then restore the YAML `Ascend` field.
+6. Delete temporary auto-generated files and keep only the custom implementation.
 
 <a id="gen-ops-py-troubleshooting"></a>
-## 3. gen_ops.py 常见问题定位
+## 3. gen_ops.py Troubleshooting
 
-典型报错与方向：
-- **keys 结构不匹配**：对照已有基础算子 YAML（如 add）调整字段层级。
-- **缺 `py_method`**：补齐 python 暴露相关字段。
-- **function_doc 缺条目**：补齐对应的 doc 节点，保持参数一致。
+Typical errors and fixes:
+- **Mismatched keys structure**: compare against existing basic operator YAML, such as `add`, and align field nesting.
+- **Missing `py_method`**: add the Python exposure field.
+- **Missing function_doc entry**: add the matching doc node and keep arguments consistent.
 
-提示：Windows 下英文 YAML 文档尽量不要混入中文字符，避免编码问题。
+Keep English YAML docs ASCII-only when possible, especially on Windows, to avoid encoding issues.
 
 <a id="general-infer"></a>
-## 4. GeneralInfer（C++）推导约定
+## 4. GeneralInfer C++ Conventions
 
 <a id="general-infer-responsibilities"></a>
-### 4.1 职责边界
-- 只做**形状/类型推导**；不要做运行时合法性校验（交给 ACLNN/运行时）。
-- 报错使用框架异常宏，错误信息要包含：参数名、期望、实际。
+### 4.1 Responsibility Boundary
+
+- Only infer shape and dtype. Do not validate runtime input legality there; leave runtime validation to ACLNN or the kernel.
+- Use framework exception macros for errors. Error messages should include the argument name, expected condition, and actual value.
 
 <a id="general-infer-dynamic-shape-rank"></a>
-### 4.2 动态 shape / 动态 rank
-> 动态 shape 的完整三分类（InputDynamic / OutputDynamic）见 [`21 动态 shape 分类与处理策略`](#dynamic-shape-strategy)。本节侧重 Infer 推导时的快速回退策略。
+### 4.2 Dynamic Shape And Dynamic Rank
 
-推荐策略（与 `算子流程/ACLNN_nsa_compress_适配开发经验.md` 一致）：
-- 动态 rank：返回动态秩（`kShapeRankAny` 或项目等价常量）。
-- 推导依赖的关键参数（如 block/stride/seq_len）只要出现 unknown：
-  - 输出对应维度回退为动态维（`kShapeDimAny` 或项目等价常量）
-  - 其余维度沿用输入推导
-- 当关键参数都已知时：尽可能返回精确 shape。
+For the full three-category dynamic shape strategy, see [16. Dynamic Shape Categories And Strategies](#dynamic-shape-strategy). This section focuses on quick fallback rules during Infer.
+
+Recommended rules:
+- Dynamic rank: return dynamic rank, such as `kShapeRankAny`.
+- If a key parameter required for inference is unknown, such as block, stride, or sequence length:
+  - set affected output dimensions to dynamic dimension, such as `kShapeDimAny`
+  - infer the remaining dimensions from inputs when possible
+- If all key parameters are known, return the exact shape whenever possible.
 
 <a id="general-infer-api"></a>
-### 4.3 常用 InferInfo API（以项目已有实现为准）
-inferinfo类接口定义在`mindspore/core/include/ops/infer_info/infer_info.h`，以头文件中定义为准
-- `IsDynamic`, `IsDynamicRank`: 动态shape/rank判断
-- `GetScalarValueWithCheck<T>()`：取标量（带检查）
-- `GetArrayValue<T>()` + `HasUnknownValue()`：取 tuple/list
-- `IsNone()`：判断 None
+### 4.3 Common InferInfo APIs
 
-不要凭空使用项目里不存在的 API。
+`InferInfo` APIs are defined in `mindspore/core/include/ops/infer_info/infer_info.h`. Always follow the actual header in the target branch.
+
+- `IsDynamic`, `IsDynamicRank`: dynamic shape and dynamic rank checks
+- `GetScalarValueWithCheck<T>()`: read scalar with validation
+- `GetArrayValue<T>()` plus `HasUnknownValue()`: read tuple/list values
+- `IsNone()`: check `None`
+
+Do not invent APIs that do not exist in the target project.
 
 <a id="pyboost-reference"></a>
-## 5. PyBoost（Pynative）实现要点
+## 5. PyBoost Pynative Implementation Notes
 
 <a id="pyboost-argument-normalization"></a>
-### 5.1 输入参数转换
-- tuple/list：建议统一转为 `std::vector<int64_t>` 再传给 ACLNN。
-- 可选输入：若允许 None，需定义"None 语义"，并在 PyBoost/Infer/KBK 同步处理。
+### 5.1 Argument Normalization
 
-### 5.2 调用惯例
-以项目已有 ACLNN 封装为准（例如 `LAUNCH_ACLNN`/`RunOp`），保持风格一致。
+- Convert tuple/list arguments to `std::vector<int64_t>` before passing them to ACLNN.
+- For optional inputs, define the `None` semantics clearly and handle them consistently in PyBoost, Infer, and KBK.
+
+### 5.2 Call Conventions
+
+Follow the existing ACLNN wrapper style in the project, such as `LAUNCH_ACLNN` or `RunOp`.
 
 <a id="kbk-reference"></a>
-## 6. KBK（Graph）kernel 要点
+## 6. KBK Graph Kernel Notes
 
-> Init/Resize/Launch 职责分离、无意义输出、compute-depend 输出等优化要点见 [`13 Resize/Launch 优化要点`](#resize-launch-optimization)。
+For Init/Resize/Launch responsibility separation, useless outputs, and compute-dependent outputs, see [11. Resize/Launch Optimization Notes](#resize-launch-optimization).
 
-推荐固定结构：
-- `GetWorkSpaceInfo()`：取参 + `GetWorkspaceForResize`
-- `Launch()`：调用 `RunOp` 或等价执行路径
-- 注册：`MS_ACLNN_KERNEL_FACTORY_REG`（或项目等价宏）
+Recommended structure:
+- `GetWorkSpaceInfo()`: extract arguments and call `GetWorkspaceForResize`
+- `Launch()`: call `RunOp` or the equivalent execution path
+- Registration: `MS_ACLNN_KERNEL_FACTORY_REG` or the project equivalent
 
-强约束：
-- 前向/反向分文件、分注册
-- 头/实现命名空间保持一致（否则易出现"未声明/未定义"）
+Constraints:
+- Keep forward and backward in separate files and registrations.
+- Keep namespaces consistent between header and implementation, otherwise undeclared or undefined symbol errors are common.
 
 <a id="kbk-auto-generated-skeleton"></a>
-### 6.1 KBK 自动生成骨架位置提示
-从经验文档示例看，KBK 的自动生成代码常落在类似目录（以实际仓库为准）：
-- `.../ops/kernel/ascend/opapi/aclnn_auto_gen/`
-你可以先让 `gen_ops.py` 自动生成，再拷贝到自定义目录改造（见 [`2.5 dispatch + 先自动生成，再拷贝改造`](#dispatch-bootstrap-pattern)）。
+### 6.1 KBK Auto-Generated Skeleton Location
+
+Generated KBK code often appears under a directory similar to:
+
+```text
+.../ops/kernel/ascend/opapi/aclnn_auto_gen/
+```
+
+Confirm the actual path in the target branch. You can first let `gen_ops.py` generate the skeleton, then copy it into a custom directory and adapt it. See [2.5 Practical Bootstrap](#dispatch-bootstrap-pattern).
 
 <a id="bprop-reference"></a>
-## 7. BPROP 接线要点
+## 7. BPROP Wiring Notes
 
-> 反向实现的进阶注意事项（OutZeros/ZerosLikeExt/inplace/Depend）另见 [`12 反向实现注意事项`](#bprop-advanced-notes)。
+For advanced backward implementation notes such as `OutZeros`, `ZerosLikeExt`, in-place behavior, and `Depend`, see [10. Backward Implementation Notes](#bprop-advanced-notes).
 
-在 bprop builder 中：
-- 只为需要梯度的输入构建反向子图
-- 非张量/不需要梯度的输入返回零梯度占位
-- 使用 `need_compute_grad_out()`（或等价接口）做必要性判断
+In a bprop builder:
+- Build backward subgraphs only for inputs that require gradients.
+- Return zero-gradient placeholders for non-Tensor or non-differentiable inputs.
+- Use `need_compute_grad_out()` or an equivalent API to avoid unnecessary gradient computation.
 
 <a id="bprop-io-rules"></a>
-### 7.1 反向输入/输出个数经验规则（来自 `算子流程/.../aclnn开发示例.md`）
-- **反向输入个数**：等于"正向输入个数 + 2"（`out` 与 `dout`）。
-- **反向输出个数**：等于"正向输入个数"（每个输入一个梯度）。
-- 多输出正向算子：`out` 在反向侧通常是 tuple，需要通过 `TupleGetItem` 取对应输出。
+### 7.1 Backward Input And Output Count Rules
+
+- **Backward input count**: forward input count plus two, namely `out` and `dout`.
+- **Backward output count**: forward input count, one gradient slot per input.
+- For forward operators with multiple outputs, `out` is usually a tuple on the backward side. Use `TupleGetItem` to read the needed output.
 
 <a id="bprop-set-unused-inputs"></a>
-### 7.2 SetUnusedInputs 的使用场景
-当反向不依赖某些输入的 tensor value（只依赖 shape/type 或完全没用到）时，可标记为 unused，以便
-Pynative 异步场景更早释放正向 kernel 内存，降低峰值。
+### 7.2 SetUnusedInputs
+
+When backward does not depend on the value of some forward Tensor inputs, only their shape/type or nothing at all, mark them unused. This lets Pynative asynchronous execution release forward kernel memory earlier and reduce peak memory.
 
 <a id="bprop-dynamic-inputs"></a>
-### 7.3 图模式动态输入处理（bprop 中必须考虑）
+### 7.3 Dynamic Inputs In Graph-Mode bprop
 
-> **优先级：Pynative 正确性 > KBK 动态兼容。** 如果无法写出正确的 KBK 动态适配，
-> 只保留 Pynative 正确的版本，后续通过用例报错驱动修复。
+Priority: Pynative correctness comes before KBK dynamic compatibility. If a correct KBK dynamic adaptation is not ready, keep the Pynative-correct version and let test failures drive later fixes.
 
-图模式（KBK）下正向输入的**值或 shape** 在编译态可能未知（`ValueAny` / 动态维 / 动态秩）。
-bprop builder 内直接用 C++ `if/else` + `GetValue<T>()` 取值的写法只适用于编译期已知场景；
-若输入值可能 unknown，必须使用框架提供的**运行时延迟机制**。
+In graph mode, forward input values or shapes may be unknown at compile time (`ValueAny`, dynamic dimension, or dynamic rank). Direct C++ `if/else` plus `GetValue<T>()` only works when the value is known at compile time. If an input value may be unknown, use the framework runtime-deferred mechanisms.
 
-#### 三类场景与对应工具
+#### Three Common Cases
 
-| 场景 | 编译期表现 | 工具 | 说明 |
+| Case | Compile-time state | Tool | Notes |
 | --- | --- | --- | --- |
-| **标量值 unknown** | `GetScalarValue` 返回的对象的 `has_value` 为 false | `ib->Conditional(cond, true_br, false_br)` | 将 C++ if/else 转为图中的条件子图，运行时再决定走哪条分支 |
-| **shape 维度 unknown** | `IsDynamicShape(shape)` 为 true | `DEF_PURE_SHAPE_CALC` + `ib->ShapeCalc(calc, inputs, indices)` | 将 shape 依赖的计算封装为 ShapeCalc 节点，运行时根据实际 shape 执行 |
-| **rank unknown** | `IsDynamicRank(shape)` 为 true | 独立动态路径函数 | 将整个反向逻辑拆到独立函数中，入口处分流 |
+| **Unknown scalar value** | `GetScalarValue` returns `has_value == false` | `ib->Conditional(cond, true_br, false_br)` | Convert C++ branches into graph branches and decide at runtime |
+| **Unknown shape dimensions** | `IsDynamicShape(shape)` is true | `DEF_PURE_SHAPE_CALC` plus `ib->ShapeCalc(calc, inputs, indices)` | Put shape-dependent computation into a ShapeCalc node |
+| **Unknown rank** | `IsDynamicRank(shape)` is true | separate dynamic path function | Split the full backward logic at the entry |
 
-#### 典型模式
-
-**模式 A：标量值 unknown → `Conditional`**
+#### Pattern A: Unknown Scalar Value With `Conditional`
 
 ```cpp
 auto keep_dims_value = keep_dims->BuildValue();
 auto keep_dims_opt = GetScalarValue<bool>(keep_dims_value);
 if (keep_dims_opt.has_value()) {
-  // 编译期已知：直接走 C++ 分支
-  if (!keep_dims_opt.value()) { std_d = ib->Reshape(std_d, res[0]); }
+  if (!keep_dims_opt.value()) {
+    std_d = ib->Reshape(std_d, res[0]);
+  }
 } else {
-  // 编译期未知：构建运行时条件子图
   auto true_branch = [&](Emitter *e) -> NodePtrList { return {e->Reshape(std_d, res[0])}; };
   auto false_branch = [&](const Emitter *e) -> NodePtrList { return {std_d}; };
   auto cond = ib->Equal(keep_dims, ib->Value<bool>(false));
   std_d = ib->Conditional(cond, true_branch, false_branch);
 }
 ```
-> **参考**：`ReduceStd` bprop（`grad_math_ops.cc`）
 
-**模式 B：shape 动态 → 独立动态路径**
+Reference: `ReduceStd` bprop in `grad_math_ops.cc`.
+
+#### Pattern B: Dynamic Shape With A Separate Path
 
 ```cpp
 bool is_dynamic_rank = IsDynamicRank(x_shape) || IsDynamicRank(w_shape);
 bool is_dynamic_shape = IsDynamicShape(x_shape) || IsDynamicShape(w_shape);
 if (is_dynamic_rank || is_dynamic_shape) {
-  return MatMulBackwardDynamic(ib, is_complex);  // 独立的动态处理函数
+  return MatMulBackwardDynamic(ib, is_complex);
 }
-// 静态路径
 dx = MatMulInputBackward(ib, is_complex);
 ```
-> **参考**：`MatMulExt` bprop（`grad_math_ops.cc`）
 
-**模式 C：shape 依赖计算 → `ShapeCalc`**
+Reference: `MatMulExt` bprop in `grad_math_ops.cc`.
+
+#### Pattern C: Shape-Dependent Computation With `ShapeCalc`
 
 ```cpp
 DEF_PURE_SHAPE_CALC(g_reduce_std)
@@ -419,81 +414,79 @@ DEF_PURE_SHAPE_CALC(g_reduce_std)
     return ReduceStdShapeFunc(inputs.at(0), inputs.at(1));
   })
   ...
-// 在 bprop 中调用
+
 auto res = ib->ShapeCalc(g_reduce_std, {x, axis}, {1});
 ```
-> **参考**：`ReduceStd` bprop（`grad_math_ops.cc`）
 
-#### 编写检查清单
+Reference: `ReduceStd` bprop in `grad_math_ops.cc`.
 
-实现 bprop 后逐项确认：
+#### bprop Checklist
 
-- [ ] 反向中使用的每个标量输入（int/float/bool），是否检查了 `BuildValue()->ContainsValueAny()`？
-- [ ] 对值 unknown 的标量，是否用了 `Conditional` 而非 C++ `if`？
-- [ ] 反向中依赖输入 shape 的计算（如 `ib->GetShape()` 结果用于构造 axis/dims），是否处理了动态 shape？
-- [ ] 如果输入可能动态秩，是否有 `IsDynamicRank` 检查和对应回退？
+- [ ] Every scalar input used by backward checks `BuildValue()->ContainsValueAny()` or the equivalent.
+- [ ] Unknown scalar values use `Conditional` instead of C++ `if`.
+- [ ] Shape-dependent backward computations handle dynamic shape.
+- [ ] Inputs that may have dynamic rank have an `IsDynamicRank` check and a fallback.
 
 <a id="testing-reference"></a>
-## 8. 测试策略（UT + ST）
+## 8. Test Strategy
 
 <a id="testing-cpp-ut"></a>
-### 8.1 C++ UT（GeneralInfer）
-典型构造（按项目现有 UT 工具）：
-- 标量：`ShapeVector{}` + `CreateScalar<T>(value)`
-- tuple：`ShapeArray{{}}` + `ValuePtrList{CreateScalar<...>(...)}`
-- None：`kMetaTypeNone` + `kNone`
-- unknown：使用 `kValueAny` 或项目等价占位
+### 8.1 C++ UT For GeneralInfer
+
+Typical construction patterns:
+- scalar: `ShapeVector{}` plus `CreateScalar<T>(value)`
+- tuple: `ShapeArray{{}}` plus `ValuePtrList{CreateScalar<...>(...)}`
+- `None`: `kMetaTypeNone` plus `kNone`
+- unknown: `kValueAny` or the project equivalent
 
 <a id="testing-st-opinfo"></a>
-### 8.2 ST op-info测试框架
+### 8.2 ST OpInfo Test Framework
 
-> 核心理念：从"给算子写测试文件"变为"给测试场景添加新算子"。
-> 主体代码位于 `tests/st/ops/share/`，由 **OpInfo**（定义"测什么"）+ **OpsFactory**（定义"怎么测"）构成参数化测试能力。
+Core idea: add the operator to test scenarios instead of writing a completely separate test file for every operator. The main code lives under `tests/st/ops/share/` and is built around **OpInfo** for what to test and **OpsFactory** for how to test it.
 
-#### 8.2.1 目录结构
+#### 8.2.1 Directory Layout
 
-```
+```text
 tests/st/ops/share/
 ├── _op_info/
-│   ├── op_info.py        # OpInfo 及其子类定义
-│   ├── op_database.py    # 所有算子的 OpInfo 注册 + xxx_op_db 列表
-│   └── op_common.py      # 辅助工具：make_tensor / OpSampleInput / OpDynamicInput 等
+│   ├── op_info.py        # OpInfo and subclasses
+│   ├── op_database.py    # OpInfo registration and xxx_op_db lists
+│   └── op_common.py      # make_tensor / OpSampleInput / OpDynamicInput helpers
 ├── _internal/
-│   ├── meta.py           # OpsFactory 基类（test_op_reference / test_op_dynamic 等）
-│   ├── binary_ops.py     # BinaryStdOpsFactory 等特化工厂
+│   ├── meta.py           # OpsFactory base class
+│   ├── binary_ops.py     # BinaryStdOpsFactory and related factories
 │   └── ...
 ├── ../op_info_tests/
-|   ├── test_binary_ops.py    # 前端测试：pytest 参数化调用 BinaryStdOpsFactory
-|   ├── test_unary_ops.py
-|   └── ...
+│   ├── test_binary_ops.py
+│   ├── test_unary_ops.py
+│   └── ...
 ```
 
-#### 8.2.2 OpInfo 配置
+#### 8.2.2 OpInfo Configuration
 
-OpInfo 定义"对哪个算子、用什么输入、比对什么参考实现"：
+OpInfo defines the target operator, input generation, and reference implementation.
 
-| 关键字段 | 说明 |
+| Field | Meaning |
 | --- | --- |
-| `name` | 算子名，用于参数化标识 |
-| `op` | 算子可调用对象（如 `mint.add`） |
-| `ref` | 参考实现（如 `numpy.add`），用于数值比对 |
-| `dtypes_xxx` | 各场景支持的 dtype 集合（`dtypes_support` / `dtypes_grad` / `dtypes_dynamic` 等） |
-| `op_basic_reference_inputs_func` | 基础输入生成函数（返回 `OpSampleInput` 列表） |
-| `op_extra_reference_inputs_func` | 额外输入场景（可选） |
-| `compare` | 比对配置（`atol` / `rtol`） |
+| `name` | Operator name used in parametrized test IDs |
+| `op` | Callable operator, such as `mint.add` |
+| `ref` | Reference implementation, such as `numpy.add` |
+| `dtypes_xxx` | Supported dtype sets for different scenarios |
+| `op_basic_reference_inputs_func` | Basic input generator returning `OpSampleInput` entries |
+| `op_extra_reference_inputs_func` | Optional extra input scenarios |
+| `compare` | Numeric comparison options such as `atol` and `rtol` |
 
-**子类**（自带默认输入生成函数，可直接使用或覆盖）：
+Common subclasses:
 
-| 子类 | 适用场景 | 默认输入 |
+| Subclass | Scenario | Default inputs |
 | --- | --- | --- |
-| `BinaryOpInfo` | 二元算子（add/mul/…） | 两个同 shape 随机 tensor |
-| `UnaryOpInfo` | 一元算子（abs/sin/…） | 单个随机 tensor |
-| `ReductionOpInfo` | 归约算子（sum/mean/…） | 单个随机 tensor + axis 参数 |
+| `BinaryOpInfo` | Binary operators such as add and mul | Two random tensors with the same shape |
+| `UnaryOpInfo` | Unary operators such as abs and sin | One random tensor |
+| `ReductionOpInfo` | Reduction operators such as sum and mean | Tensor plus axis argument |
 
-**配置示例**（`op_database.py`）：
+Example:
 
 ```python
-# 二元算子 — 使用 BinaryOpInfo，复用默认输入
 BinaryOpInfo(
     name="mint.add",
     op=mint.add,
@@ -501,7 +494,6 @@ BinaryOpInfo(
     dtypes_support=FLOAT_TYPES | INT_TYPES,
 )
 
-# 自定义输入场景 — 通过 op_basic_reference_inputs_func
 OpInfo(
     name="mint.clamp",
     op=mint.clamp,
@@ -511,335 +503,246 @@ OpInfo(
 )
 ```
 
-注册后将算子名加入对应列表（如 `binary_op_db`、`unary_op_db`），即可被前端测试文件自动覆盖。
+After registration, add the operator name to the corresponding list, such as `binary_op_db` or `unary_op_db`.
 
-#### 8.2.3 OpsFactory 测试套
+#### 8.2.3 OpsFactory Test Suite
 
-OpsFactory 提供标准化的测试方法，开发者无需手写测试逻辑：
-
-| 方法 | 说明 |
+| Method | Meaning |
 | --- | --- |
-| `test_op_reference()` | 用 `OpSampleInput` 跑算子，与 `ref` 数值比对 |
-| `test_op_dynamic()` | 测试动态 shape（`DYNAMIC_SHAPE` / `DYNAMIC_RANK`） |
-| `compare_with_torch()` | 与 PyTorch 实现进行精度比对 |
+| `test_op_reference()` | Run samples and compare with `ref` |
+| `test_op_dynamic()` | Test dynamic shape and dynamic rank |
+| `compare_with_torch()` | Compare accuracy with PyTorch |
 
-**层级**：`OpsFactory` → `UnaryOpsFactory` / `BinaryOpsFactory` / `ReductionOpsFactory` → 特化 `XxxStdOpsFactory`
+Factory hierarchy: `OpsFactory` -> `UnaryOpsFactory` / `BinaryOpsFactory` / `ReductionOpsFactory` -> specialized `XxxStdOpsFactory`.
 
-**执行模式**通过 `set_context_mode()` 切换：`pynative` / `kbk` / `ge`。
+Execution mode is selected by `set_context_mode()`: `pynative`, `kbk`, or `ge`.
 
-#### 8.2.4 前端测试文件模式
+#### 8.2.4 Frontend Test File Pattern
 
-前端测试文件通过 pytest 参数化 + `arg_mark` 装饰器展开所有已注册算子的用例。每个测试函数内部创建对应的 `OpsFactory` 实例并调用标准测试方法：
+Frontend test files use pytest parametrization and `arg_mark` to expand registered operator cases.
 
 ```python
-# test_binary_ops.py（简化示例）
 from tests.st.ops.share._internal.binary_ops import BinaryOpsFactory
 from tests.st.ops.share._op_info.op_database import get_op_info, binary_op_db, binary_op_kbk_db
 
-# 前向精度（pynative）
 @pytest.mark.parametrize("op_info", binary_op_db)
 def test_binary_op_reference_forward(op_info):
     fact = BinaryOpsFactory(op_info=get_op_info(op_info))
-    fact.set_context_mode(mode='pynative')
+    fact.set_context_mode(mode="pynative")
     fact.test_op_reference()
 
-# 反向精度（pynative）
 @pytest.mark.parametrize("op_info", binary_op_db)
 def test_binary_op_reference_backward(op_info):
     fact = BinaryOpsFactory(op_info=get_op_info(op_info))
-    fact.set_context_mode(mode='pynative')
+    fact.set_context_mode(mode="pynative")
     fact.test_op_reference(grad_cmp=True)
 
-# 动态 shape（kbk）
 @pytest.mark.parametrize("op_info", binary_op_kbk_db)
 def test_binary_op_dynamic_forward(op_info):
     fact = BinaryOpsFactory(op_info=get_op_info(op_info))
-    fact.set_context_mode(mode='kbk')
+    fact.set_context_mode(mode="kbk")
     fact.test_op_dynamic(only_dynamic_shape=True)
     fact.test_op_dynamic(only_dynamic_rank=True)
 ```
 
-#### 8.2.5 辅助工具速览
+#### 8.2.5 Helper Overview
 
-| 工具 | 用途 |
+| Helper | Purpose |
 | --- | --- |
-| `make_tensor(shape, dtype)` | 生成随机 tensor（底层调用 `np.random`） |
-| `OpSampleInput(input, args, kwargs)` | 封装一组测试输入 |
-| `OpDynamicInput(...)` | 封装动态 shape 测试输入（含 `dynamic_level`） |
-| `OpErrorInput(...)` | 封装预期报错的输入（用于异常路径测试） |
-| `wrap_sample_inputs(func)` | 将简单输入生成函数包装为 `OpSampleInput` 列表 |
-
-<a id="delivery-consensus"></a>
-## 9. 交付/转测"共识要点"（来自 `算子流程/.../Aclnn算子对接开发整体流程.md`）
-
-### 9.1 适配方案的基本原则
-- **优先对标 PyTorch/PTA**：PTA 不支持的功能可以不开发。
-- CANN 不支持且 PTA 也不支持的功能可以不开发。
-- 正反向尽量采用与 PTA 相同的 ACLNN/aten 组合，便于达成"精度 0 偏差"的目标。
-
-### 9.2 影响面评估
-- **复用存量原语/适配存量接口时**：必须确保原有 CPU/GPU 流程不回退、功能不退化（已有 UT/ST 回归通过）。
-- **全新算子（新原语 + 新接口）**：不需要新增 CPU/GPU 支持，仅做 Ascend。
-- 若可能影响 GEOP / Lite 现有流程，需要给出消除影响方案（例如通过 Pass/Expander）。
-
-<a id="delivery-artifacts-and-scope"></a>
-### 9.3 交付件与验证范围（摘要）
-转测时通常要求覆盖：
-- 接口形态：NN / functional / Tensor（若完全一致可只验一个入口）
-- 后端：Ascend（复用存量原语/接口时须确保 CPU/GPU 不回退；全新算子仅 Ascend）
-- 模式：动态图 / 静态图 / 静态图 KernelByKernel
-- shape：动态/静态
-- 维度：泛化性（dtype/shape）+ 精度 + 性能（按项目门槛要求）
+| `make_tensor(shape, dtype)` | Generate a random tensor |
+| `OpSampleInput(input, args, kwargs)` | Wrap one sample input |
+| `OpDynamicInput(...)` | Wrap dynamic shape test input |
+| `OpErrorInput(...)` | Wrap expected-error input |
+| `wrap_sample_inputs(func)` | Convert a simple input generator to `OpSampleInput` entries |
 
 <a id="documentation-reference"></a>
-## 10. 文档与资料开发要点（来自 `算子流程/.../5. 资料开发指导.md`）
+## 9. Documentation Notes
 
-### 10.0 文档导出基本要求
-- 英文 function_doc（YAML）与中文 RST 参数名、默认值、必填/可选、示例必须一致。
-- ops 包显式导出算子 API；非 Ascend 设备提供占位实现并给出清晰错误。
+### 9.1 Basic Export Requirements
+
+- English function_doc YAML and Chinese RST must match on argument names, defaults, required/optional status, constraints, and examples.
+- Operator APIs must be explicitly exported from the ops package.
+- Non-Ascend devices should provide placeholder behavior with clear errors when appropriate.
 
 <a id="documentation-general-principles"></a>
-### 10.1 总原则
-- **中英文严格一致**：参数、默认值、必选/可选、约束、示例等必须一致。
-- **接口列表按字母序添加**：减少冲突与重复。
-- **文件名 / 文件内标题 / 文件内接口定义三者一致**：不一致会导致页面生成失败。
-- 示例需要**完整 import**、确保可运行；必要时打印输出或 shape 便于理解。
+### 9.2 General Principles
+
+- Keep Chinese and English docs strictly consistent.
+- Add interface entries in alphabetical order to reduce conflicts and duplicates.
+- File name, in-file title, and in-file API definition must match; mismatches can break page generation.
+- Examples need complete imports and should be runnable. Print output or shape when it helps users understand the result.
 
 <a id="documentation-output-mapping"></a>
-### 10.2 常见场景与落点（摘要）
-- 新增 functional：英文注释在实现 `.py`；中文在 `docs/api/api_python/ops/` 下 `func_*.rst`；并更新接口列表。
-- 新增 mint：需要同时处理 mint 的中英文列表与中文 rst（若是 import 原有接口可复用）。
-- 新增 Tensor 方法：英文在 `tensor.py`，中文在 `docs/api/api_python/mindspore/Tensor/`，并更新列表。
+### 9.3 Common Scenarios
 
-## 11. 性能自验工具 apitimewrapper（来自 `算子流程/.../7. 接口性能自验工具.md`）
-
-### 11.1 用途
-对 MindSpore / PyTorch 脚本里的 API 做 wrap 打点，得到端到端耗时与（可选的）接口内部耗时分解。
-
-### 11.2 使用要点（摘要）
-- 安装：`pip install apitimewrapper-0.0.3-py3-none-any.whl`
-- 整网打点：在网络入口启动 `start_hook_net(hook_inside=False)`，需要在网络执行前调用。
-- 单 API：可同时启用 `start_hook_net` 与 `start_hook_torch_net`，用 `start_analysis()/end_analysis()` 包住循环。
+- New functional API: English doc in the implementation `.py`; Chinese doc under `docs/api/api_python/ops/func_*.rst`; update API lists.
+- New mint API: update both Chinese and English mint lists and Chinese RST. If it imports an existing API, reuse the existing documentation when valid.
+- New Tensor method: English doc in `tensor.py`; Chinese doc under `docs/api/api_python/mindspore/Tensor/`; update API lists.
 
 <a id="bprop-advanced-notes"></a>
-## 12. 反向实现注意事项（来自 `算子流程/.../算子反向注意事项.md`）
+## 10. Backward Implementation Notes
 
-> 基础 BPROP 接线规则（I/O 个数、need_compute_grad_out、SetUnusedInputs）见 [`7 BPROP 接线要点`](#bprop-reference)。
+### 10.1 Non-Differentiable Inputs
 
-### 12.1 不可微分入参
-Torch 里不可微分的入参（如 index/mode 等），MS 侧反向输出必须与输入个数一致：
-- 对不可微分入参返回 `ib->OutZeros(x)`。
-- 若全部入参都不可微分，可用 `ReturnZeros`（以框架现状为准）。
+For PTA non-differentiable inputs such as index or mode, the MindSpore backward output count must still match the input count.
 
-### 12.2 "梯度就是 0"时的实现选择
-当某输入梯度理论上为 0，建议使用 `ib->ZerosLikeExt()`，确保走到 ACLNN/后端期望路径。
+- Return `ib->OutZeros(x)` for non-differentiable inputs.
+- If all inputs are non-differentiable, `ReturnZeros` may be used depending on current framework support.
 
-### 12.3 inplace 算子反向
-- 若反向需要用到更新前的 self，需要注册 `CloneInplaceInput(...)` 让框架保留旧值。
-- KBK 动态 shape 场景下在反向里使用 inplace 可能不保序时，可用 `ib->Depend(target, inplace_call)` 规避。
+### 10.2 When The Gradient Is Mathematically Zero
+
+When an input gradient is theoretically zero, prefer `ib->ZerosLikeExt()` so execution goes through the ACLNN/backend path expected by the framework.
+
+### 10.3 In-Place Operator Backward
+
+- If backward needs the original value of `self` before an in-place update, register `CloneInplaceInput(...)` so the framework preserves the old value.
+- If in-place usage in KBK dynamic shape backward may break ordering, use `ib->Depend(target, inplace_call)`.
 
 <a id="resize-launch-optimization"></a>
-## 13. Resize/Launch 优化要点（来自 `算子流程/.../ResizeKernelLaunch实现优化.md`）
+## 11. Resize/Launch Optimization Notes
 
-> KBK 的基础结构与注册见 [`6 KBK kernel 要点`](#kbk-reference)。
+For basic KBK structure and registration, see [6. KBK Graph Kernel Notes](#kbk-reference).
 
 <a id="resize-launch-no-attr-mutation"></a>
-### 13.1 禁止在 InferShape 中修改属性
-不要在 InferShape/InferType 内设置或修改算子属性（Pynative 下会引入问题）。
+### 11.1 Do Not Mutate Attributes In InferShape
 
-### 13.2 Resize/Launch 职责分离
-- **能在 Init 确定的放 Init**；与 shape 强相关的放 Resize；Launch 尽量只做发射/调用。
-- 运行期不要做 device 内存申请（例如 GPU 的 `cudaMalloc/cudaFree`），统一通过 workspace 由框架管理。
+Do not set or modify operator attributes in `InferShape` or `InferType`; this can introduce Pynative issues.
 
-### 13.3 无意义输出忽略
-对于预留/无意义输出，覆写 `GetUseLessOutputIdx()`（或等价接口）避免 dump/溢出误检/确定性副作用。
+### 11.2 Resize/Launch Responsibility Separation
 
-### 13.4 计算依赖（compute-depend）输出
-按框架要求：分配最大可能输出 + 同步/更新输出 shape（如 NonZero 类模式）。
+- Put what can be determined in `Init` into `Init`.
+- Put shape-dependent work into `Resize`.
+- Keep `Launch` focused on emitting or calling the execution path.
+- Avoid runtime device memory allocation such as `cudaMalloc` or `cudaFree`; use framework-managed workspace.
 
-<a id="accuracy-and-memory-validation"></a>
-## 14. 精度零偏差与显存对齐自验
+### 11.3 Ignore Useless Outputs
 
-<a id="bitwise-accuracy-validation"></a>
-### 14.1 精度零偏差（bitwise 一致）
-当目标是与 PTA 输出二进制一致时：
-- 固定随机种子，保存输出为 `.npy`
-- 用 `md5sum`（或等价方式）对比两个输出文件的哈希确保一致
+For reserved or meaningless outputs, override `GetUseLessOutputIdx()` or the equivalent API to avoid dump, overflow-check, or deterministic side effects.
 
-<a id="memory-alignment-validation"></a>
-### 14.2 显存占用对齐
-关键点：MS 与 PTA 在**相同阶段**统计 max memory（避免把初始化/编译混入）。
-- MS：`mindspore.runtime.max_memory_allocated()`
-- PTA：`torch_npu.npu.max_memory_allocated()`
+### 11.4 Compute-Dependent Outputs
+
+Follow framework requirements: allocate the maximum possible output size and synchronize/update the output shape after execution, such as the `NonZero` pattern.
 
 <a id="api-development"></a>
-## 15. 接口开发要点（functional / nn / Tensor）（来自 `算子流程/.../2. 接口开发.md`）
+## 12. Interface Development Notes
 
-### 15.1 functional 接口（强约束）
-- functional 内部**务必使用** `_get_cache_prim` 获取 Primitive 实例，避免反复 __init__ 造成性能问题。
-- 复杂接口允许"一对多映射/组合映射"：按参数分支选择不同 Primitive 或组合算子实现。
+### 12.1 Functional Interface
 
-### 15.2 nn 接口
-- nn 接口是 `Cell` 子类：在 `__init__` 初始化算子与属性，在 `construct` 做执行路径。
-- `construct` 类似编译器入口：不要在其中直接 `raise`；需要编译期校验/抛错时，用 `@constexpr` 的辅助函数。
+- Functional APIs must use `_get_cache_prim` internally to get Primitive instances and avoid repeated `__init__` overhead.
+- Complex APIs may map one frontend function to multiple Primitives or a composite implementation based on argument branches.
 
-### 15.3 Tensor 方法（含 GE 映射要点）
-- Tensor 方法需要覆盖不同模式：PyNative/KBK 与 GE（若项目要求）。
-- GE 模式往往需要：
-  - 在 `resource.cc` 注册映射；
-  - 在 `standard_method.py` 实现（该处校验函数不能接收 Tensor 作为入参，需用对应封装）。
+### 12.2 nn Interface
+
+- nn APIs are `Cell` subclasses. Initialize operators and attributes in `__init__`, and implement execution in `construct`.
+- `construct` is similar to a compiler entrypoint. Avoid direct `raise` there; use `@constexpr` helpers when compile-time validation is required.
+
+### 12.3 Tensor Methods And GE Mapping
+
+- Tensor methods must cover required modes: PyNative, KBK, and GE when the project requires GE.
+- GE mode often needs:
+  - mapping registration in `resource.cc`
+  - implementation in `standard_method.py`; validation functions there cannot take Tensor arguments directly and need the corresponding wrapper.
 
 <a id="api-integration-strategy"></a>
-### 15.4 原语与接口接入策略（必须在 Pre-B 阶段确定）
+### 12.4 Primitive And Interface Integration Strategy
 
-在开始 YAML 定义之前，必须完成接口分析并确定原语/接口策略。
+Complete interface analysis and decide the Primitive/interface strategy before YAML definition.
 
 <a id="api-analysis-five-factors"></a>
-#### 15.4.1 接口分析五要素
+#### 12.4.1 Interface Analysis
 
-通过对比 MindSpore 与 PTA/torch 的文档和实现，搞清以下问题：
-1. 功能是否一致
-2. 参数定义是否一致
+Compare MindSpore with PTA/torch documentation and implementation:
+1. Whether the functions are equivalent.
+2. Whether argument definitions are equivalent.
 
-接口和功能一致则复用原语，否则新增原语`XXXExt`，参考[`ops.extend` 命名空间](reference.md#ops-extend-namespace)
+If the interface and function are consistent, reuse the existing Primitive. Otherwise, add a new `XXXExt` Primitive. See [12.4.3 `ops.extend` Namespace](#ops-extend-namespace).
 
-> PTA/torch 可能存在**同名接口重载**（同函数名、不同参数签名），需逐一分析。
+PTA/torch may have overloads with the same function name and different signatures. Analyze each signature separately.
 
 <a id="yaml-three-scenarios"></a>
-#### 15.4.2 YAML 三种场景
+#### 12.4.2 Three YAML Scenarios
 
-| 场景 | YAML 操作 | 示例 |
+| Scenario | YAML action | Example |
 | --- | --- | --- |
-| **已有 YAML + 复用原有原语** | 在现有 YAML 上加 `dispatch` 字段 | `eye`：已有原语，加 `dispatch.Ascend: EyeAscend` |
-| **已有 YAML + 新增原语** | 新建 YAML，加 `_ext` 后缀 | `zeros_like_ext`：已有 `zeros_like` 但参数不兼容 |
-| **没有 YAML** | 新建 YAML，通常不加 `_ext` | 全新算子直接创建 |
+| **Existing YAML + reuse existing Primitive** | Add `dispatch` to existing YAML | `eye`: existing Primitive plus `dispatch.Ascend: EyeAscend` |
+| **Existing YAML + new Primitive** | Create new YAML with `_ext` suffix | `zeros_like_ext`: existing `zeros_like` has incompatible arguments |
+| **No YAML** | Create a new YAML, usually without `_ext` | Brand-new operator |
 
-**复用原有原语**示例：
+Reuse existing Primitive:
+
 ```yaml
-# 在已有 eye YAML 上加 dispatch 字段即可
 dispatch:
   enable: True
   Ascend: EyeAscend
 ```
 
-**新增原语 + `_ext`**示例：
+New Primitive with `_ext`:
+
 ```yaml
 zeros_like_ext:
-    args:
-        input:
-            dtype: tensor
-        dtype:
-            dtype: TypeId
-            arg_handler: dtype_to_type_id
-            default: None
-    returns:
-        y:
-            dtype: tensor
-    function:
-        disable: True
-    dispatch:
-        enable: True
-        Ascend: ZerosLikeExtAscend
+  args:
+    input:
+      dtype: tensor
+    dtype:
+      dtype: TypeId
+      arg_handler: dtype_to_type_id
+      default: None
+  returns:
+    y:
+      dtype: tensor
+  function:
+    disable: True
+  dispatch:
+    enable: True
+    Ascend: ZerosLikeExtAscend
 ```
 
 <a id="ops-extend-namespace"></a>
-#### 15.4.3 `ops.extend` 命名空间
+#### 12.4.3 `ops.extend` Namespace
 
-> 若 aclnn 功能与存量 `ops.xx` 方法不一致，且不能对 ops 存量方法做兼容性修改 → 需要新增 extend 接口。
+If ACLNN behavior differs from an existing `ops.xxx` method and compatibility changes to the existing method are not acceptable, add an extend interface.
 
-MindSpore 接口命名空间（来自 `5. 资料开发指导.md`）：
-- `ops.xxx` / `ops.xxx_ext()` / `ops.auto_generate.xxx_ext()` / `ops.extend.xxx_ext()`
-- `nn.xxx` / `nn.xxxExt()` / `nn.extend.xxx()`
+MindSpore interface namespaces:
+- `ops.xxx`, `ops.xxx_ext()`, `ops.auto_generate.xxx_ext()`, `ops.extend.xxx_ext()`
+- `nn.xxx`, `nn.xxxExt()`, `nn.extend.xxx()`
 
 <a id="existing-primitive-signature-change"></a>
-#### 15.4.4 修改已有原语参数签名与接口重载
+#### 12.4.4 Existing Primitive Signature Changes And Interface Overloads
 
-实际开发中，经常遇到已有 Primitive 需要**扩展参数**的情况（如 PTA 新版多了参数、需要支持 ACLNN 特有参数等），
-或 PTA/torch 存在**同名接口重载**（同函数名、不同参数签名）需要适配。
+Existing Primitives sometimes need argument extensions, such as new PTA arguments or ACLNN-specific arguments. PTA/torch may also have same-name overloads.
 
-**参数扩展的实践策略**：
-1. **搜索 MS 仓库中相似算子**的处理方式作为参考（如同类算子是如何加参数的）
-2. **具体分析兼容性**：新参数是否能设默认值、是否影响已有调用方、是否影响其他后端
-3. **判断走哪条路**：
-   - 可兼容修改（加可选参数不破坏已有行为）→ 直接修改现有 YAML + Infer + 接口
-   - 不可兼容 → 新增原语加 `_ext` 后缀，或走 `ops.extend`
-4. **确保不破坏已有功能**：修改后已有 UT/ST 全部回归通过
-5. **遵循评审规则**（见 [`15.4.5 评审规则`](#api-review-rules)）
+Practical strategy:
+1. Search the MindSpore repository for similar operators.
+2. Analyze compatibility: whether the new argument can have a default, whether existing callers are affected, and whether other backends are affected.
+3. Decide the route:
+   - compatible optional extension -> modify existing YAML, Infer, and interface
+   - incompatible change -> add an `_ext` Primitive or use `ops.extend`
+4. Ensure existing functionality is not broken by running the relevant UT/ST.
+5. Follow the review rules in [12.4.5 Review Rules](#api-review-rules).
 
-**接口重载适配**：若涉及 Tensor/functional 同名多签名（如 Tensor-Scalar / Tensor-Tensor 两种入参、有/无 keyword-only 参数、新旧接口兼容等），
-通过 `api_def` YAML 多条目机制实现重载转发。完整机制、场景分类、deprecated YAML 及 alias 等详见 **[`25 接口重载适配`](#api-overload-adaptation)**。
+For Tensor/functional overload adaptation, use `api_def` YAML with multiple entries. See [20. API Overload Adaptation](#api-overload-adaptation).
 
 <a id="api-review-rules"></a>
-#### 15.4.5 评审规则
+#### 12.4.5 Review Rules
 
-| 变更类型 | 评审要求 |
+| Change type | Review requirement |
 | --- | --- |
-| 无新增接口，功能与之前完全一致 | 无需评审 |
-| 无新增接口，功能有扩展 | 需要评审 |
-| 新增接口 | **重点评审** |
-| 存量接口功能非兼容修改 | **原则上不允许**，特殊情况评审 |
-| 新增算子 | 需要评审 |
-| 存量算子功能非兼容修改 | 需要评审 |
+| No new interface and behavior unchanged | No review required |
+| No new interface but behavior extended | Review required |
+| New interface | Focused review required |
+| Non-compatible existing interface change | Generally not allowed; special-case review required |
+| New operator | Review required |
+| Non-compatible existing operator behavior change | Review required |
 
-需要评审场景**必须用户确认**。
-
-## 16. 当 ACLNN / PTA 文档不完善：用"探测脚本"补齐事实范围
-
-现实中 ACLNN/PTA 文档可能滞后或缺失细节（尤其是不同 CANN/PTA 版本支持范围变化时）。此时不要猜：
-
-### 16.1 必须先记录版本矩阵
-让用户确认并记录（写入 Feature 文档/验收报告/测试输出）：
-- torch 版本、torch_npu 版本
-- CANN 版本（或可追溯的安装路径/镜像版本信息）
-- 芯片型号/驱动信息（能打印则打印）
-
-### 16.2 生成并运行"PTA 支持范围探测脚本"
-推荐做法：
-- 我在本 skill 里提供了模板脚本：`scripts/probe_pta_sparse_flash_attention.py`
-  （这是以 `sparse_flash_attention` 为例的**模板**，适配其他算子时需复制并修改 `run_case` 的输入构造与 API 调用）
-- 用途：自动枚举一组 dtype/layout/关键参数组合，记录成功/失败与错误信息，并输出 JSON 汇总。
-
-运行方式（示例）：
-
-```bash
-python scripts/probe_pta_sparse_flash_attention.py --device npu:0 --out pta_probe.json
-# 快速模式（只跑核心组合）：
-python scripts/probe_pta_sparse_flash_attention.py --device npu:0 --quick --out pta_probe_quick.json
-```
-
-你需要用户回传的证据：
-- `pta_probe.json`（或其中 summary + 关键失败用例的错误信息）
-- 同一份输出里的版本信息（torch/torch_npu/env/npu-smi）
-
-### 16.3 用探测结果驱动"接口对齐与约束落地"
-基于探测结果再决定：
-- sparse_size 是否被固定（例如某些 CANN 版本要求 2048）
-- attention_mode / return_softmax_lse / layout 组合是否可用
-- dtype 支持是否确实只有 fp16/bf16，是否存在隐藏限制
-并把这些结论同步到 YAML/Infer/文档/测试中。
-
-## 17. vmap 支持（按需）
-
-> 来源：`算子流程/.../4. 算子关键特性.md`。当前 skill 主要覆盖 ACLNN 算子的前向/反向/
-> 推导/测试/文档流程，vmap 作为**可选扩展**列在此处。如果目标算子不需要 vmap 支持，可跳过本节。
-
-### 17.1 何时需要 vmap
-- 算子需要被 `vmap`/`vectorize_cell` 调用时。
-- 项目要求覆盖 vmap 路径时（部分算子交付件要求 vmap 验证）。
-
-### 17.2 关键要点（摘要）
-- 注册 vmap rule：在框架指定位置注册（以项目现有 vmap 注册模式为准）。
-- 测试：需单独补 vmap UT，验证批量化后的 shape/数值正确性。
-- 注意 vmap 路径可能不走 ACLNN（而是退回到组合算子/循环展开），需确认性能是否可接受。
+Cases requiring review must be confirmed by the user.
 
 <a id="code-skeletons"></a>
-## 18. 代码骨架模板（可直接复制改造）
+## 13. Code Skeletons
 
-> 以下骨架来自"先自动生成再自定义改造"的实际经验，仅作**起步参考**。
-> 真正使用时必须对照同目录下相似算子的现有代码调整宏名、命名空间、参数列表。
+The skeletons below are starting points based on the auto-generate-then-customize workflow. Before using them, compare with similar code in the target directory and adjust macros, namespaces, and argument lists.
 
 <a id="yaml-skeleton"></a>
-### 18.1 YAML 最小模板（op_def + api_def + doc）
+### 13.1 Minimal YAML Template
 
 ```yaml
 # ---- op_def ----
@@ -853,36 +756,34 @@ returns:
 dispatch:
   enable: True
   Ascend: "OpNameAscendCustomize"
+
 # ---- api_def ----
 api:
   py_method: "op_name"
   module: "mindspore.ops"
+
 # ---- function_doc ----
 function_doc:
   desc: "Brief English description of the operator."
 ```
 
 <a id="pyboost-skeleton"></a>
-### 18.3 PyBoost customize 骨架（C++）
+### 13.2 PyBoost Customize Skeleton
 
 ```cpp
-// op_name_ascend_customize.cc
 #include "plugin/device/ascend/kernel/pyboost/customize/op_name_ascend_customize.h"
-// 具体 include 以仓库实际为准
 
 namespace mindspore::kernel::pyboost {
 
-// 前向
 tensor::TensorPtr OpNameAscendCustomize::Call(
     const tensor::TensorPtr &input_x,
     const std::optional<float> &scale) {
-  // 1. 输出 tensor 分配
   auto output = std::make_shared<tensor::Tensor>(input_x->data_type(), out_shape);
 
-  // 2. 参数转换（tuple->vector / None 处理等）
+  // Convert arguments here, such as tuple -> vector or None handling.
   // auto scale_val = scale.value_or(1.0f);
 
-  // 3. ACLNN 两段式调用（以项目封装宏为准）
+  // Launch through the project ACLNN wrapper.
   // LAUNCH_ACLNN(aclnnOpName, stream, input_x, scale_val, output);
 
   return output;
@@ -892,22 +793,20 @@ tensor::TensorPtr OpNameAscendCustomize::Call(
 ```
 
 <a id="kbk-skeleton"></a>
-### 18.4 KBK kernel 骨架（C++）
+### 13.3 KBK Kernel Skeleton
 
 ```cpp
-// op_name_aclnn_kernel.cc
 #include "plugin/device/ascend/kernel/opapi/aclnn_kernel/op_name_aclnn_kernel.h"
-// 具体 include 以仓库实际为准
 
 namespace mindspore::kernel {
 
 void OpNameAclnnKernel::GetWorkSpaceInfo(
     const std::vector<KernelTensor *> &inputs,
     const std::vector<KernelTensor *> &outputs) {
-  // 取参（标量/tuple 等）
+  // Extract scalar/tuple/etc. arguments.
   // auto scale = inputs[1]->GetValueWithCheck<float>();
 
-  // 获取 workspace
+  // Get workspace.
   // GetWorkspaceForResize(aclnnOpNameGetWorkspaceSize, ...);
 }
 
@@ -920,27 +819,21 @@ bool OpNameAclnnKernel::Launch(
   return true;
 }
 
-// 注册
 MS_ACLNN_KERNEL_FACTORY_REG(OpName, OpNameAclnnKernel);
 
 }  // namespace mindspore::kernel
 ```
 
 <a id="bprop-builder-skeleton"></a>
-### 18.5 BPROP builder 骨架（C++）
+### 13.4 BPROP Builder Skeleton
 
 ```cpp
-// grad_xxx_ops.cc (在合适的 bprop 注册文件中添加)
-
 REG_BPROP_BUILDER("OpName").SetBody([](const BpropBuilder *ib) -> NodePtrList {
-  // 取正向输入
   auto input_x = ib->GetInput(kIndex0);
   auto scale = ib->GetInput(kIndex1);
-  // 取正向输出与上游梯度
-  auto out = ib->GetInput(kIndex2);   // 正向输入个数 + 0
-  auto dout = ib->GetInput(kIndex3);  // 正向输入个数 + 1
+  auto out = ib->GetInput(kIndex2);
+  auto dout = ib->GetInput(kIndex3);
 
-  // 构建反向子图
   NodePtr dx;
   if (ib->need_compute_grad_out(kIndex0)) {
     dx = ib->Emit("OpNameGrad", {input_x, out, dout, scale});
@@ -948,267 +841,256 @@ REG_BPROP_BUILDER("OpName").SetBody([](const BpropBuilder *ib) -> NodePtrList {
     dx = ib->OutZeros(input_x);
   }
 
-  // 非张量参数（如 scale）返回零梯度占位
   auto d_scale = ib->OutZeros(scale);
-
   return {dx, d_scale};
 });
 ```
 
 <a id="pta-source-review"></a>
-## 19. PTA 源码审查方法（必做）
+## 14. PTA Source Review
 
-> PTA 文档可能滞后或遗漏细节。开发前**必须**同时审查 op-plugin 仓库中的实际代码，
-> 结合文档与源码一起参考。若两者不一致，不要猜，让用户找接口人确认（见 [`19.5 代码与文档不一致时的处理流程`](#pta-source-doc-mismatch)）。
+PTA documentation may lag behind or omit details. Before development, review the actual op-plugin source and use both docs and source as references. If docs and source conflict, do not guess; ask the user to confirm with the ACLNN/PTA owner. See [14.5 Source And Documentation Mismatch](#pta-source-doc-mismatch).
 
-### 19.1 需要审查的三类关键文件
+### 14.1 Key Files To Review
 
-| 文件 | 路径模式 | 提取什么信息 |
+| File | Path pattern | What to extract |
 | --- | --- | --- |
-| **函数签名 YAML** | `op_plugin/config/op_plugin_functions.yaml` | 精确的参数名、类型、默认值、返回值结构、是否走 `op_api` / `acl_op` / `gen_opapi` |
-| **反向注册 YAML** | `op_plugin/config/derivatives.yaml` | 哪些输入可微、grad 函数名、参数传递顺序、`output_differentiability` |
-| **C++ 实现** | `op_plugin/ops/opapi/XxxKernelNpuOpApi.cpp`（含 Grad 变体） | 实际调用的 `aclnnXxx`、参数预处理逻辑、输出 tensor 构造方式、硬编码默认值 |
+| **Function signature YAML** | `op_plugin/config/op_plugin_functions.yaml` | exact argument names, types, defaults, return structure, `op_api` / `acl_op` / `gen_opapi` route |
+| **Backward registration YAML** | `op_plugin/config/derivatives.yaml` | differentiable inputs, grad function name, argument order, `output_differentiability` |
+| **C++ implementation** | `op_plugin/ops/opapi/XxxKernelNpuOpApi.cpp` and Grad variants | actual `aclnnXxx` call, preprocessing, output Tensor construction, hard-coded defaults |
 
-### 19.2 审查时重点关注的差异点
+### 14.2 Differences To Watch For
 
-从 PTA 代码中经常能发现文档未提及的关键细节：
+1. **Forward and backward argument names or order differ**
+   - Example: forward uses `actual_seq_lengths_query`, backward uses `actual_seq_qlen`.
+   - Example: forward has separate `layout_query` and `layout_kv`, while backward uses one `layout`.
+   - Impact: MS bprop must pass arguments according to the actual backward signature.
 
-**1. 前向与反向的参数命名/顺序不一致**
-- 例：前向用 `actual_seq_lengths_query`，反向用 `actual_seq_qlen`
-- 例：前向 `layout_query`/`layout_kv` 分开，反向退化为单个 `layout`
-- **影响**：MS 侧 bprop builder 的参数传递必须按反向的实际签名，不能照搬前向
+2. **Extra or hidden backward ACLNN arguments**
+   - Example: backward hard-codes `deterministic_const = true`.
+   - Example: backward omits `block_table` even though forward has it.
+   - Impact: MS PyBoost/KBK backward must match these hidden behaviors.
 
-**2. 反向 ACLNN 调用的额外/隐藏参数**
-- 例：反向里硬编码 `deterministic_const = true`（前向无此参数）
-- 例：反向缺少 `block_table`（前向有但反向不传）
-- **影响**：MS 侧 KBK/PyBoost 的反向实现要对齐这些隐藏行为
+3. **Optional argument `None` handling**
+   - Example: PTA passes an empty `at::Tensor()` to ACLNN when `query_rope` is `None`.
+   - Example: when `query_rope` is `None`, its gradient is `at::empty({0}, ...)`.
+   - Impact: MS must match `None` semantics, or ACLNN may fail or produce different behavior.
 
-**3. 可选参数的 None 处理方式**
-- 例：`query_rope` 为 None 时，PTA 构造 `at::Tensor()`（空 tensor）传给 ACLNN
-- 例：`query_rope` 的梯度在 None 时输出 `at::empty({0}, ...)`（形状为 [0]，非零张量）
-- **影响**：MS 侧必须同步 None 语义，否则 ACLNN 可能报错或结果不一致
+4. **Output count and output construction**
+   - Example: forward returns `(output, softmax_max, softmax_sum)`.
+   - Example: backward returns five gradients.
+   - Impact: MS Infer and bprop must match output shape and tuple indexing.
 
-**4. 输出 tensor 个数与构造**
-- 例：前向返回 `(output, softmax_max, softmax_sum)` 共 3 个，反向返回 5 个
-- `softmax_max`/`softmax_sum` 的 shape 推导逻辑在 C++ 里有明确的 3D/4D 分支
-- **影响**：MS Infer 必须对齐输出 shape 推导逻辑，bprop 必须正确传递中间结果
+5. **`derivatives.yaml` gradient routing**
+   - Example: `result0`, `result1`, and `result2` map to forward outputs 0, 1, and 2.
+   - Impact: MS `GetInput` indices and `OutZeros` placeholders must align.
 
-**5. `derivatives.yaml` 中的梯度传递**
-- 例：`result0`/`result1`/`result2` 分别对应前向的第 0/1/2 个输出
-- 哪些输入标记为 `non_differentiable`，哪些参与 grad
-- **影响**：MS bprop 的 `GetInput` 索引和 `OutZeros` 占位必须对齐
+### 14.3 Review Steps
 
-### 19.3 审查操作步骤
+1. Search the operator name in `op_plugin_functions.yaml`; extract exact forward and backward signatures.
+2. Search the operator name in `derivatives.yaml`; confirm differentiable inputs and grad argument passing.
+3. Locate the C++ implementation under `ops/opapi/` and inspect:
+   - output Tensor shape construction
+   - optional argument handling and `value_or` defaults
+   - actual argument order passed to `EXEC_NPU_NO_FORMAT_CHECK_CMD` or `aclnnXxx`
+   - hard-coded arguments such as `deterministic`
+4. Record differences as evidence for the MS adaptation.
+5. If source and docs conflict, stop and ask for confirmation. See [14.5](#pta-source-doc-mismatch).
 
-1. **在 `op_plugin_functions.yaml` 中搜索算子名**：提取前向/反向的精确签名，记录参数差异。
-2. **在 `derivatives.yaml` 中搜索算子名**：提取反向注册，确认可微输入和 grad 参数传递。
-3. **找到对应的 C++ 实现文件**（`ops/opapi/` 下），阅读：
-   - 输出 tensor 的 shape 构造逻辑
-   - 可选参数的 None 处理（`value_or` 的默认值是什么）
-   - 实际传给 `EXEC_NPU_NO_FORMAT_CHECK_CMD` / `aclnnXxx` 的参数列表与顺序
-   - 是否有硬编码参数（如 `deterministic`）
-4. **记录发现的差异**，作为 MS 适配的依据写入验证闭环的"关键证据"部分。
-5. **若发现代码与文档不一致 → 必须暂停并确认**（见 25.5）。
-
-### 19.4 典型差异记录模板
+### 14.4 Difference Record Template
 
 ```text
-算子：npu_sparse_flash_attention
+Operator: npu_sparse_flash_attention
 
-前向 vs 反向参数差异：
-- actual_seq_lengths_query (fwd) → actual_seq_qlen (bwd)
-- layout_query + layout_kv (fwd) → layout 单个 (bwd)
-- block_table (fwd 有) → bwd 不传
-- return_softmax_lse (fwd 有) → bwd 不传
+Forward vs backward argument differences:
+- actual_seq_lengths_query (forward) -> actual_seq_qlen (backward)
+- layout_query + layout_kv (forward) -> layout (backward)
+- block_table exists in forward but is not passed in backward
+- return_softmax_lse exists in forward but is not passed in backward
 
-反向隐藏行为：
-- deterministic_const = true（硬编码）
-- query_rope 为 None 时 d_query_rope = at::empty({0}, ...)
+Hidden backward behavior:
+- deterministic_const = true
+- when query_rope is None, d_query_rope = at::empty({0}, ...)
 
-输出结构：
-- 前向：(output, softmax_max, softmax_sum) = 3 个
-- 反向：(d_query, d_key, d_value, d_query_rope, d_key_rope) = 5 个
+Output structure:
+- forward: (output, softmax_max, softmax_sum), 3 outputs
+- backward: (d_query, d_key, d_value, d_query_rope, d_key_rope), 5 outputs
 
-derivatives.yaml 可微输入：
-- query, key, value, query_rope, key_rope（5 个）
-- sparse_indices, block_table 等不可微
+derivatives.yaml differentiable inputs:
+- query, key, value, query_rope, key_rope
+- sparse_indices, block_table, and similar inputs are non-differentiable
 ```
 
 <a id="pta-source-doc-mismatch"></a>
-### 19.5 代码与文档不一致时的处理流程
+### 14.5 Source And Documentation Mismatch
 
-> **核心原则**：文档与源码一致时，结合两者参考，高效推进。不一致时不要猜，直接让用户去确认。
+Principle: when docs and source agree, use both and proceed. When they conflict, do not guess; ask the user to confirm.
 
-**一致时**：结合文档（了解语义/约束）和源码（了解实现细节/隐藏行为）同步参考，直接推进开发。
+Mismatch process:
+1. List each difference: "docs say X, code does Y", with file path and line number.
+2. Ask the user to confirm with the ACLNN/PTA owner which behavior is authoritative.
+3. After confirmation, record the decision in the implementation plan or Feature document and continue.
 
-**不一致时**：
-1. **整理差异清单**：逐条列出"文档说的是 X，代码实际是 Y"，给出文件路径和行号。
-2. **立即交给用户确认**：不自行判断以哪边为准，让用户找 ACLNN/PTA 算子开发接口人确认。
-3. **拿到结论后继续**：将确认结论记录到方案文档/Feature 文档中，据此推进 MS 适配。
-
-差异确认输出模板：
+Output template:
 
 ```text
-⚠️ PTA 代码与文档不一致，需要确认
+PTA source and documentation conflict. Confirmation required.
 
-差异清单：
-| # | 内容 | 文档描述 | 代码实际行为 | 文件/行号 |
-| - | ---- | -------- | ------------ | --------- |
+| # | Topic | Documentation | Source behavior | File/line |
+| - | ----- | ------------- | --------------- | --------- |
 | 1 | ... | ... | ... | ... |
 
-建议找以下接口人确认以哪边为准：
-- ACLNN 算子开发接口人
-- PTA 算子开发接口人
-
-请确认后告知结论，我再继续开发。
+Please confirm with the ACLNN/PTA owner which behavior MS should follow.
 ```
 
 <a id="infervalue-constant-folding"></a>
-## 20. InferValue 常量折叠（可选优化）
+## 15. InferValue Constant Folding
 
-> 来源：`算子流程/.../3. 算子开发.md`。当算子的输入在编译期全部已知时，可通过 InferValue 直接
-> 推导出结果值，跳过运行时计算，提升整图执行性能。
+When all inputs are known at compile time, InferValue can infer the result value directly and skip runtime computation to improve graph execution performance.
 
-### 20.1 两种实现方式
-- **Python 回调**（如 concat）：在 `mindspore/python/mindspore/ops/operations/manually_defined/ops_def.py`
-  中注册 InferValue 回调函数。
-- **C++ 实现**（如 add）：在 `mindspore/ops/infer/ops_frontend_func_impl/` 下实现。
-- **C++ 性能优于 Python**，优先使用 C++ 实现。
+### 15.1 Implementation Options
 
-### 20.2 验证方法
-- 增加 InferValue 的 UT 用例（全常量输入场景）。
-- 运行测试脚本查看 IR 图，确认常量折叠生效（输出节点变为 ValueNode）。
+- **Python callback**, such as concat: register an InferValue callback in `mindspore/python/mindspore/ops/operations/manually_defined/ops_def.py`.
+- **C++ implementation**, such as add: implement under `mindspore/ops/infer/ops_frontend_func_impl/`.
+- Prefer C++ when practical because it has better performance.
 
-### 20.3 适用场景
-- 算子输入在编译期可确定（如 shape 计算、类型转换等辅助算子）。
-- 大多数 ACLNN 计算算子的输入在运行时才确定，**不需要实现 InferValue**。
+### 15.2 Verification
+
+- Add InferValue UT cases with all-constant inputs.
+- Inspect IR after running tests and confirm the output node becomes a ValueNode.
+
+### 15.3 Applicable Scenarios
+
+- Inputs can be determined at compile time, such as shape calculation or type-conversion helper operators.
+- Most ACLNN compute operators have runtime inputs and do not need InferValue.
 
 <a id="dynamic-shape-strategy"></a>
-## 21. 动态 shape 分类与处理策略
+## 16. Dynamic Shape Categories And Strategies
 
-> 来源：`算子流程/.../4. 算子关键特性.md`。Infer 推导的快速回退策略另见 [`4.2 动态 shape / 动态 rank`](#general-infer-dynamic-shape-rank)。
+For quick Infer fallback rules, see [4.2 Dynamic Shape And Dynamic Rank](#general-infer-dynamic-shape-rank).
 
-### 21.1 动态 shape 三种类型
-| 类型 | 含义 | 典型算子 | Infer 策略 |
+### 16.1 Three Dynamic Shape Categories
+
+| Type | Meaning | Typical operators | Infer strategy |
 | --- | --- | --- | --- |
-| **InputDynamic** | 输入 shape 编译期未知 | 大多数算子 | 输出对应维度设为 -1（`kShapeDimAny`） |
-| **OutputDynamic (Input Value Depend)** | 输出 shape 依赖输入的值 | `Std`、`Ones` | `GetScalarValue` / `GetArrayValue` 取值；unknown 时回退动态维/秩 |
-| **OutputDynamic (Compute Depend)** | 输出 shape 需运行时计算 | `NonZero`、`UniqueConsecutive` | 输出分配最大可能 size + 运行后 `SyncOutputShape` |
+| **InputDynamic** | input shape unknown at compile time | most operators | set corresponding output dimensions to `kShapeDimAny` |
+| **OutputDynamic (Input Value Depend)** | output shape depends on input values | `Std`, `Ones` | read with `GetScalarValue` / `GetArrayValue`; fall back when unknown |
+| **OutputDynamic (Compute Depend)** | output shape must be computed at runtime | `NonZero`, `UniqueConsecutive` | allocate maximum possible size and call `SyncOutputShape` after execution |
 
-### 21.2 InputDynamic 处理要点
-- 输入 shape 中 -1 维度：输出对应维度也设为 -1。
-- 输入动态秩（-2）：输出回退动态秩。
-- 关键标量参数 unknown（`HasUnknownValue`）：依赖该参数的输出维度回退 -1。
+### 16.2 InputDynamic
 
-### 21.3 Input Value Depend 处理要点
-输出 shape 依赖某个输入参数的**值**（标量或数组），编译期该值可能已知也可能 unknown。
-- **标量值依赖**：用 `GetScalarValue<T>()` 取值；`!has_value()` 时回退动态秩/动态维。
-- **数组值依赖**：用 `GetArrayValue<T>()` 取值；整体 `!has_value()` 回退动态秩；逐元素 `IsValueUnknown(i)` 回退对应维为 -1。
-- 典型场景 A — `Std`：输出 shape 依赖 `dim`（数组）和 `keepdim`（标量）的值，任一 unknown 则回退 `kShapeRankAny`。
-- 典型场景 B — `Ones`：输出 shape 直接由输入 `shape` 数组的值决定，逐元素 unknown 则对应维设为 `kShapeDimAny`。
+- If an input dimension is `-1`, set the corresponding output dimension to `-1`.
+- If input rank is dynamic, such as `-2`, return dynamic rank.
+- If a key scalar parameter is unknown, set dimensions depending on that parameter to `-1`.
 
-### 21.4 Compute Depend 处理要点
-- 输出分配最大可能 size（编译期估算上界）。
-- 运行后通过 `Sync` + `SyncOutputShape` 更新实际输出 shape。
-- 需覆写 `GetUseLessOutputIdx()` 避免 dump/溢出误检。
+### 16.3 Input Value Depend
+
+Output shape may depend on an input value, scalar or array, which may be known or unknown at compile time.
+
+- **Scalar value dependency**: use `GetScalarValue<T>()`; if `!has_value()`, fall back to dynamic rank or dynamic dimensions.
+- **Array value dependency**: use `GetArrayValue<T>()`; if the whole value is unknown, fall back to dynamic rank; if only one element is unknown, set the corresponding dimension to `kShapeDimAny`.
+- Example A, `Std`: output shape depends on `dim` and `keepdim`; if either is unknown, fall back to `kShapeRankAny`.
+- Example B, `Ones`: output shape is directly determined by the `shape` array; unknown elements become `kShapeDimAny`.
+
+### 16.4 Compute Depend
+
+- Allocate the maximum possible output size estimated at compile time.
+- After execution, use `Sync` plus `SyncOutputShape` to update the actual output shape.
+- Override `GetUseLessOutputIdx()` when needed to avoid dump or overflow-check issues.
 
 <a id="aclnn-callchain-analysis"></a>
-## 22. ACLNN 调用链分析与子算子盘点（组合场景）
+## 17. ACLNN Call Chain Analysis
 
-> PTA 的一个 `torch_npu.npu_xxx()` 接口，底层不一定只调用一个 `aclnnXxx` 大算子，
-> 常见模式是**多个 ACLNN 小算子串联**（前向/反向均可能）。在这种场景下，MS 必须先盘点
-> 所有子算子的接入情况，补齐缺失的子算子，再按相同方式组合。
+A PTA `torch_npu.npu_xxx()` API may call more than one `aclnnXxx` operator internally. Forward or backward may be implemented as a chain of smaller ACLNN operators. In that case, MS must inventory all sub-operators, implement missing ones, and then compose them in the same way.
 
-### 22.1 何时需要做调用链分析
+### 17.1 When Call Chain Analysis Is Needed
 
-- PTA C++ 实现中出现了**多个 `EXEC_NPU_CMD` / `EXEC_NPU_NO_FORMAT_CHECK_CMD`** 调用。
-- PTA C++ 实现中调用了其他 `at_npu::native::` 函数（间接组合）。
-- ACLNN 文档/头文件中没有与 PTA 接口一一对应的单个大算子。
-- 反向实现不是单个 `aclnnXxxGrad`，而是用多个小算子拼出梯度计算。
+- PTA C++ implementation contains multiple `EXEC_NPU_CMD` or `EXEC_NPU_NO_FORMAT_CHECK_CMD` calls.
+- PTA C++ implementation calls other `at_npu::native::` functions.
+- ACLNN docs or headers do not provide a single operator matching the PTA API.
+- Backward is not a single `aclnnXxxGrad` call and is instead built from smaller operators.
 
 <a id="aclnn-callchain-extraction"></a>
-### 22.2 调用链提取方法
+### 17.2 Extracting The Call Chain
 
-1. **找到 PTA 前向 C++ 实现**（`ops/opapi/XxxKernelNpuOpApi.cpp`），逐行标注：
-   - 每个 `EXEC_NPU_CMD(aclnnYyy, ...)` 或 `OpApiFunc(aclnnYyy, ...)`
-   - 中间 tensor 的构造（`at::empty(...)` / `npu_preparation::apply_tensor(...)`）
-   - 参数预处理（类型转换、默认值填充、None 处理）
-2. **同样分析反向 C++ 实现**（`XxxGradKernelNpuOpApi.cpp` 或 `derivatives.yaml` 指向的函数）。
-3. **产出调用链图**（文本即可）：
+1. Find the PTA forward C++ implementation, such as `ops/opapi/XxxKernelNpuOpApi.cpp`, and mark:
+   - each `EXEC_NPU_CMD(aclnnYyy, ...)` or `OpApiFunc(aclnnYyy, ...)`
+   - intermediate Tensor construction, such as `at::empty(...)` or `npu_preparation::apply_tensor(...)`
+   - argument preprocessing, default filling, and `None` handling
+2. Analyze the backward implementation similarly, such as `XxxGradKernelNpuOpApi.cpp` or the function referenced by `derivatives.yaml`.
+3. Produce a text call chain.
 
 ```text
-torch_npu.npu_foo(q, k, v, scale) 前向调用链：
-  ① aclnnBarPrepare(q, k) → intermediate_qk     # 预处理
-  ② aclnnAttentionScore(intermediate_qk, v, scale) → output  # 主计算
-  ③ aclnnSoftmaxLse(output) → softmax_lse        # 辅助输出
+torch_npu.npu_foo(q, k, v, scale) forward:
+  1. aclnnBarPrepare(q, k) -> intermediate_qk
+  2. aclnnAttentionScore(intermediate_qk, v, scale) -> output
+  3. aclnnSoftmaxLse(output) -> softmax_lse
 
-torch_npu.npu_foo 反向调用链：
-  ① aclnnAttentionScoreGrad(dout, q, k, v, softmax_lse) → (dq, dk, dv)
-  （反向为单个大算子，无需拆分）
+torch_npu.npu_foo backward:
+  1. aclnnAttentionScoreGrad(dout, q, k, v, softmax_lse) -> (dq, dk, dv)
 ```
 
 <a id="ms-coverage-inventory"></a>
-### 22.3 MS 侧覆盖盘点方法
+### 17.3 MS Coverage Inventory
 
-对调用链中的每个子算子，在 MS 仓库中搜索确认：
+Search each sub-operator in the MS repository.
 
-| 搜索对象 | 搜索关键词 | 说明 |
+| Target | Search key | Purpose |
 | --- | --- | --- |
-| YAML 定义 | `aclnnYyy` 或对应 op_name | 确认 op_def 是否存在 |
-| C++ 小算子 API | `functions/auto_generate/functions.h` 中的函数名 | 确认 PyBoost 拼接可用（[`23.1 PyBoost 拼接`](#composite-pyboost-pattern)） |
-| Meta DSL Prim | `Prim(OpName)` 或 `gen_ops_primitive_*.h` 中的原语 | 确认 KBK 拼接可用（[`23.2 KBK 拼接`](#composite-kbk-pattern)） |
-| PyBoost 实现 | `LAUNCH_ACLNN(aclnnYyy` 或对应 customize 文件 | 确认 Pynative 路径 |
-| KBK kernel | `MS_ACLNN_KERNEL_FACTORY_REG` + 对应类名 | 确认 Graph 路径 |
-| Infer | 对应 `FuncImpl` 类 | 确认推导是否存在 |
-| aclnn_config.yaml | 算子名映射（仅路径 1 自动生成需要） | 确认调度映射（路径 2 无需此映射） |
+| YAML definition | `aclnnYyy` or corresponding op name | confirm `op_def` exists |
+| C++ small-operator API | function name in `functions/auto_generate/functions.h` | confirm PyBoost composition can call it |
+| Meta DSL Prim | `Prim(OpName)` or `gen_ops_primitive_*.h` | confirm KBK composition can call it |
+| PyBoost implementation | `LAUNCH_ACLNN(aclnnYyy` or customize file | confirm Pynative path |
+| KBK kernel | `MS_ACLNN_KERNEL_FACTORY_REG` plus class name | confirm Graph path |
+| Infer | corresponding `FuncImpl` class | confirm inference exists |
+| `aclnn_config.yaml` | operator name mapping | confirm dispatch mapping for Path 1 |
 
-### 22.4 盘点结果模板
+### 17.4 Inventory Template
 
 ```text
-目标接口：torch_npu.npu_foo → mindspore.ops.foo
+Target API: torch_npu.npu_foo -> mindspore.ops.foo
 
-ACLNN 调用链盘点：
-| # | aclnnXxx | 用途 | MS 状态 | 备注 |
-| - | -------- | ---- | ------- | ---- |
-| 1 | aclnnBarPrepare | 前向-预处理 | ✅ 已接入 | YAML/Infer/PyBoost/KBK 齐全 |
-| 2 | aclnnAttentionScore | 前向-主计算 | ⚠️ 仅有 YAML+Infer | 缺 PyBoost customize 和 KBK |
-| 3 | aclnnSoftmaxLse | 前向-辅助输出 | ❌ 未接入 | 需走完整开发流程 |
-| 4 | aclnnAttentionScoreGrad | 反向 | ✅ 已接入 | 无需额外工作 |
+ACLNN call chain inventory:
+| # | aclnnXxx | Purpose | MS status | Notes |
+| - | -------- | ------- | --------- | ----- |
+| 1 | aclnnBarPrepare | forward preprocessing | integrated | YAML/Infer/PyBoost/KBK complete |
+| 2 | aclnnAttentionScore | forward main compute | partial | YAML+Infer only; missing PyBoost/KBK |
+| 3 | aclnnSoftmaxLse | forward auxiliary output | missing | full flow required |
+| 4 | aclnnAttentionScoreGrad | backward | integrated | no extra work |
 
-实施计划：
-1. 先补 #3（aclnnSoftmaxLse）：走 YAML→Infer→PyBoost→KBK→UT 全流程
-2. 再补 #2 的 PyBoost/KBK
-3. 最后在 foo 的 customize 中组合 #1+#2+#3
+Plan:
+1. Implement #3 first through YAML -> Infer -> PyBoost -> KBK -> UT.
+2. Complete PyBoost/KBK for #2.
+3. Implement foo customize by composing #1, #2, and #3.
 ```
 
 <a id="callchain-rollout-order"></a>
-### 22.5 实施顺序原则
+### 17.5 Rollout Order
 
-- **叶子先、组合后**：先实现所有独立的子算子，再实现组合算子。
-- **前向先、反向后**：反向可能复用前向子算子，先确保前向链完整。
-- **每个子算子走完整流程**：缺失的子算子按 SKILL.md 的步骤 1-8 逐步实现
-  （但通常不需要独立导出/文档，只需 YAML+Infer+PyBoost+KBK+UT）。
-- **组合算子在最后实现**：确认所有子算子可用后，再写组合层的 customize。
+- Implement leaf sub-operators before composite operators.
+- Implement forward before backward, because backward may reuse forward sub-operators.
+- Each missing sub-operator should follow the full flow from YAML to Infer to PyBoost to KBK to UT.
+- Implement the composite layer after all sub-operators are available.
 
 <a id="composite-implementation"></a>
-## 23. 组合实现模式（C++ 小算子拼接 + Meta DSL）
+## 18. Composite Implementation Patterns
 
-> 当目标算子由多个小算子拼接组合实现时，MindSpore 提供了两套机制分别覆盖动态图和静态图：
-> - **PyBoost（Pynative）**：C++ 小算子 API 拼接——调用封装好的 C++ 函数（含隐式类型转换 + 算子 Call + 自动微分）
-> - **KBK（Graph）**：Meta DSL 编程范式——通过 C++ 构图自动处理类型推导、自动微分和多平台适配
+When an operator is composed from smaller operators, MindSpore provides two mechanisms:
+- **PyBoost Pynative**: compose generated C++ small-operator APIs.
+- **KBK Graph**: compose operators using the Meta DSL.
 
 <a id="composite-pyboost-pattern"></a>
-### 23.1 PyBoost 拼接（C++ 小算子 API）
+### 18.1 PyBoost Composition With C++ Small-Operator APIs
 
-**核心思路**：在 PyBoost customize 中直接调用已有算子的 C++ API 函数（如 `add()`/`mul()`/`transpose()` 等），
-每个 API 内部封装了隐式类型转换 + PyBoost Call + 自动微分，无需手动 `LAUNCH_ACLNN`。
+In PyBoost customize code, directly call existing generated C++ API functions such as `add()`, `mul()`, or `transpose()`. Each API wraps implicit type conversion, the PyBoost call, and automatic differentiation, so you do not need to call `LAUNCH_ACLNN` manually for each sub-operator.
 
-**关键头文件**：
+Key header:
+
 ```cpp
 #include "mindspore/ccsrc/include/pynative/utils/pyboost/functions/auto_generate/functions.h"
 ```
 
-**YAML 配置**：设置 `bprop_expander: False`，表示大算子不走反向 expander，由拼接的小算子各自负责自动微分。
+YAML:
 
 ```yaml
 bprop_expander: False
@@ -1217,9 +1099,11 @@ dispatch:
   Ascend: FooAscend
 ```
 
-**`RequireGradGuard` 用法**：若大算子已有独立的 bprop 注册（未设 `bprop_expander: False`），需用 `RequireGradGuard(false)` 禁止小算子各自做自动微分，避免重复。
+Set `bprop_expander: False` to make the large operator rely on sub-operator autodiff rather than its own bprop expander.
 
-**精简示例**（参考 `cosine_embedding_loss.cc`）：
+If the large operator already has an independent bprop registration and `bprop_expander: False` is not set, use `RequireGradGuard(false)` around sub-operator calls to avoid duplicate autodiff.
+
+Example:
 
 ```cpp
 #include "mindspore/ccsrc/include/pynative/utils/pyboost/functions/auto_generate/functions.h"
@@ -1227,12 +1111,10 @@ dispatch:
 tensor::TensorPtr FooAscendCustomize(const std::shared_ptr<OpRunner> &op,
                                      const TensorPtr &input1, const TensorPtr &input2,
                                      const FP32ImmPtr &margin, const Int64ImmPtr &reduction) {
-  // 直接调用 C++ 小算子 API 拼接计算逻辑
   auto prod = mul(input1, input2);
   auto result = sum_ext(prod, dim_tuple, std::make_shared<BoolImm>(False), std::nullopt);
   auto output = div(result, sqrt(denom));
 
-  // reduction 分支
   auto reduction_val = static_cast<Reduction>(GetValue<int64_t>(reduction));
   if (reduction_val == Reduction::MEAN) {
     output = mean_ext(output, std::nullopt, std::make_shared<BoolImm>(False), std::nullopt);
@@ -1243,33 +1125,30 @@ tensor::TensorPtr FooAscendCustomize(const std::shared_ptr<OpRunner> &op,
 }
 ```
 
-**可用 API**：查看 `mindspore/ops/op_def/yaml/` 下的 YAML 定义，已有 YAML + dispatch 的算子均会生成对应 C++ API。
+Available APIs can be inferred from `mindspore/ops/op_def/yaml/`: operators with YAML and dispatch generate corresponding C++ APIs.
 
 <a id="composite-kbk-pattern"></a>
-### 23.2 KBK 拼接（Meta DSL 编程范式）
+### 18.2 KBK Composition With Meta DSL
 
-**核心思路**：通过 `REGISTER_FUNCTION_OP` 注册 + `BeginFunction/EndFunction` 实现 C++ 构图，
-框架自动处理类型推导、自动微分和多平台适配，无需手写 `GetWorkSpaceInfo/Launch/RunOp`。
+Meta DSL uses `REGISTER_FUNCTION_OP` plus `BeginFunction`/`EndFunction` to build a graph in C++. The framework handles type inference, autodiff, and multi-platform adaptation.
 
-**代码位置**：`mindspore/ccsrc/frontend/operator/meta_dsl/func_op/`
+Code location: `mindspore/ccsrc/frontend/operator/meta_dsl/func_op/`.
 
-**核心接口速览**：
-
-| 接口 | 说明 | 示例 |
+| API | Meaning | Example |
 | --- | --- | --- |
-| `REGISTER_FUNCTION_OP(OpName)` | 注册拼接算子（可选传入校验函数） | `REGISTER_FUNCTION_OP(Foo, CheckFunc)` |
-| `BeginFunction(Op, args...) { }` | 开始算子拼接实现 | `BeginFunction(Foo, x, y, z) { ... }` |
-| `EndFunction(Op)` | 结束算子拼接实现 | `EndFunction(Foo)` |
-| `Prim(OpName)` | 表示算子原语 | `Prim(Add)` / `Prim(SumExt)` |
-| `Call(prim, args...)` | 调用单个算子 | `Call(Prim(Mul), x, y)` |
-| `Value(v)` | 常量值 | `Value(0)` / `Value(1.0)` / `Value(kNone)` |
-| `Return(out)` | 返回输出 | `Return(output)` |
-| `If(cond, true_br, false_br)` | 控制流 if-else | 分支为 lambda 函数 |
-| `Tuple(...)` / `List(...)` | 创建元组/列表 | `Tuple(x, y, z)` |
-| `Rank(x)` / `Shape(x)` | 获取秩/形状 | — |
-| `PRIMITIVE_BPROP_REG(Op, Grad)` | 定义反向 bprop（可选） | `PRIMITIVE_BPROP_REG(Foo, FooGrad)` |
+| `REGISTER_FUNCTION_OP(OpName)` | Register a composed operator | `REGISTER_FUNCTION_OP(Foo, CheckFunc)` |
+| `BeginFunction(Op, args...) { }` | Start composition | `BeginFunction(Foo, x, y, z) { ... }` |
+| `EndFunction(Op)` | End composition | `EndFunction(Foo)` |
+| `Prim(OpName)` | Reference a Primitive | `Prim(Add)` |
+| `Call(prim, args...)` | Call one operator | `Call(Prim(Mul), x, y)` |
+| `Value(v)` | Create a constant | `Value(0)` or `Value(kNone)` |
+| `Return(out)` | Return output | `Return(output)` |
+| `If(cond, true_br, false_br)` | Graph if-else | branches are lambdas |
+| `Tuple(...)` / `List(...)` | Create tuple/list | `Tuple(x, y, z)` |
+| `Rank(x)` / `Shape(x)` | Get rank/shape | `Rank(x)` |
+| `PRIMITIVE_BPROP_REG(Op, Grad)` | Register optional bprop | `PRIMITIVE_BPROP_REG(Foo, FooGrad)` |
 
-**精简示例**（参考 `cosine_embedding_loss.cc`）：
+Example:
 
 ```cpp
 REGISTER_FUNCTION_OP(CosineEmbeddingLoss, CheckCosineEmbeddingLossInputs)
@@ -1279,7 +1158,6 @@ BeginFunction(CosineEmbeddingLoss, input1_tensor, input2_tensor, target_tensor, 
   auto dim_tuple_ptr = Tuple(Rank(target_tensor));
   auto prod_sum = Call(Prim(SumExt), Call(Prim(Mul), input1_tensor, input2_tensor),
                        dim_tuple_ptr, Value(false), Value(kNone));
-  // mag_square + denom + cos 计算 ...
   auto denom = Call(Prim(Sqrt), Call(Prim(Mul), mag_square1, mag_square2));
   auto cos = Call(Prim(Div), prod_sum, denom);
 
@@ -1290,7 +1168,6 @@ BeginFunction(CosineEmbeddingLoss, input1_tensor, input2_tensor, target_tensor, 
   auto output_neg = Call(Prim(Select), Equal(target_tensor, Value(-1)), neg, zeros);
   auto output = Call(Prim(AddExt), output_pos, output_neg, Value(1));
 
-  // 嵌套 If：先判 NONE，再判 MEAN/SUM
   auto condition_none = Equal(reduction, Value(static_cast<int64_t>(Reduction::NONE)));
   auto none_true_branch = [&]() { Return(output); };
   auto none_false_branch = [&]() {
@@ -1304,177 +1181,150 @@ BeginFunction(CosineEmbeddingLoss, input1_tensor, input2_tensor, target_tensor, 
 EndFunction(CosineEmbeddingLoss)
 ```
 
-### 23.3 YAML 配置要点
+### 18.3 YAML Notes
 
-| 字段 | 值 | 说明 |
+| Field | Value | Meaning |
 | --- | --- | --- |
-| `bprop_expander` | `False` | 大算子不走反向 expander，由小算子各自负责自动微分 |
-| `dispatch.enable` | `True` | 启用调度 |
-| `dispatch.Ascend` | `FooAscend` | 指向 PyBoost customize 实现（若有） |
+| `bprop_expander` | `False` | large operator does not use bprop expander; sub-operators handle autodiff |
+| `dispatch.enable` | `True` | enable dispatch |
+| `dispatch.Ascend` | `FooAscend` | point to PyBoost customize implementation if any |
 
-> **注意**：设置 `bprop_expander: False` 后**不再需要**手写 bprop builder（`REG_BPROP_BUILDER`），
-> 反向由小算子的已有 bprop 自动组合。若需自定义反向，也可用 Meta DSL 的 `PRIMITIVE_BPROP_REG` 注册。
+After `bprop_expander: False`, a handwritten `REG_BPROP_BUILDER` is usually not needed. Backward is composed from sub-operator bprop implementations. If custom backward is required, Meta DSL can use `PRIMITIVE_BPROP_REG`.
 
-### 23.4 Infer 要点
+### 18.4 Infer Notes
 
-- 组合算子的 Infer **只需推导最终输出的 shape/type**，不需要推导中间 tensor。
-- 如果最终输出依赖于中间结果的 shape（级联推导），Infer 中需要直接按已知输入推导最终输出。
+- Composite operator Infer only needs to infer final output shape and type.
+- It does not need to infer intermediate tensors.
+- If final output shape depends on intermediate shapes, infer it directly from known inputs.
 
-### 23.5 组合场景的分层验证策略
+### 18.5 Layered Verification
 
-| 阶段 | 验证内容 | 方法 |
+| Stage | Verify | Method |
 | --- | --- | --- |
-| **子算子级** | 每个子算子独立正确 | 子算子各自的 UT/ST |
-| **组合级-中间值** | 中间 tensor 与 PTA 对齐 | 临时 dump 中间 tensor，与 PTA 逐阶段对比 |
-| **组合级-最终输出** | 最终输出与 PTA 对齐 | 标准 ST 对齐流程 |
-| **反向级** | 梯度正确性 | 反向 ST + 数值梯度检查（若适用） |
-
----
+| **Sub-operator** | each sub-operator is correct | each sub-operator's UT/ST |
+| **Composite intermediate** | intermediate tensors match PTA | temporary dumps and staged PTA comparison |
+| **Composite final output** | final output matches PTA | standard ST alignment |
+| **Backward** | gradients are correct | backward ST and numerical gradient checks when applicable |
 
 <a id="feature-document-reference"></a>
-## 24. Feature 文档（评审与交付必须产物）
+## 19. Feature Document
 
-> **来源**：实际交付的 Feature 文档（`==符号重载Feature.md`、`CosineEmbeddingLoss Feature.md`、`NsaCompressAttention_Feature_文档.md`、`参考feature.md`）。
+Feature documents are required for operator review and test handoff. They consolidate design, interface definition, implementation details, test plan, and acceptance results in a standard format.
 
 <a id="feature-document-overview"></a>
-### 24.1 什么是 Feature 文档
+### 19.1 What A Feature Document Is
 
-Feature 文档是算子**评审和转测交付的必须文件**，它将方案设计、接口定义、实现细节、测试计划和验收结果整合到一份标准化文档中。
-评审委员会根据此文档判断算子是否可以合入主干。
+The review committee uses the Feature document to decide whether the operator can be merged.
 
-### 24.2 Feature 文档标准章节
+### 19.2 Standard Sections
 
-| 序号 | 章节 | 填写时机 | 说明 |
-| ---- | ---- | -------- | ---- |
-| 1 | 背景描述 | Pre-B | 算子来源、动机、MindSpore 为何需要 |
-| 2 | 标杆与接口 | Pre-B | 标杆接口（PTA/Torch）、MindSpore 接口（functional/nn/tensor） |
-| 3 | 任务清单 | Pre-B 初始化 → 开发中更新状态 | **标准 13 大类表格**（见下方 [`24.3 任务清单标准 13 大类`](#feature-document-task-categories)） |
-| 4 | 功能与接口说明 | Pre-B | 计算公式、接口签名、参数说明 |
-| 5 | YAML 定义 | Step 1 后 | `op_def` YAML 内容 |
-| 6 | 约束与类型 | Pre-B | 设备、dtype、shape 约束、空 Tensor 策略 |
-| 7 | 执行模式与适配 | Step 4/5 后 | PyBoost / KBK 实现说明 |
-| 8 | 与 PTA 的差异与对齐 | Pre-B 初始化 → 开发中补齐 | 功能/精度/API 语义差异 |
-| 9 | 动态 Shape/Rank 支持 | Step 3 后 | 动态维/动态秩推导策略 |
-| 10 | 异常与校验 | Step 3/4 后 | 推导期/运行期校验 |
-| 11 | 反向（BPROP） | Step 6 后 | BPROP 注册、反向接口、梯度处理 |
-| 12 | 测试方案 | Step 8 后 | UT/ST/TEST_OP 覆盖说明 |
-| 13 | 代码与文件改动说明 | 开发完成后 | 所有新增/修改文件的完整路径 |
-| 14 | 验收报告 | 转测前 | 四张自测表：资料验证 + 功能验证 + 性能验证 + 安全编码（见 [`24.4 验收报告四张表`](#feature-document-acceptance-tables)） |
+| No. | Section | Fill time | Notes |
+| --- | ------- | --------- | ----- |
+| 1 | Background | Pre-B | operator source, motivation, why MindSpore needs it |
+| 2 | Benchmark and API | Pre-B | PTA/Torch benchmark API and MindSpore API |
+| 3 | Task list | Pre-B init, then update during development | standard task categories |
+| 4 | Function and interface spec | Pre-B | formula, signature, argument descriptions |
+| 5 | YAML definition | after Step 1 | `op_def` YAML |
+| 6 | Constraints and types | Pre-B | device, dtype, shape, empty Tensor strategy |
+| 7 | Execution modes and adaptation | after Step 4/5 | PyBoost and KBK implementation |
+| 8 | PTA differences and alignment | Pre-B init, then update | functional, precision, and API semantic differences |
+| 9 | Dynamic Shape/Rank support | after Step 3 | dynamic dimension/rank strategy |
+| 10 | Errors and validation | after Step 3/4 | Infer/runtime checks |
+| 11 | Backward BPROP | after Step 6 | bprop registration, backward API, gradients |
+| 12 | Test plan | after Step 8 | UT/ST/TEST_OP coverage |
+| 13 | Code change summary | after development | full paths for all added/modified files |
+| 14 | Acceptance report | before handoff | documentation, function, performance, and secure-coding self-checks |
 
 <a id="feature-document-task-categories"></a>
-### 24.3 任务清单标准 13 大类
+### 19.3 Task List Categories
 
-Feature 文档中的"任务清单"是标准化表格，每个算子**必须逐项填写**：
+Each operator should fill the task list with `new`, `modified`, `unchanged`, or `not applicable`, plus a short note.
 
-| 序号 | 任务项 | 子项 |
-| ---- | ------ | ---- |
-| 1 | 接口基本功能 | Primitive / functional / nn / tensor |
-| 2 | 后端及数据类型支持 | Ascend / GPU / CPU |
-| 3 | 支持 vmap | — |
-| 4 | 支持动态 Shape | 动态 Shape / 动态 Rank |
-| 5 | 支持反向 | bprop 函数 / 复数支持 |
-| 6 | 补齐资料 | API 映射 / 接口中英文资料 |
-| 7 | 功能 | 空 Tensor / inf-nan / 0~8 维 / 其他功能点 |
-| 8 | 门禁用例补齐 | UT / ST / TEST_OP |
-| 9 | 安全与异常 | 异常用例与报错规范 |
-
-每项需标注：`新增` / `修改` / `无变更` / `不涉及`，并在备注中简要说明。
+| No. | Task item | Subitems |
+| --- | --------- | -------- |
+| 1 | Basic interface function | Primitive / functional / nn / tensor |
+| 2 | Backend and dtype support | Ascend / GPU / CPU |
+| 3 | vmap support | - |
+| 4 | Dynamic Shape support | dynamic shape / dynamic rank |
+| 5 | Backward support | bprop function / complex support |
+| 6 | Documentation | API mapping / Chinese and English API docs |
+| 7 | Functionality | empty Tensor / inf-nan / 0D-8D / other points |
+| 8 | Gate tests | UT / ST / TEST_OP |
+| 9 | Security and errors | error cases and error message standards |
 
 <a id="feature-document-acceptance-tables"></a>
-### 24.4 验收报告四张表
+### 19.4 Acceptance Tables
 
-#### 资料验证表（17 项）
+**Documentation validation, 17 items**: interface lists, UT/ST cases, Chinese and English docs, interface description, formula, arguments, inputs, outputs, output shape relation, Raises, platform, format checks, samples, sample output, sample executability, API sandbox.
 
-涵盖：接口列表、UT/ST 用例、中英文文档、接口描述、公式、参数描述、输入描述、输出描述、
-输出尺寸与输入关系、Raises、平台填写、格式检查、样例提供、样例打印结果、样例可执行、API 沙盘。
+**Functional validation, 26 items**: default arguments, empty Tensor, inf/nan, dtype alignment, value range, 0D-8D coverage, dtype coverage, implicit casting, broadcasting, input constraints, forward accuracy, backward support, single backward operator, error messages, error whitelist, dynamic shape/rank, fallback disable validation, test repository regression, bf16, bprop as required, compute-dependent output shape, non-contiguous input, PTA zero-difference, existing API impact, AMP, inconsistent multi-Tensor dtype.
 
-#### 功能验证表（26 项）
+**Performance validation, 4 items**: broadcast performance, backward memory optimization with `SetUnusedInputs`, at least three specs, memory comparable to PTA.
 
-涵盖：默认参数、空 Tensor、inf/nan、dtype 对齐、取值范围、维度覆盖 0D-8D、dtype 全覆盖、
-隐式类型转换、广播、输入约束、正向精度、反向支持、反向单算子实现、异常报错信息、报错白名单、
-动态 shape/rank、退避关闭验证、测试仓回归、bf16、bprop 按需求导、
-输出 shape 计算依赖、非连续输入、PTA 0 偏差、存量接口影响、AMP、多 Tensor dtype 不一致。
+**Secure coding review, 12 items**: null pointer, use-before-check, out of bounds, divide by zero, memory leak, exception-path release, `nothrow`, secure function library, type conversion overflow, redundant code, sensitive information, weak random numbers.
 
-#### 性能验证表（4 项）
+### 19.5 Feature Document Workflow
 
-涵盖：广播场景性能、反向显存优化（SetUnusedInputs）、多规格性能（≥3 种）、显存持平 PTA。
+```text
+Pre-B:
+  1. Copy templates/feature-document.md.
+  2. Fill background, benchmark/API, task list, function spec, constraints, and PTA alignment.
+  3. Submit for design review.
 
-#### 安全编码检视表（12 项）
+During development:
+  4. Backfill the corresponding sections after each workflow step.
 
-涵盖：指针判空、先用后校、越界、除零、内存泄露、异常路径释放、nothrow、安全函数库、
-类型转换溢出、冗余代码、敏感信息、弱随机数。
-
-### 24.5 Feature 文档生成流程
-
-```
-Pre-B 阶段：
-  1. 从模板 templates/feature-document.md 复制一份
-  2. 填写 [1. 背景描述](templates/feature-document.md#feature-background)、[2. 标杆与接口](templates/feature-document.md#feature-benchmark-api)、[3. 任务清单](templates/feature-document.md#feature-task-list)、[4. 功能与接口说明](templates/feature-document.md#feature-functional-spec)、[6. 约束与类型](templates/feature-document.md#feature-constraints) 和 [8. 与 PTA 的差异与对齐](templates/feature-document.md#feature-pta-alignment)
-  3. 提交给评审委员会做方案评审
-
-开发过程中：
-  4. 每完成一个 Workflow Step，回填对应章节
-     - Step 1 → [5. YAML 定义](templates/feature-document.md#feature-yaml-definition)
-     - Step 3 → [9. 动态 Shape/Rank 支持](templates/feature-document.md#feature-dynamic-shape), [10. 异常与校验](templates/feature-document.md#feature-validation-and-errors)
-     - Step 4/5 → [7. 执行模式与适配](templates/feature-document.md#feature-execution-modes)
-     - Step 6 → [11. 反向（BPROP）](templates/feature-document.md#feature-bprop)
-     - Step 8 → [12. 测试方案](templates/feature-document.md#feature-test-plan)
-
-转测交付前：
-  5. 补齐 [13. 代码与文件改动说明](templates/feature-document.md#feature-code-change-summary)
-  6. 填写 [14. 验收报告](templates/feature-document.md#feature-acceptance-report) 的四张自测表（资料/功能/性能/安全编码）
-  7. 更新 [3. 任务清单](templates/feature-document.md#feature-task-list) 中每项的最终状态
-  8. 完整 Feature 文档随代码 PR 一起提交
+Before test handoff:
+  5. Fill code change summary.
+  6. Fill all acceptance tables.
+  7. Update final task list status.
+  8. Submit the Feature document with the code PR.
 ```
 
-### 24.6 不同类型算子的 Feature 文档差异
+### 19.6 Differences By Operator Type
 
-| 场景 | 差异 |
-| ---- | ---- |
-| **单 ACLNN 算子** | 标准流程，[7. 执行模式与适配](templates/feature-document.md#feature-execution-modes) 中 PyBoost/KBK 各调用一个 ACLNN 接口 |
-| **组合算子（小算子拼接）** | [4. 功能与接口说明](templates/feature-document.md#feature-functional-spec) 需描述 ACLNN 调用链，[7. 执行模式与适配](templates/feature-document.md#feature-execution-modes) 描述多 ACLNN 组合，[12. 测试方案](templates/feature-document.md#feature-test-plan) 需分层验证 |
-| **符号重载（如 ==）** | [4. 功能与接口说明](templates/feature-document.md#feature-functional-spec) 需描述 MultitypeFuncGraph 适配，[3. 任务清单](templates/feature-document.md#feature-task-list) 中 functional/tensor 列为"修改" |
-| **纯 Python 组合（无 Primitive）** | [3. 任务清单](templates/feature-document.md#feature-task-list) 中 Primitive 列为"不涉及"，[7. 执行模式与适配](templates/feature-document.md#feature-execution-modes) 只描述 functional 层实现 |
+| Scenario | Difference |
+| --- | --- |
+| **Single ACLNN operator** | standard flow; PyBoost/KBK each call one ACLNN API |
+| **Composite operator** | describe the ACLNN call chain, multi-ACLNN execution, and layered verification |
+| **Symbol overload, such as `==`** | describe MultitypeFuncGraph adaptation; functional/tensor task list entries are `modified` |
+| **Pure Python composite without Primitive** | Primitive is `not applicable`; execution section only describes the functional layer |
 
-### 24.7 模板位置
+### 19.7 Template Location
 
-- 模板文件：`templates/feature-document.md`
-- 参考实例：用户提供的已有 Feature 文档（建议在开发前找到相似算子的 Feature 作参考）
+- Template: `templates/feature-document.md`
+- References: existing Feature documents for similar operators, when available
 
 <a id="api-overload-adaptation"></a>
-## 25. 接口重载适配（Tensor/functional 同名多签名）
+## 20. API Overload Adaptation
 
-> 当 PTA/torch 中存在同名接口的多种调用形态（如 `div(x, y)` 与 `div(x, y, *, rounding_mode=None)`）时，
-> MindSpore 通过 `api_def` YAML 的多条目机制实现重载转发，框架根据入参类型/个数自动匹配对应的 `op_yaml`。
+When PTA/torch has multiple call forms with the same API name, such as `div(x, y)` and `div(x, y, *, rounding_mode=None)`, MindSpore uses multiple entries in `api_def` YAML. The framework dispatches by argument type and count.
 
-### 25.1 核心机制：api_def YAML 重载转发
+### 20.1 Core Mechanism: api_def YAML Forwarding
 
-在 `mindspore/ops/api_def/{op_name}.yaml` 中，一个 API 名下可定义**多条 `op_yaml` 条目**，
-动态图按条目顺序检查入参匹配，静态图优先匹配 `deprecated` 分支。
+In `mindspore/ops/api_def/{op_name}.yaml`, one API name can have multiple `op_yaml` entries. Pynative checks entries in order. Static graph prefers the `deprecated` branch.
 
-**关键字段**：
-
-| 字段 | 说明 |
+| Field | Meaning |
 | --- | --- |
-| `op_yaml` | 映射到的 `op_def/yaml/` 下算子 YAML（决定走哪个 Primitive） |
-| `py_method` | 回调 Python 函数名（定义在 `tensor_method.py`），当 `Ascend/CPU/GPU` 配置为 `py_method` 时使用 |
-| `kwonlyargs` | keyword-only 参数列表（如 `rounding_mode`），须与 op_yaml 定义严格一致 |
-| `Ascend` / `CPU` / `GPU` | 各后端执行方式：`pyboost`（走 PyBoost 算子）或 `py_method`（回调 Python） |
-| `interface` | 接口类型：`tensor`（Tensor 方法）/ `function`（functional 接口）/ `tensor, function`（两者皆有） |
-| `disable_scalar_tensor` | 禁止标量自动转 Tensor 的参数名（用于 Scalar 重载分支） |
+| `op_yaml` | maps to an operator YAML under `op_def/yaml/` |
+| `py_method` | Python callback name defined in `tensor_method.py` |
+| `kwonlyargs` | keyword-only arguments such as `rounding_mode`; must match `op_yaml` |
+| `Ascend` / `CPU` / `GPU` | backend route: `pyboost` or `py_method` |
+| `interface` | `tensor`, `function`, or `tensor, function` |
+| `disable_scalar_tensor` | disables scalar-to-Tensor conversion for selected arguments |
 
-**示例 — `less.yaml`（入参类型重载）**：
+Example, type overload:
 
 ```yaml
 less:
-  - op_yaml: less_scalar_op.yaml      # Tensor-Scalar 分支
+  - op_yaml: less_scalar_op.yaml
     py_method: tensor_less
     Ascend: pyboost
     CPU: py_method
     GPU: py_method
     interface: tensor, function
 
-  - op_yaml: less_op.yaml             # Tensor-Tensor 分支
+  - op_yaml: less_op.yaml
     py_method: tensor_less
     Ascend: pyboost
     CPU: pyboost
@@ -1482,11 +1332,11 @@ less:
     interface: tensor, function
 ```
 
-**示例 — `div.yaml`（多签名 + kwonlyargs）**：
+Example, multiple signatures with keyword-only arguments:
 
 ```yaml
 div:
-  - op_yaml: divs_op.yaml             # Tensor-Scalar，无 rounding_mode
+  - op_yaml: divs_op.yaml
     py_method: tensor_div
     Ascend: pyboost
     CPU: pyboost
@@ -1494,14 +1344,14 @@ div:
     disable_scalar_tensor: other
     interface: tensor, function
 
-  - op_yaml: div_op.yaml              # Tensor-Tensor，无 rounding_mode
+  - op_yaml: div_op.yaml
     py_method: tensor_div
     Ascend: pyboost
     CPU: pyboost
     GPU: pyboost
     interface: tensor, function
 
-  - op_yaml: divmods_op.yaml          # Tensor-Scalar + rounding_mode
+  - op_yaml: divmods_op.yaml
     py_method: tensor_div
     kwonlyargs: rounding_mode
     Ascend: pyboost
@@ -1510,7 +1360,7 @@ div:
     disable_scalar_tensor: other
     interface: tensor, function
 
-  - op_yaml: divmod_op.yaml           # Tensor-Tensor + rounding_mode
+  - op_yaml: divmod_op.yaml
     py_method: tensor_div
     kwonlyargs: rounding_mode
     Ascend: pyboost
@@ -1520,44 +1370,41 @@ div:
 ```
 
 <a id="api-overload-scenarios"></a>
-### 25.2 四种典型重载场景
+### 20.2 Common Overload Scenarios
 
-| 场景 | 描述 | 典型算子 | api_def 特征 |
+| Scenario | Description | Typical operators | api_def traits |
 | --- | --- | --- | --- |
-| **1. 入参类型不同** | 同函数名，Tensor/Scalar 入参 → 不同 op_yaml | `less` / `mul` / `eq` | 多条 op_yaml，同 `py_method` |
-| **2. 入参类型 + kwonlyargs** | 有/无 keyword-only 参数 → 不同 op_yaml | `div` / `sub` / `add` | 部分条目带 `kwonlyargs` |
-| **3. 新旧接口兼容** | MS 旧接口参数与 mint/ext 不一致，需 deprecated 兼容 | `flatten` / `pow` / `sub` | 含 `deprecated/*.yaml` 条目 |
-| **4. 符号别名** | 两个 API 名共享同一实现 | `__mul__`→`mul` / `__truediv__`→`div` | `alias: xxx` 一行 |
+| **Different argument type** | same name, Tensor/Scalar arguments map to different `op_yaml` | `less`, `mul`, `eq` | multiple `op_yaml`, same `py_method` |
+| **Argument type plus keyword-only args** | with or without keyword-only args map to different `op_yaml` | `div`, `sub`, `add` | some entries have `kwonlyargs` |
+| **New/old interface compatibility** | old MS Tensor API differs from mint/ext API | `flatten`, `pow`, `sub` | includes `deprecated/*.yaml` entries |
+| **Symbol alias** | two API names share one implementation | `__mul__` -> `mul`, `__truediv__` -> `div` | one-line `alias: xxx` |
 
-### 25.3 deprecated YAML 机制
+### 20.3 deprecated YAML Mechanism
 
-**何时需要**：MS 旧 Tensor 接口的入参与 mint/ext 新接口不兼容（参数个数/名称/KV 传参不同），
-需通过 deprecated YAML 回调 Python 方法保证旧接口功能不退化。
+Use deprecated YAML when an old MS Tensor interface is incompatible with the new mint/ext interface in argument count, names, or keyword passing, and a Python callback is needed to preserve old behavior.
 
-**涉及文件**：
-
-| 文件 | 作用 |
+| File | Purpose |
 | --- | --- |
-| `ops/op_def/deprecated/{op_name}_method.yaml` | 定义旧接口的参数签名，参数须与 `tensor_method.py` 中的 py_method 一致 |
-| `ops/tensor_method.py` | 实现 `tensor_{op_name}` / `deprecated_tensor_{op_name}` Python 回调函数 |
-| `_extends/parse/deprecated/deprecated_tensor_method.py` | 静态图场景注册 deprecated 接口映射 |
+| `ops/op_def/deprecated/{op_name}_method.yaml` | defines the old signature; arguments must match `tensor_method.py` |
+| `ops/tensor_method.py` | implements `tensor_{op_name}` or `deprecated_tensor_{op_name}` callbacks |
+| `_extends/parse/deprecated/deprecated_tensor_method.py` | registers deprecated static graph Tensor method mapping |
 
-**匹配优先级**：
-- **动态图**：按 api_def 中 `op_yaml` 条目顺序检查入参匹配
-- **KBK 静态图**：优先匹配 `deprecated` 分支
+Priority:
+- Pynative: checks `api_def` entries in order.
+- KBK static graph: prefers the `deprecated` branch.
 
-**示例 — `flatten.yaml`（新旧兼容）**：
+Example:
 
 ```yaml
 flatten:
-  - op_yaml: flatten_ext_op.yaml       # 新接口：flatten(start_dim, end_dim)
+  - op_yaml: flatten_ext_op.yaml
     py_method: tensor_flatten
     Ascend: pyboost
     CPU: py_method
     GPU: py_method
     interface: tensor
 
-  - op_yaml: deprecated/flatten_method.yaml  # 旧接口：flatten(order, *, start_dim, end_dim)
+  - op_yaml: deprecated/flatten_method.yaml
     py_method: deprecated_tensor_flatten
     Ascend: py_method
     CPU: py_method
@@ -1565,10 +1412,9 @@ flatten:
     interface: tensor
 ```
 
-对应的 deprecated YAML（`ops/op_def/deprecated/flatten_method.yaml`）：
+Deprecated YAML:
 
 ```yaml
-#deprecated flatten
 flatten:
   args:
     input:
@@ -1587,227 +1433,38 @@ flatten:
       dtype: tensor
 ```
 
-### 25.4 functional 重载注意事项
+### 20.4 Functional Overload Notes
 
-functional 接口（mint）的重载与 Tensor 重载有关键差异：
+Functional overloads for mint differ from Tensor overloads:
 
-- **静态图无回调 Python 机制**：`py_method` 字段和 deprecated YAML 对 functional 重载**无效**
-- functional 重载仅根据**入参类型和个数**做一次算子转发
+- Static graph has no Python callback mechanism for functional overloads.
+- `py_method` and deprecated YAML are ineffective for functional overloads.
+- Functional overloads only forward once based on argument type and count.
 
-**对接步骤**：
-1. 在 `api_def/{op_name}.yaml` 中，`interface` 字段增加 `function`
-2. 更新 `mint/__init__.py`，将原接口来源替换为 `functional_overload` 中的自动生成入口
-3. 补充 `api_def/function_doc/` 下对应的文档 YAML（缺失会导致编译报错）
+Steps:
+1. Add `function` to the `interface` field in `api_def/{op_name}.yaml`.
+2. Update `mint/__init__.py` so the public API imports the auto-generated entry from `functional_overload`.
+3. Add matching docs under `api_def/function_doc/`, otherwise generation can fail.
 
-### 25.5 alias 声明（符号重载/接口别名）
+### 20.5 alias Declarations
 
-当两个 API 名共享相同的 PyBoost 实现时（如符号运算符 `__mul__` 与 `mul`），使用 `alias` 一行声明：
+When two API names share the same PyBoost implementation, use a one-line alias.
 
 ```yaml
-# __mul__.yaml
 __mul__:
   alias: mul
 ```
 
 ```yaml
-# __truediv__.yaml
 __truediv__:
   alias: div
 ```
 
-框架会将 alias API 的所有调用转发到目标 API 的重载逻辑。
+The framework forwards alias API calls to the target API overload logic.
 
-### 25.6 开发注意事项
+### 20.6 Development Notes
 
-1. **删除 `tensor.py` 原接口**：重载完成后，需将 `common/tensor.py` 中的原对外接口删除，迁移到 `tensor_method.py` 并加 `tensor_` 前缀
-2. **yaml 缩进统一 2 空格**
-3. **测试用例**：在 `tests/st/tensor/overload/test_{op_name}.py` 编写重载测试，`level_mark` 选 `level0`，指定 `jit_level` 为 `O0`
-4. **仅 Ascend 支持的算子**：CPU/GPU 设为 `py_method` 并在回调中抛出异常，或直接走 `py_method` 空实现
-
-<a id="view-operator-development"></a>
-## 26. View 算子开发（零拷贝 shape/strides 变换）
-
-> View 算子（如 `transpose`、`reshape`、`expand_dims`、`slice`、`narrow`、`chunk`）不搬运数据，
-> 只修改 tensor 的 shape/strides/offset，输出与输入共享同一块 device 内存，实现零拷贝。
-
-### 26.1 什么是 View 算子
-
-与普通 ACLNN 算子的区别：
-
-| 维度 | 普通算子 | View 算子 |
-| --- | --- | --- |
-| 数据搬运 | 有（ACLNN kernel 执行计算） | 无（零拷贝） |
-| 输出内存 | 独立分配 | 与输入共享 device 地址 |
-| 核心实现 | `LAUNCH_ACLNN` / `RunOp` | strides 计算函数 |
-| Infer | 需要手写 InferShape/InferType | View 专用 YAML 不需要手写 Infer（框架处理） |
-| 反向 | 通常需要 bprop | 通常 `bprop_expander: False` 或由子算子自动微分 |
-
-**典型 View 算子**：`Transpose`、`Reshape`、`ExpandDims`（unsqueeze）、`Squeeze`、`BroadcastTo`、`Narrow`、`Slice`、`Split`、`Chunk`、`Diagonal` 等。
-
-### 26.2 YAML 标记
-
-View 算子的 YAML 有两个关键标记：
-
-| 字段 | 说明 |
-| --- | --- |
-| `view: True` | 启用 PyNative 模式 View 路径（strides 计算） |
-| `graph_view: True` | 启用 KBK 图模式 View 路径（host kernel，不走 ACLNN） |
-| `labels: side_effect_mem: True` | 标记算子有内存副作用（View 语义） |
-
-**两种 YAML 模式**：
-
-1. **原始算子 YAML**（如 `transpose_op.yaml`）：`view: True` + 标准 `dispatch`，PyNative 走 View，KBK 走 ACLNN
-2. **View 专用 YAML**（如 `transpose_view_op.yaml`）：`view: True` + `graph_view: True`，PyNative 和 KBK 均走 View
-
-```yaml
-# transpose_view_op.yaml（View 专用 YAML 示例）
-transpose_view:
-  args:
-    input:
-      dtype: tensor
-    input_perm:
-      dtype: tuple[int]
-  returns:
-    output:
-      dtype: tensor
-  view: True
-  graph_view: True
-  labels:
-    side_effect_mem: True
-  dispatch:
-    enable: True
-```
-
-```yaml
-# expand_dims_view_op.yaml
-expand_dims_view:
-  args:
-    input:
-      dtype: tensor
-    dim:
-      dtype: int
-      type_cast: tensor
-  returns:
-    output:
-      dtype: tensor
-  view: True
-  graph_view: True
-  labels:
-    side_effect_mem: True
-  dispatch:
-    enable: True
-```
-
-<a id="view-strides-calculation"></a>
-### 26.3 Strides 计算实现（PyNative View 路径）
-
-View 算子不需要 ACLNN kernel，核心是实现 strides 计算函数：根据输入 tensor 的 shape/strides 和算子参数，计算输出的 shape/strides/offset。
-
-**文件位置**：
-- 头文件：`mindspore/ops/include/view/{op_name}_view_strides_calc.h`（函数前需加 `OPS_API`）
-- 实现：`mindspore/ops/view/{op_name}_view_strides_calc.cc`
-
-**函数签名约定**：`{OpName}ViewBasicTypeCalc`，入参为 `TensorPtr` + C++ 基础类型参数。
-
-**精简示例**（`transpose_view_strides_calc`）：
-
-```cpp
-// transpose_view_strides_calc.h
-OPS_API TensorStorageInfoPtrList TransposeViewBasicTypeCalc(
-    const mindspore::tensor::TensorPtr &input_tensor,
-    const std::vector<int64_t> &dims);
-
-// transpose_view_strides_calc.cc
-#include "view/transpose_view_strides_calc.h"
-#include "view/transpose_strides_calc.h"
-
-namespace mindspore::ops {
-TensorStorageInfoPtrList TransposeViewBasicTypeCalc(
-    const mindspore::tensor::TensorPtr &input_tensor,
-    const std::vector<int64_t> &dims) {
-  return TransposeBasicTypeCalc(input_tensor, dims);
-}
-}  // namespace mindspore::ops
-```
-
-> **注意**：View 专用 YAML 的 strides calc 函数（`*ViewBasicTypeCalc`）通常直接委托给原始算子的 strides 计算函数（`*BasicTypeCalc` 或 `*StridesCalc`），
-> 因为计算逻辑相同，只是入口不同。
-
-**原始算子的 strides 计算**使用 `REG_VIEW_STRIDES_CALC_FUN` 宏注册（在 `ops/view/{op_name}_strides_calc.cc` 中）：
-
-```cpp
-REG_VIEW_STRIDES_CALC_FUN(ExpandDims, ExpandDimsCalc);
-REG_VIEW_STRIDES_CALC_FUN(BroadcastTo, BroadcastToCalc);
-REG_VIEW_STRIDES_CALC_FUN(Transpose, TransposeCalc);  // 原始算子注册
-```
-
-**strides 计算三要素**：
-1. **shape**：根据输入 tensor 和参数计算输出 shape
-2. **strides**：每个维度数据之间的步长（如 shape `(3,4,5)` 对应 strides `(20,5,1)`）
-3. **offset**：输出 tensor 在 device 上的起始偏移量
-
-<a id="view-kbk-host-kernel"></a>
-### 26.4 KBK Host Kernel（图模式 View 路径）
-
-当 YAML 标记 `graph_view: True` 时，KBK 不走 ACLNN kernel，而是走 host kernel 直接操作 strides。
-
-**文件位置**：`mindspore/ops/kernel/host/view/kernel_mod_impl/{op_name}_view.cc/.h`
-
-**关键模式**：
-- 继承 `HostKernelMod`
-- 实现 `GetWorkSpaceInfo`（调用 `UpdateOutputTensorInfo` 更新输出的 `tensor_storage_info`）
-- 使用 `MS_HOST_REG_KERNEL` 宏注册
-
-**精简示例**（`transpose_view.cc`）：
-
-```cpp
-// transpose_view.h
-class TransposeView : public HostKernelMod {
- public:
-  void GetWorkSpaceInfo(const std::vector<KernelTensor *> &inputs,
-                        const std::vector<KernelTensor *> &outputs) override;
-  void UpdateOutputTensorInfo(const std::vector<KernelTensor *> &inputs,
-                              const std::vector<KernelTensor *> &outputs);
-};
-
-// transpose_view.cc
-void TransposeView::UpdateOutputTensorInfo(const std::vector<KernelTensor *> &inputs,
-                                           const std::vector<KernelTensor *> &outputs) {
-  const auto &dims = inputs[kIndex1]->GetValueWithCheck<std::vector<int64_t>>();
-  const auto &input = inputs[kIndex0];
-  auto infos = ops::TransposeStridesCalc(
-      input->GetShapeVector(), GetTensorStride(input),
-      input->tensor_storage_info(), dims);
-  outputs[kIndex0]->set_tensor_storage_info(infos[0]);
-}
-
-void TransposeView::GetWorkSpaceInfo(const std::vector<KernelTensor *> &inputs,
-                                     const std::vector<KernelTensor *> &outputs) {
-  UpdateOutputTensorInfo(inputs, outputs);
-}
-
-MS_HOST_REG_KERNEL(TransposeView, TransposeView);
-```
-
-### 26.5 View 特性切换与回退
-
-KBK 图模式下，框架通过 `kViewForGraphMode` 开关控制是否启用 View 路径：
-- **启用**（默认）：标记了 `graph_view: True` 的算子走 host kernel
-- **禁用或不支持**：自动回退到 ACLNN kernel（走原始算子 YAML 的 dispatch 路径）
-
-**回退场景**：
-- 后端不具备某 View Kernel 能力
-- 输入为动态 shape 且 strides 无法静态确定
-- 特殊控制流场景
-
-### 26.6 View 算子开发清单
-
-| 步骤 | 产物 | 说明 |
-| --- | --- | --- |
-| 1 | `op_def/yaml/{op_name}_view_op.yaml` | `view: True` + `graph_view: True` + `labels` |
-| 2 | `ops/view/{op_name}_view_strides_calc.cc/.h` | strides 计算函数（`BasicTypeCalc`） |
-| 3 | `ops/kernel/host/view/kernel_mod_impl/{op_name}_view.cc/.h` | KBK host kernel（`MS_HOST_REG_KERNEL`） |
-| 4 | 原始算子 YAML 加 `view: True` | 如 `transpose_op.yaml` 加 `view: True` |
-| 5 | `ops/view/{op_name}_strides_calc.cc` + `REG_VIEW_STRIDES_CALC_FUN` | 原始算子的 strides 计算注册 |
-
-> **Torch 参考**：View 算子的 strides 计算逻辑可参考 PyTorch 源码 `aten/src/ATen/native/TensorShape.cpp`。
+1. After overload migration, remove the original public method from `common/tensor.py`, move it to `tensor_method.py`, and add the `tensor_` prefix.
+2. Use two-space YAML indentation.
+3. Add overload tests under `tests/st/tensor/overload/test_{op_name}.py`, use `level0`, and set `jit_level` to `O0`.
+4. For Ascend-only operators, set CPU/GPU to `py_method` and raise a clear exception in the callback, or use a placeholder `py_method`.
