@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.mint.cummin::cummin_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.cummin",
+    "public_surface": "mindspore.mint",
+    "api_name": "cummin",
+    "op_branch": "cummin_ext_op.yaml",
+    "op": "cummin_ext",
+    "primitive": "CumminExt"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.auto_generate",
+    "target_symbol": "cummin_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.cummin_ext",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "cummin_ext::CumminExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/cummin_ext_op.yaml",
+    "class_name": "CumminExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "CumminExtAscend",
+    "aclnn": [
+      "aclnnCummin"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/cummin_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/cummin_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/cummin_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/cummin_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/cummin_ext_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/cummin_ext_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_cummin_ext.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/cummin_ext_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.cummin::cummin_ext_op.yaml",
+    "coverage_key": "cummin_ext::CumminExt"
+  }
+}

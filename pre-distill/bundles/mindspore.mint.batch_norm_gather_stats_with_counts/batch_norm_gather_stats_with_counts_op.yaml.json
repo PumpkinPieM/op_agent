@@ -1,0 +1,69 @@
+{
+  "bundle_key": "mindspore.mint.batch_norm_gather_stats_with_counts::batch_norm_gather_stats_with_counts_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.batch_norm_gather_stats_with_counts",
+    "public_surface": "mindspore.mint",
+    "api_name": "batch_norm_gather_stats_with_counts",
+    "op_branch": "batch_norm_gather_stats_with_counts_op.yaml",
+    "op": "batch_norm_gather_stats_with_counts",
+    "primitive": "BatchNormGatherStatsWithCounts"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.auto_generate",
+    "target_symbol": "batch_norm_gather_stats_with_counts",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.batch_norm_gather_stats_with_counts",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "batch_norm_gather_stats_with_counts::BatchNormGatherStatsWithCounts",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/batch_norm_gather_stats_with_counts_op.yaml",
+    "class_name": "BatchNormGatherStatsWithCounts",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "BatchNormGatherStatsWithCountsAscend",
+    "aclnn": [
+      "aclnnBatchNormGatherStatsWithCounts"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": false,
+    "ut": false,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/batch_norm_gather_stats_with_counts.cc",
+      "mindspore/ops/infer/ops_func_impl/batch_norm_gather_stats_with_counts.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/batch_norm_gather_stats_with_counts.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/batch_norm_gather_stats_with_counts.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/batch_norm_gather_stats_with_counts_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/batch_norm_gather_stats_with_counts_aclnn_kernel.h"
+    ],
+    "bprop": [],
+    "ut": [],
+    "st": [
+      "tests/st/ops/ascend/test_batch_norm_gather_stats_with_counts.py"
+    ],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.batch_norm_gather_stats_with_counts::batch_norm_gather_stats_with_counts_op.yaml",
+    "coverage_key": "batch_norm_gather_stats_with_counts::BatchNormGatherStatsWithCounts"
+  }
+}

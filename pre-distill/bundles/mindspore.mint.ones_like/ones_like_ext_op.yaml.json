@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.mint.ones_like::ones_like_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.ones_like",
+    "public_surface": "mindspore.mint",
+    "api_name": "ones_like",
+    "op_branch": "ones_like_ext_op.yaml",
+    "op": "ones_like_ext",
+    "primitive": "OnesLikeExt"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.array_func",
+    "target_symbol": "ones_like_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.array_func.ones_like_ext",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "ones_like_ext::OnesLikeExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/ones_like_ext_op.yaml",
+    "class_name": "OnesLikeExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "OnesLikeExtAscend",
+    "aclnn": [
+      "aclnnInplaceOne"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/ones_like_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/ones_like_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/ones_like_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/ones_like_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/ones_like_ext_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/ones_like_ext_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_ones_like_ext.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/ones_like_ext_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.ones_like::ones_like_ext_op.yaml",
+    "coverage_key": "ones_like_ext::OnesLikeExt"
+  }
+}

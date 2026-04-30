@@ -1,0 +1,77 @@
+{
+  "bundle_key": "mindspore.mint.reciprocal::reciprocal_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.reciprocal",
+    "public_surface": "mindspore.mint",
+    "api_name": "reciprocal",
+    "op_branch": "reciprocal_op.yaml",
+    "op": "reciprocal",
+    "primitive": "Reciprocal"
+  },
+  "resolver": {
+    "py_method": "tensor_reciprocal",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.functional",
+    "target_symbol": "reciprocal",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional.reciprocal",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "reciprocal::Reciprocal",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/reciprocal_op.yaml",
+    "class_name": "Reciprocal",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnReciprocal"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/reciprocal.cc",
+      "mindspore/ops/infer/ops_func_impl/reciprocal.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/reciprocal.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_reciprocal.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_reciprocal.py",
+      "tests/st/ops/ascend/test_tbe_ops/test_reciprocal.py",
+      "tests/st/ops/gpu/test_reciprocal_op.py",
+      "tests/st/ops/test_func_reciprocal.py",
+      "tests/st/ops/test_ops_reciprocal.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/reciprocal_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.reciprocal::reciprocal_op.yaml",
+    "coverage_key": "reciprocal::Reciprocal"
+  }
+}

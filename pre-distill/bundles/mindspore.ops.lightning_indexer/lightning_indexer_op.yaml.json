@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.ops.lightning_indexer::lightning_indexer_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.ops.lightning_indexer",
+    "public_surface": "mindspore.ops",
+    "api_name": "lightning_indexer",
+    "op_branch": "lightning_indexer_op.yaml",
+    "op": "lightning_indexer",
+    "primitive": "LightningIndexer"
+  },
+  "resolver": {
+    "py_method": "tensor_lightning_indexer",
+    "interface": "function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "lightning_indexer",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/lightning_indexer.yaml",
+    "source_file": "mindspore/ops/api_def/lightning_indexer.yaml"
+  },
+  "coverage": {
+    "coverage_key": "lightning_indexer::LightningIndexer",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/lightning_indexer_op.yaml",
+    "class_name": "LightningIndexer",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "LightningIndexerAscend",
+    "aclnn": [
+      "aclnnLightningIndexer"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/lightning_indexer.cc",
+      "mindspore/ops/infer/ops_func_impl/lightning_indexer.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/lightning_indexer.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/lightning_indexer.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/lightning_indexer_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/lightning_indexer_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_nn_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_lightning_indexer.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_lightning_indexer.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/lightning_indexer_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.ops.lightning_indexer::lightning_indexer_op.yaml",
+    "coverage_key": "lightning_indexer::LightningIndexer"
+  }
+}

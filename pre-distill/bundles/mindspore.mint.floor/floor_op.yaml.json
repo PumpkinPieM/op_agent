@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.mint.floor::floor_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.floor",
+    "public_surface": "mindspore.mint",
+    "api_name": "floor",
+    "op_branch": "floor_op.yaml",
+    "op": "floor",
+    "primitive": "Floor"
+  },
+  "resolver": {
+    "py_method": "tensor_floor",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.auto_generate",
+    "target_symbol": "floor",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.auto_generate.floor",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "floor::Floor",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/floor_op.yaml",
+    "class_name": "Floor",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnFloor"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/floor.cc",
+      "mindspore/ops/infer/ops_func_impl/floor.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/floor.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_floor.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_floor.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/floor_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.floor::floor_op.yaml",
+    "coverage_key": "floor::Floor"
+  }
+}

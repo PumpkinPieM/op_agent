@@ -1,0 +1,69 @@
+{
+  "bundle_key": "mindspore.ops.remainder::remainder_tensor_tensor_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.ops.remainder",
+    "public_surface": "mindspore.ops",
+    "api_name": "remainder",
+    "op_branch": "remainder_tensor_tensor_op.yaml",
+    "op": "remainder_tensor_tensor",
+    "primitive": "RemainderTensorTensor"
+  },
+  "resolver": {
+    "py_method": "tensor_remainder",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "remainder",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/remainder.yaml",
+    "source_file": "mindspore/ops/api_def/remainder.yaml"
+  },
+  "coverage": {
+    "coverage_key": "remainder_tensor_tensor::RemainderTensorTensor",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/remainder_tensor_tensor_op.yaml",
+    "class_name": "RemainderTensorTensor",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnRemainderTensorTensor"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/remainder_tensor_tensor.cc",
+      "mindspore/ops/infer/ops_func_impl/remainder_tensor_tensor.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/remainder_tensor_tensor.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_remainder_tensor_tensor.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.ops.remainder::remainder_tensor_tensor_op.yaml",
+    "coverage_key": "remainder_tensor_tensor::RemainderTensorTensor"
+  }
+}
