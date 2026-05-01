@@ -757,9 +757,7 @@ def stage_skills_for_case(
         raise ManifestError(f"Invalid skill install subdirectory: {skill_install_subdir!r}")
     target_skill_dir = prepared["mindspore"].checkout_path.joinpath(*skill_install_subdir)
     target_skill_dir.parent.mkdir(parents=True, exist_ok=True)
-    if target_skill_dir.exists():
-        shutil.rmtree(target_skill_dir)
-    shutil.copytree(skill_path, target_skill_dir, symlinks=True)
+    shutil.copytree(skill_path, target_skill_dir, symlinks=True, dirs_exist_ok=True)
 
 
 def _collect_git_source_changes(checkout_path: Path) -> list[tuple[str, str]]:

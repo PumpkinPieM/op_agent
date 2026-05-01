@@ -773,6 +773,31 @@ def test_stage_skills_copies_into_isolated_mindspore_checkout(tmp_path: Path):
         cleanup_prepared_repos(prepared)
 
 
+def test_stage_skills_merges_into_existing_target_skill_folder(tmp_path: Path):
+    repo_root = tmp_path / "mindspore"
+    skill_root = tmp_path / "skills"
+    init_repo(repo_root, {"tracked.txt": "base\n"})
+    (skill_root / "aclnn-builder").mkdir(parents=True, exist_ok=True)
+    (skill_root / "aclnn-builder" / "SKILL.md").write_text("skill\n", encoding="utf-8")
+    repo_spec = RepoSpec(name="mindspore", source=str(repo_root))
+    case = CaseSpec(case_id="skills_case", prompt="test", repos=(repo_spec,))
+    prepared = prepare_repos(case, tmp_path / "sandbox", ms_root=repo_root, path_root=tmp_path)
+    try:
+        existing = prepared["mindspore"].checkout_path / ".codex" / "skills" / "existing-skill" / "SKILL.md"
+        existing.parent.mkdir(parents=True, exist_ok=True)
+        existing.write_text("existing\n", encoding="utf-8")
+
+        stage_skills_for_case(prepared, skill_root)
+
+        copied = prepared["mindspore"].checkout_path / ".codex" / "skills" / "aclnn-builder" / "SKILL.md"
+        assert copied.read_text(encoding="utf-8") == "skill\n"
+        assert existing.read_text(encoding="utf-8") == "existing\n"
+    finally:
+        from framework import cleanup_prepared_repos
+
+        cleanup_prepared_repos(prepared)
+
+
 def test_stage_skills_uses_executor_specific_install_directory(tmp_path: Path):
     repo_root = tmp_path / "mindspore"
     skill_root = tmp_path / "skills"
