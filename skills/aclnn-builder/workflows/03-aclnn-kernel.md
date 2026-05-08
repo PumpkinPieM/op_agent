@@ -4,7 +4,7 @@ Path convention: unless stated otherwise, `reference.md` means `../_shared/refer
 
 ## Goal
 
-Implement the ACLNN kernel for Pynative And Graph(KBK) mode.
+Implement the ACLNN kernel for PyNative and Graph(KBK) mode.
 **The workload of this step differs greatly depending on the integration path:**
 - **Path 1 (auto-generated)**: `gen_ops.py` already generated the full call code, so this step only needs **validation**
 - **Path 2 (Customize)**: you must handwrite kernel implementation
@@ -25,22 +25,96 @@ Implement the ACLNN kernel for Pynative And Graph(KBK) mode.
 
 ## Steps
 
-### Path 1(auto generate): Validate The Auto-Generated Artifacts
+### Path 1(auto-generated): Validate The Auto-Generated Artifacts
 
 1. **Confirm the generated code exists**
-   - For Pyboost, check registraion `MS_REG_PYBOOST_OP(Ascend, {PrimitiveName})` in `mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/pyboost_ascend_ops_*.cc`
-   - For KBK, check registration `MS_ACLNN_COMMON_KERNEL_FACTORY_REG({PrimitiveName}, ...})` or `MS_ACLNN_KERNEL_FACTORY_REG({PrimitiveName}, ...`.
+   - For PyBoost, check registration `MS_REG_PYBOOST_OP(Ascend, {PrimitiveName})` in `mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/pyboost_ascend_ops_*.cc`
+   - For KBK, check registration `MS_ACLNN_COMMON_KERNEL_FACTORY_REG({PrimitiveName}, ...)` or `MS_ACLNN_KERNEL_FACTORY_REG({PrimitiveName}, ...)`.
+2. **Confirm the generated PyBoost code follows the post-refactor memory pattern**
+   - input Tensor arguments are passed through `TensorToDevice(...)`
+   - output Tensor arguments are allocated through `TensorMalloc(...)`
+   - ACLNN launch uses `DISPATCH_LAUNCH_ACLNN(...)` or the current generated equivalent
 
 ### Path 2(customize kernel): Handwrite Customize Files
 
-#### Pyboost
+#### PyBoost
+
+Commit `42ab8b21a20f1789bf48dc6163c627b2a25fe187` refactored PyBoost customize kernels to decouple customize functions from `OpRunner`. New customize functions should be standalone C++ functions whose parameters are the real op arguments and whose return value is the op output tensor structure.
 
 ##### Single-Operator Direct Call Pattern
 
-Standard three-part structure (`reference.md#pyboost-reference`):
-1. output tensor allocation
-2. argument conversion (`tuple -> vector`, `None` handling, and so on)
-3. two-stage ACLNN invocation (`LAUNCH_ACLNN` or the project's equivalent macro)
+Standard structure after the PyBoost refactor:
+1. declare the customize function without `std::shared_ptr<OpRunner>` in both `.h` and `.cc`
+2. infer and create output tensors with `InferOutput<N>(prim::kPrim..., args...)` or `InferDynamicOutput(...)`
+3. normalize non-Tensor arguments (`tuple -> vector`, `None` handling, scalar extraction, and so on)
+4. call `TensorToDevice(...)` for every input Tensor argument
+5. call `TensorMalloc(...)` for output Tensor arguments
+6. launch ACLNN with `DISPATCH_ACLNN(...)`
+7. return the output tensor, output tuple, or output vector directly
+
+Required includes for the common direct-call pattern:
+
+```cpp
+#include "kernel/ascend/aclnn/pyboost_impl/pyboost_aclnn_utils.h"
+#include "include/pynative/utils/pyboost/tensor_memory.h"
+#include "include/pynative/utils/pyboost/infer_output.h"
+#include "include/pynative/utils/pyboost/pyboost_utils.h"
+#include "primitive/auto_generate/gen_ops_primitive_x.h"
+```
+
+Single-output skeleton:
+
+```cpp
+tensor::TensorPtr XxxAscendCustomize(const tensor::TensorPtr &input, const ScalarPtr &alpha) {
+  auto output = InferOutput<1>(prim::kPrimXxx, input, alpha);
+  auto alpha_imm = GetValue<int64_t>(alpha);
+
+  TensorToDevice(input);
+  TensorMalloc(output);
+  DISPATCH_ACLNN(aclnnXxx, input, alpha_imm, output);
+  return output;
+}
+```
+
+Fixed multi-output skeleton:
+
+```cpp
+std::tuple<tensor::TensorPtr, tensor::TensorPtr> XxxAscendCustomize(const tensor::TensorPtr &input) {
+  auto outputs = InferOutput<2>(prim::kPrimXxx, input);
+  TensorToDevice(input);
+  TensorMalloc(outputs);
+  DISPATCH_ACLNN(aclnnXxx, input, std::get<0>(outputs), std::get<1>(outputs));
+  return outputs;
+}
+```
+
+Dynamic-output skeleton:
+
+```cpp
+std::vector<tensor::TensorPtr> XxxAscendCustomize(const tensor::TensorPtr &input, const ValueTuplePtr &sections) {
+  auto outputs = InferDynamicOutput(prim::kPrimXxx, input, sections);
+  auto sections_vec = ConvertValueTupleToVector<int64_t>(sections);
+  TensorToDevice(input);
+  TensorMalloc(outputs);
+  DISPATCH_ACLNN(aclnnXxx, input, sections_vec, outputs);
+  return outputs;
+}
+```
+
+Do not use the pre-refactor pattern for new customize kernels:
+- do not add `const std::shared_ptr<OpRunner> &op` to the customize function signature
+- do not call `OpRunner::InferOpOutput(op, ...)` when `InferOutput<N>` / `InferDynamicOutput` can represent the output contract
+- do not call `PyBoostUtils::PrepareOpInputs`, `PyBoostUtils::PrepareOpOutputs`, `PyBoostUtils::MallocOpInputs`, or `PyBoostUtils::MallocOpOutputs` in new code
+- do not manually wrap `LAUNCH_ACLNN` in `PyBoostUtils::DispatchRun`; use `DISPATCH_ACLNN(...)`
+
+Rare special cases may still follow an existing repository example that creates a local `OpRunner` internally, but this is an exception. Prefer the standalone pattern above unless the current codebase has an established special-case implementation for the same output/inference behavior.
+
+##### Tensor Memory Rules
+
+- `TensorToDevice(...)`: allocate device memory for a Tensor and copy it to the device. This is MindSpore's implicit copy mechanism with automatic H2D transfer, which differs from torch and is still retained currently. Usage principle: all input Tensors should call `TensorToDevice`.
+- `TensorMalloc(...)`: only allocate device memory for a Tensor. Usually used for output Tensors.
+- `TensorToDevice` accepts Tensor inputs, `std::optional<TensorPtr>`, `ValueTuplePtr`, and vectors handled by the helper overloads. Pass all real input Tensor carriers to it, including optional Tensor arguments.
+- For outputs returned as `TensorPtr`, `std::tuple<TensorPtr...>`, or `std::vector<TensorPtr>`, call `TensorMalloc(output_or_outputs)` before dispatching ACLNN.
 
 ##### Composite Operator Pattern (Composing Small C++ Operator APIs)
 
@@ -55,12 +129,26 @@ When the target operator is implemented as a composition of multiple smaller ope
 - `tuple` / `list` -> `std::vector<int64_t>`
 - optional `None` inputs -> define the `None` semantics and handle them consistently in PyBoost / Infer / KBK
 - scalar parameters -> extract using the project's scalar wrapper pattern
+- value scalars passed to ACLNN should be converted before dispatch, for example `GetValue<bool>(flag)`, `GetValue<int64_t>(dim)`, or `static_cast<double>(GetValue<float>(epsilon))`
+- if ACLNN expects a null tensor argument, pass `nullptr` directly to `DISPATCH_ACLNN`; do not pass a typed null Tensor variable
 
 ##### Inplace Op
 
 For inplace operator, its input tensor is used as the output tensor, so there's no need for calling infer and allocating output tensor.
 
 Check `mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_add_ext.cc` as an example for inplace operator pyboost kernel.
+
+Post-refactor inplace pattern:
+
+```cpp
+tensor::TensorPtr InplaceXxxAscendCustomize(const tensor::TensorPtr &input, const tensor::TensorPtr &other,
+                                            const ScalarPtr &alpha) {
+  TensorToDevice(input, other);
+  mindspore::pyboost::CheckMemoryOverlap({input, other}, {input});
+  DISPATCH_ACLNN(aclnnInplaceXxx, input, other, alpha);
+  return input;
+}
+```
 
 #### Aclnn Kernelmode(KBK mode)
 
@@ -91,6 +179,10 @@ Code skeletons are available in `reference.md#kbk-skeleton` for single operators
 
 **Path 2**:
 - [ ] Customize PyBoost call function and Aclnn Kernelmod are implemented
+- [ ] PyBoost customize function uses the post-refactor standalone signature without `std::shared_ptr<OpRunner> &op`
+- [ ] PyBoost output creation uses `InferOutput<N>` / `InferDynamicOutput` or a justified current-repository special-case pattern
+- [ ] All PyBoost input Tensors call `TensorToDevice`; all PyBoost output Tensors call `TensorMalloc`
+- [ ] PyBoost ACLNN dispatch uses `DISPATCH_ACLNN` or the current equivalent wrapper
 - [ ] Argument conversion is correct (`tuple` / `None` / scalar)
-- [ ] In composite scenarios, the calculation logic matches PTA, and intermediate tensors are correctly allocated in Pyboost kernel
+- [ ] In composite scenarios, the calculation logic matches PTA, and intermediate tensors are correctly allocated in PyBoost kernel
 ---
