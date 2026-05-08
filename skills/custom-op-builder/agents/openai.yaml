@@ -1,0 +1,4 @@
+interface:
+  display_name: "Custom Op Builder"
+  short_description: "Build ACLNN adapters and standalone op tests"
+  default_prompt: "Use $custom-op-builder to generate a MindSpore AclnnOpRunner C++ adapter and, if requested, a standalone Python test for this ACLNN operator."
