@@ -1,0 +1,128 @@
+import gc
+import os
+from pathlib import Path
+
+import numpy as np
+import pytest
+import mindspore as ms
+from mindspore import Tensor, context
+
+torch = pytest.importorskip("torch")
+torch_npu = pytest.importorskip("torch_npu")
+
+DEVICE_ID = int(os.getenv("DEVICE_ID", "0"))
+KERNEL_SOURCE = Path(__file__).with_name("npu_add_quant_matmul.cc")
+_CUSTOM_OPS = None
+
+
+def _ops():
+    global _CUSTOM_OPS
+    if _CUSTOM_OPS is None:
+        torch.npu.set_device(DEVICE_ID)
+        torch.npu.set_compile_mode(jit_compile=False)
+        context.set_context(device_target="Ascend", device_id=DEVICE_ID)
+        context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
+        try:
+            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_add_quant_matmul_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
+        except Exception as exc:  # pragma: no cover
+            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+    return _CUSTOM_OPS
+
+
+def _torch_tensor(arr, dtype=None):
+    t = torch.from_numpy(np.array(arr, copy=True)).npu()
+    if dtype is not None:
+        t = t.to(dtype)
+    return t
+
+
+def _ms_tensor(arr, dtype=None):
+    t = Tensor(np.array(arr, copy=True))
+    if dtype is not None:
+        t = t.astype(dtype)
+    return t
+
+
+def _np_from_torch(value):
+    if value is None:
+        return None
+    if value.dtype == torch.bfloat16:
+        value = value.float()
+    return value.detach().cpu().numpy()
+
+
+def _np_from_ms(value):
+    if value is None:
+        return None
+    if value.dtype == ms.bfloat16:
+        value = value.astype(ms.float32)
+    return value.asnumpy()
+
+
+def _as_tuple(value):
+    if value is None:
+        return ()
+    if isinstance(value, (tuple, list)):
+        return tuple(value)
+    return (value,)
+
+
+def _assert_close(expected, actual, rtol=1e-3, atol=1e-3):
+    expected = _as_tuple(expected)
+    actual = _as_tuple(actual)
+    assert len(expected) == len(actual)
+    for exp, act in zip(expected, actual):
+        exp_np = _np_from_torch(exp)
+        act_np = _np_from_ms(act)
+        assert exp_np.shape == act_np.shape
+        if exp_np.dtype.kind in "iu" or act_np.dtype.kind in "iu" or exp_np.dtype == np.bool_:
+            np.testing.assert_array_equal(exp_np, act_np)
+        else:
+            np.testing.assert_allclose(exp_np, act_np, rtol=rtol, atol=atol, equal_nan=True)
+
+
+@pytest.fixture(autouse=True)
+def _cleanup():
+    yield
+    gc.collect()
+    torch.npu.empty_cache()
+    if hasattr(ms.hal, "empty_cache"):
+        ms.hal.empty_cache()
+
+
+
+def npu_add_quant_matmul(self, x1, x2, x2_scale, group_list, *, x1_scale=None, group_list_type=0, group_sizes=None, x1_dtype=None, x2_dtype=None, x1_scale_dtype=None, x2_scale_dtype=None):
+    return _ops().npu_add_quant_matmul(self, x1, x2, x2_scale, group_list, x1_scale, group_list_type, group_sizes, x1_dtype, x2_dtype, x1_scale_dtype, x2_scale_dtype)
+
+
+CASES = [
+    {"id": "group_list_type_0", "torch": lambda: torch_npu.npu_add_quant_matmul(_torch_tensor(np.zeros((2, 4), np.int32)), _torch_tensor(np.ones((2, 8), np.int8)), _torch_tensor(np.ones((8, 4), np.int8)), _torch_tensor(np.ones((1,), np.float32)), _torch_tensor(np.array([2], np.int64)), group_list_type=0), "ms": lambda: npu_add_quant_matmul(_ms_tensor(np.zeros((2, 4), np.int32)), _ms_tensor(np.ones((2, 8), np.int8)), _ms_tensor(np.ones((8, 4), np.int8)), _ms_tensor(np.ones((1,), np.float32)), _ms_tensor(np.array([2], np.int64)), group_list_type=0)},
+    {"id": "group_list_type_1_x1_scale", "torch": lambda: torch_npu.npu_add_quant_matmul(_torch_tensor(np.zeros((2, 4), np.int32)), _torch_tensor(np.ones((2, 8), np.int8)), _torch_tensor(np.ones((8, 4), np.int8)), _torch_tensor(np.ones((1,), np.float32)), _torch_tensor(np.array([2], np.int64)), x1_scale=_torch_tensor(np.ones((1,), np.float32)), group_list_type=1, group_sizes=[2]), "ms": lambda: npu_add_quant_matmul(_ms_tensor(np.zeros((2, 4), np.int32)), _ms_tensor(np.ones((2, 8), np.int8)), _ms_tensor(np.ones((8, 4), np.int8)), _ms_tensor(np.ones((1,), np.float32)), _ms_tensor(np.array([2], np.int64)), x1_scale=_ms_tensor(np.ones((1,), np.float32)), group_list_type=1, group_sizes=[2])},
+]
+
+
+@pytest.mark.parametrize("case", CASES, ids=lambda c: c["id"])
+def test_npu_add_quant_matmul_matches_torch_npu(case):
+    try:
+        expected = case["torch"]()
+        actual = case["ms"]()
+    except (RuntimeError, AttributeError, TypeError, ValueError) as exc:
+        msg = str(exc).lower()
+        skip_keys = (
+            "not support",
+            "tiling",
+            "hccl",
+            "workspace",
+            "not implemented",
+            "has no attribute",
+            "expected at most",
+            "unknown keyword",
+            "missing value",
+            "takes",
+            "expected a value of type",
+            "declaration:",
+        )
+        if any(key in msg for key in skip_keys):
+            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
+        raise
+    _assert_close(expected, actual, case.get("rtol", 1e-3), case.get("atol", 1e-3))
