@@ -145,7 +145,7 @@ runner->Run({query, key, query_index, key_index, weights, softmax_max, softmax_s
             {d_query_index, d_key_index, d_weights, loss});
 ```
 
-For optional array or list attributes, prefer converting to `std::make_pair(value, true)` unless that causes a concrete problem for the target operator. This is required for operator families where the array value may change across sequential calls; passing only a vector can cause segmentation faults. Recognize these cases from the ACLNN interface information and default to the pair form for safety:
+For optional int64_t array or list attributes, prefer converting to `std::make_pair(value, true)` unless that causes a concrete problem for the target operator. This is required for operator families where the array value may change across sequential calls; passing only a vector can cause segmentation faults. Recognize these cases from the ACLNN interface information and default to the pair form for safety:
 
 ```cpp
 auto actual_seq_qlen = std::make_pair(actual_seq_qlen_opt.value_or(std::vector<int64_t>{}), true);
@@ -273,7 +273,7 @@ Cover dtype and value combinations, not just one happy path:
 
 Respect input restrictions from the ACLNN documentation. For example, if `aclnnXxx` only supports 4D inputs, do not test 2D or 3D shapes even if the wrapper accepts them.
 
-Prefer a `torch_npu.npu_*` reference comparison when available. If no reference API exists, write smoke, shape, dtype, determinism, and no-crash checks that still exercise the supported matrix.
+When a benchmark is provided, compare the output to the benchmark output with zero tolerance. If no reference API exists, write smoke, shape, dtype, determinism, and no-crash checks that still exercise the supported matrix.
 
 ## Checklist
 

@@ -22,10 +22,7 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_ffn_to_attention_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_ffn_to_attention_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
     return _CUSTOM_OPS
 
 
@@ -99,15 +96,6 @@ def npu_ffn_to_attention(x, session_ids, micro_batch_ids, token_ids, expert_offs
 def test_npu_ffn_to_attention_matches_torch_npu():
     if not hasattr(torch_npu, "npu_ffn_to_attention"):
         pytest.skip("benchmark torch_npu API is unavailable on this host")
-    try:
-        expected = torch_npu.npu_ffn_to_attention(_torch_f16((2, 2)), _torch_i32((2,)), _torch_i32((2,)), _torch_i32((2,)), _torch_i32((2,)), _torch_i32((2,)), "hccl_world_group", 0, [2], [2], attn_rank_table=None)
-        actual = npu_ffn_to_attention(_ms_f16((2, 2)), _ms_i32((2,)), _ms_i32((2,)), _ms_i32((2,)), _ms_i32((2,)), _ms_i32((2,)), "hccl_world_group", 0, [2], [2], attn_rank_table=None)
-    except (RuntimeError, AttributeError, TypeError, ValueError, IndexError) as exc:
-        msg = str(exc).lower()
-        skip_keys = ("not support", "tiling", "hccl", "workspace", "not implemented", "has no attribute",
-                     "expected at most", "unknown keyword", "missing value", "takes", "expected a value of type",
-                     "declaration:", "invalid", "not initialized", "hcom", "dimension out of range", "parameter_error", "storageshape", "storage shape")
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
+    expected = torch_npu.npu_ffn_to_attention(_torch_f16((2, 2)), _torch_i32((2,)), _torch_i32((2,)), _torch_i32((2,)), _torch_i32((2,)), _torch_i32((2,)), "hccl_world_group", 0, [2], [2], attn_rank_table=None)
+    actual = npu_ffn_to_attention(_ms_f16((2, 2)), _ms_i32((2,)), _ms_i32((2,)), _ms_i32((2,)), _ms_i32((2,)), _ms_i32((2,)), "hccl_world_group", 0, [2], [2], attn_rank_table=None)
     _assert_close(expected, actual)

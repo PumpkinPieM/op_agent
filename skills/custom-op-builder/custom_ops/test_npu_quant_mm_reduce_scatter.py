@@ -1,93 +1,125 @@
-import gc
 import os
+import socket
 from pathlib import Path
 
 import numpy as np
 import pytest
 import torch
+import torch.distributed as dist
+import torch.multiprocessing as mp
 import torch_npu
+
 import mindspore as ms
 from mindspore import Tensor, context
-DEVICE_ID = int(os.getenv("DEVICE_ID", "0"))
+
+
 KERNEL_SOURCE = Path(__file__).with_name("npu_quant_mm_reduce_scatter.cc")
 
-torch.npu.set_device(DEVICE_ID)
-torch.npu.set_compile_mode(jit_compile=False)
-context.set_context(device_target="Ascend", device_id=DEVICE_ID)
-context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-_custom_ops = ms.ops.CustomOpBuilder("custom_ops_npu_quant_mm_reduce_scatter_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-def npu_quant_mm_reduce_scatter(*args):
-    return _custom_ops.npu_quant_mm_reduce_scatter(*args)
-@pytest.fixture(autouse=True)
-def _cleanup():
-    yield
-    gc.collect()
-def _pta(x):
-    if x is None:
-        return None
-    t = torch.from_numpy(x).npu()
-    return t
 
-def _ms(x):
-    if x is None:
-        return None
-    return Tensor(x)
+def _find_free_port():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return sock.getsockname()[1]
 
-def _np(x):
-    if isinstance(x, (tuple, list)):
-        return [_np(v) for v in x]
-    if isinstance(x, torch.Tensor):
-        if x.dtype == torch.bfloat16:
-            return x.float().cpu().numpy()
-        return x.cpu().numpy()
-    if hasattr(x, "asnumpy"):
-        if x.dtype == ms.bfloat16:
-            return x.astype(ms.float32).asnumpy()
-        return x.asnumpy()
-    return np.asarray(x)
 
-def _assert_close(expected, actual, rtol=1e-2, atol=1e-2):
-    e=_np(expected); a=_np(actual)
-    if not isinstance(e, list): e=[e]
-    if not isinstance(a, list): a=[a]
-    assert len(e)==len(a)
-    for ev,av in zip(e,a):
-        assert ev.shape == av.shape
-        np.testing.assert_allclose(ev, av, rtol=rtol, atol=atol, equal_nan=True)
-def _case():
-    self = np.random.default_rng(0).normal(size=(2, 4)).astype(np.float16)
-    x2 = np.random.default_rng(0).normal(size=(2, 4)).astype(np.float16)
-    hcom = ""
-    world_size = 1
-    reduce_op_opt = None
-    bias_opt = None
-    x1_scale_opt = None
-    x2_scale_opt = None
-    quant_scale_opt = None
-    block_size = 0
-    comm_turn = 0
-    group_sizes_opt = None
-    amax_output = False
-    y_dtype_opt = None
-    x1_dtype_opt = None
-    x2_dtype_opt = None
-    x1_scale_dtype_opt = None
-    x2_scale_dtype_opt = None
-    return (_pta(self), _pta(x2), hcom, world_size, reduce_op_opt, _pta(bias_opt), _pta(x1_scale_opt), _pta(x2_scale_opt), _pta(quant_scale_opt), block_size, comm_turn, group_sizes_opt, amax_output, y_dtype_opt, x1_dtype_opt, x2_dtype_opt, x1_scale_dtype_opt, x2_scale_dtype_opt), (_ms(self), _ms(x2), hcom, world_size, reduce_op_opt, _ms(bias_opt), _ms(x1_scale_opt), _ms(x2_scale_opt), _ms(quant_scale_opt), block_size, comm_turn, group_sizes_opt, amax_output, y_dtype_opt, x1_dtype_opt, x2_dtype_opt, x1_scale_dtype_opt, x2_scale_dtype_opt)
-def _torch_reference(torch_args):
-    required_count = 4
-    keyword_names = ['reduce_op', 'bias', 'x1_scale', 'x2_scale', 'quant_scale', 'block_size', 'comm_turn', 'group_sizes', 'amax_output', 'y_dtype', 'x1_dtype', 'x2_dtype', 'x1_scale_dtype', 'x2_scale_dtype']
-    kwargs = {name: value for name, value in zip(keyword_names, torch_args[required_count:]) if value is not None}
+def _get_hccl_comm_name(group, rank):
+    if torch.__version__ > "2.0.1":
+        return group._get_backend(torch.device("npu")).get_hccl_comm_name(rank)
+    return group.get_hccl_comm_name(rank)
 
-    dtype_map = {5: torch.float16, 6: torch.float32, 27: torch.bfloat16}
-    for key, value in list(kwargs.items()):
-        if key.endswith("dtype") and isinstance(value, int) and value in dtype_map:
-            kwargs[key] = dtype_map[value]
-    return torch_npu.npu_quant_mm_reduce_scatter(*torch_args[:required_count], **kwargs)
 
-def test_npu_quant_mm_reduce_scatter_against_torch_npu_benchmark():
-    assert hasattr(torch_npu, "npu_quant_mm_reduce_scatter")
-    torch_args, ms_args = _case()
-    expected = _torch_reference(torch_args)
-    actual = npu_quant_mm_reduce_scatter(*ms_args)
-    _assert_close(expected, actual)
+def _run_rank(rank, world_size, master_port, source_path, result_queue):
+    os.environ["MASTER_ADDR"] = "127.0.0.1"
+    os.environ["MASTER_PORT"] = str(master_port)
+    os.environ["HCCL_WHITELIST_DISABLE"] = "1"
+
+    torch_npu.npu.set_device(rank)
+    torch.npu.set_compile_mode(jit_compile=False)
+    dist.init_process_group(backend="hccl", world_size=world_size, rank=rank)
+    group = dist.distributed_c10d._get_default_group()
+    try:
+        hcom_name = _get_hccl_comm_name(group, rank)
+    except RuntimeError as exc:
+        if "Communication_Error_Bind_IP_Port" in str(exc):
+            result_queue.put(("skip", str(exc)))
+            dist.destroy_process_group()
+            return
+        raise
+
+    context.set_context(device_target="Ascend", device_id=rank)
+    context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
+    custom_ops = ms.ops.CustomOpBuilder(
+        f"custom_ops_npu_quant_mm_reduce_scatter_ws{world_size}_rank{rank}",
+        [source_path],
+        backend="Ascend",
+    ).load()
+
+    rng = np.random.default_rng(100 + rank)
+    x1 = rng.normal(size=(16, 256)).astype(np.float16)
+    x2 = rng.normal(size=(256, 32)).astype(np.float16)
+    expected_full = None
+    for expected_rank in range(world_size):
+        expected_rng = np.random.default_rng(100 + expected_rank)
+        expected_x1 = expected_rng.normal(size=(16, 256)).astype(np.float16)
+        expected_x2 = expected_rng.normal(size=(256, 32)).astype(np.float16)
+        expected_part = expected_x1.astype(np.float32) @ expected_x2.astype(np.float32)
+        expected_full = expected_part if expected_full is None else expected_full + expected_part
+    rows_per_rank = expected_full.shape[0] // world_size
+    expected = expected_full[rank * rows_per_rank : (rank + 1) * rows_per_rank].astype(np.float16)
+
+    actual, actual_amax = custom_ops.npu_quant_mm_reduce_scatter(
+        Tensor(x1),
+        Tensor(x2),
+        hcom_name,
+        world_size,
+        "sum",
+        None,
+        None,
+        None,
+        None,
+        0,
+        0,
+        None,
+        False,
+        None,
+        None,
+        None,
+        None,
+        None,
+    )
+
+    np.testing.assert_allclose(expected, actual.asnumpy(), rtol=8e-2, atol=8e-2)
+    assert actual_amax.asnumpy().shape == (1,)
+    result_queue.put(("ok", rank))
+    dist.barrier()
+    dist.destroy_process_group()
+
+
+def test_npu_quant_mm_reduce_scatter_world_size_2():
+    if torch.npu.device_count() < 2:
+        pytest.skip("HCCL world_size=2 test requires at least two NPU devices")
+
+    world_size = 2
+    master_port = _find_free_port()
+    ctx = mp.get_context("spawn")
+    result_queue = ctx.Queue(world_size)
+    processes = []
+    for rank in range(world_size):
+        process = ctx.Process(target=_run_rank, args=(rank, world_size, master_port, str(KERNEL_SOURCE), result_queue))
+        process.start()
+        processes.append(process)
+
+    for process in processes:
+        process.join(timeout=240)
+        if process.is_alive():
+            process.terminate()
+            process.join()
+            pytest.fail("HCCL world_size=2 test timed out")
+        assert process.exitcode == 0
+
+    results = [result_queue.get(timeout=10) for _ in range(world_size)]
+    skips = [message for status, message in results if status == "skip"]
+    if skips:
+        pytest.skip(f"HCCL communicator port is busy on this host: {skips[0]}")
+    ranks = [rank for status, rank in results if status == "ok"]
+    assert sorted(ranks) == [0, 1]

@@ -22,10 +22,7 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_deformable_conv2d_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_deformable_conv2d_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
     return _CUSTOM_OPS
 
 
@@ -99,14 +96,6 @@ def npu_deformable_conv2d(input, weight, offset, bias, kernel_size, stride, padd
 def test_npu_deformable_conv2d_matches_torch_npu():
     if not hasattr(torch_npu, "npu_deformable_conv2d"):
         pytest.skip("benchmark torch_npu API is unavailable on this host")
-    try:
-        expected = torch_npu.npu_deformable_conv2d(_torch_f16((2, 2)), _torch_f16((2, 2)), _torch_i32((2,)), _torch_f16((2, 2)), [2], [2], [2], [1,1,1,1], 1, 1, True)
-        actual = npu_deformable_conv2d(_ms_f16((2, 2)), _ms_f16((2, 2)), _ms_i32((2,)), _ms_f16((2, 2)), [2], [2], [2], [1,1,1,1], 1, 1, True)
-    except (RuntimeError, AttributeError, TypeError, ValueError, IndexError) as exc:
-        msg = str(exc).lower()
-        skip_keys = ("not support", "tiling", "hccl", "workspace", "not implemented", "has no attribute",
-                     "not initialized", "hcom", "parameter_error", "storageshape", "storage shape")
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
+    expected = torch_npu.npu_deformable_conv2d(_torch_f16((2, 2)), _torch_f16((2, 2)), _torch_i32((2,)), _torch_f16((2, 2)), [2], [2], [2], [1,1,1,1], 1, 1, True)
+    actual = npu_deformable_conv2d(_ms_f16((2, 2)), _ms_f16((2, 2)), _ms_i32((2,)), _ms_f16((2, 2)), [2], [2], [2], [1,1,1,1], 1, 1, True)
     _assert_close(expected, actual)

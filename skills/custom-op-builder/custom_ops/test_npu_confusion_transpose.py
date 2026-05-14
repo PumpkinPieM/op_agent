@@ -61,12 +61,7 @@ def test_npu_confusion_transpose_matches_torch_npu(input_shape, perm, shape, tra
         ):
             pytest.skip("aclnnConfusionTranspose is not supported by the CANN package on this host")
 
-    try:
-        expected = torch_npu.npu_confusion_transpose(torch.from_numpy(arr).npu(), perm, shape, transpose_first)
-        actual = npu_confusion_transpose(Tensor(arr), perm, shape, transpose_first)
-        actual_np = actual.asnumpy()
-    except RuntimeError as exc:
-        _skip_if_host_kernel_missing(exc)
-        raise
-
+    expected = torch_npu.npu_confusion_transpose(torch.from_numpy(arr).npu(), perm, shape, transpose_first)
+    actual = npu_confusion_transpose(Tensor(arr), perm, shape, transpose_first)
+    actual_np = actual.asnumpy()
     np.testing.assert_array_equal(actual_np, expected.cpu().numpy())

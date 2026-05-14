@@ -22,10 +22,7 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_grouped_matmul_add__test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_grouped_matmul_add__test", [str(KERNEL_SOURCE)], backend="Ascend").load()
     return _CUSTOM_OPS
 
 
@@ -102,26 +99,6 @@ CASES = [
 
 @pytest.mark.parametrize("case", CASES, ids=lambda c: c["id"])
 def test_npu_grouped_matmul_add__matches_torch_npu(case):
-    try:
-        expected = case["torch"]()
-        actual = case["ms"]()
-    except (RuntimeError, AttributeError, TypeError, ValueError) as exc:
-        msg = str(exc).lower()
-        skip_keys = (
-            "not support",
-            "tiling",
-            "hccl",
-            "workspace",
-            "not implemented",
-            "has no attribute",
-            "expected at most",
-            "unknown keyword",
-            "missing value",
-            "takes",
-            "expected a value of type",
-            "declaration:",
-        )
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
+    expected = case["torch"]()
+    actual = case["ms"]()
     _assert_close(expected, actual, case.get("rtol", 1e-3), case.get("atol", 1e-3))

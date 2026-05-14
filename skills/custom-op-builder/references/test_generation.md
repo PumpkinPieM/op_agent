@@ -89,6 +89,104 @@ MindSpore `CustomOpBuilder` exports a pybind callable for the generated C++ func
 
 This rule applies to the custom op call, not the torch-npu reference call. The torch-npu side should still use the target public interface naturally when that improves readability.
 
+## HCCL and Multi-Process Tests
+
+For custom ops that require an HCCL communication group, keep the test as one Python script and spawn one child process per rank. The validated minimal pattern on Ascend is `world_size=2` with two NPU devices.
+
+Use `torch.distributed` only to create the HCCL group and obtain the HCCL communication name. Build and call the MindSpore custom op inside each child process after setting that rank's NPU device.
+
+```python
+import os
+from pathlib import Path
+
+import numpy as np
+import pytest
+import torch
+import torch.distributed as dist
+import torch.multiprocessing as mp
+import torch_npu
+
+import mindspore as ms
+from mindspore import Tensor, context
+
+
+KERNEL_SOURCE = Path(__file__).with_name("example_hccl_op.cc")
+
+
+def _get_hccl_comm_name(group, rank):
+    if torch.__version__ > "2.0.1":
+        return group._get_backend(torch.device("npu")).get_hccl_comm_name(rank)
+    return group.get_hccl_comm_name(rank)
+
+
+def _run_rank(rank, world_size, master_port, source_path, result_queue):
+    os.environ["MASTER_ADDR"] = "127.0.0.1"
+    os.environ["MASTER_PORT"] = str(master_port)
+    os.environ["HCCL_WHITELIST_DISABLE"] = "1"
+
+    torch_npu.npu.set_device(rank)
+    torch.npu.set_compile_mode(jit_compile=False)
+    dist.init_process_group(backend="hccl", world_size=world_size, rank=rank)
+    group = dist.distributed_c10d._get_default_group()
+    hcom_name = _get_hccl_comm_name(group, rank)
+
+    context.set_context(device_target="Ascend", device_id=rank)
+    context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
+    custom_ops = ms.ops.CustomOpBuilder(
+        f"custom_ops_example_hccl_op_ws{world_size}_rank{rank}",
+        [source_path],
+        backend="Ascend",
+    ).load()
+
+    # Create per-rank inputs, run torch_npu reference with hcom_name, then run
+    # the custom op with the same hcom_name and compare local rank outputs.
+    x = np.ones((16, 16), dtype=np.float16)
+    expected = torch_npu.npu_example_hccl_op(torch.from_numpy(x).npu(), hcom_name, world_size)
+    actual = custom_ops.npu_example_hccl_op(Tensor(x), hcom_name, world_size)
+    np.testing.assert_allclose(expected.cpu().numpy(), actual.asnumpy(), rtol=1e-3, atol=1e-3)
+
+    result_queue.put(rank)
+    dist.barrier()
+    dist.destroy_process_group()
+
+
+def test_example_hccl_op_world_size_2():
+    if torch.npu.device_count() < 2:
+        pytest.skip("HCCL world_size=2 test requires at least two NPU devices")
+
+    world_size = 2
+    master_port = int(os.environ.get("MASTER_PORT", str(51000 + os.getpid() % 1000)))
+    ctx = mp.get_context("spawn")
+    result_queue = ctx.Queue(world_size)
+    processes = []
+    for rank in range(world_size):
+        process = ctx.Process(target=_run_rank, args=(rank, world_size, master_port, str(KERNEL_SOURCE), result_queue))
+        process.start()
+        processes.append(process)
+
+    for process in processes:
+        process.join(timeout=240)
+        if process.is_alive():
+            process.terminate()
+            process.join()
+            pytest.fail("HCCL world_size=2 test timed out")
+        assert process.exitcode == 0
+
+    ranks = [result_queue.get(timeout=10) for _ in range(world_size)]
+    assert sorted(ranks) == [0, 1]
+```
+
+Practical rules:
+
+- Set `MASTER_ADDR`, `MASTER_PORT`, and `HCCL_WHITELIST_DISABLE` inside each child before `init_process_group`.
+- Call `torch_npu.npu.set_device(rank)` before initializing the HCCL process group.
+- Call `context.set_context(device_target="Ascend", device_id=rank)` before building or running the MindSpore custom op.
+- Use a unique `CustomOpBuilder` module name per rank, for example include `ws{world_size}_rank{rank}`.
+- Pass the HCCL communication name string from torch distributed into both the torch-npu reference call and the custom op call.
+- Use a `spawn` multiprocessing context. Do not initialize HCCL or build the custom op in the parent process.
+- Keep a timeout on `join()` and fail explicitly so a broken communication setup does not hang pytest indefinitely.
+- Use the smallest valid `world_size`, normally 2, unless the operator contract specifically requires 4, 8, or 16.
+
 ## Do Not Link Multiple Standalone Pybind Sources Together
 
 Each generated custom op `.cc` file is normally a standalone pybind extension and contains one `PYBIND11_MODULE(MS_EXTENSION_NAME, m)` block. Do not pass two such standalone sources to one `CustomOpBuilder` call:

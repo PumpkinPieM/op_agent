@@ -1,51 +1,62 @@
-#include <algorithm>
 #include <optional>
-#include <string>
-#include <tuple>
 #include <vector>
 #include "ms_extension/all.h"
 
 namespace custom {
 namespace {
-ms::TypeId DTypeFromOptional(const std::optional<int64_t> &dtype, ms::TypeId fallback) {
-  if (!dtype.has_value() || dtype.value() < 0) { return fallback; }
-  switch (dtype.value()) {
-    case 0: return ms::TypeId::kNumberTypeUInt8;
-    case 1: return ms::TypeId::kNumberTypeInt8;
-    case 2: return ms::TypeId::kNumberTypeInt16;
-    case 3: return ms::TypeId::kNumberTypeInt32;
-    case 4: return ms::TypeId::kNumberTypeInt64;
-    case 5: return ms::TypeId::kNumberTypeFloat16;
-    case 6: return ms::TypeId::kNumberTypeFloat32;
-    case 27: return ms::TypeId::kNumberTypeBFloat16;
-    default: return fallback;
+std::vector<int64_t> ReduceSumShape(const ms::Tensor &x1, const ms::Tensor &x2) {
+  auto x1_shape = x1.shape();
+  auto x2_shape = x2.shape();
+  if (x1_shape.size() < 3 || x2_shape.size() < 3) {
+    return x1_shape;
   }
+  return {x1_shape[1], x2_shape.back()};
 }
-std::vector<int64_t> MatmulShape(const ms::Tensor &x1, const ms::Tensor &x2) {
-  auto s1 = x1.shape();
-  auto s2 = x2.shape();
-  if (s1.size() < 2 || s2.size() < 2) { return s1; }
-  std::vector<int64_t> out;
-  if (s1.size() > 2) { out.insert(out.end(), s1.begin(), s1.end() - 2); }
-  out.push_back(s1[s1.size() - 2]);
-  out.push_back(s2.back());
-  return out;
-}
-std::vector<int64_t> Conv2dShape(const ms::Tensor &input, const ms::Tensor &weight, const std::vector<int64_t> &strides, const std::vector<int64_t> &pads, const std::vector<int64_t> &dilations) {
-  auto x=input.shape(); auto w=weight.shape(); if (x.size()!=4 || w.size()!=4) return x;
-  int64_t sh=strides.empty()?1:strides[0], sw=strides.size()>1?strides[1]:sh;
-  int64_t ph=pads.empty()?0:pads[0], pw=pads.size()>1?pads[1]:ph;
-  int64_t dh=dilations.empty()?1:dilations[0], dw=dilations.size()>1?dilations[1]:dh;
-  int64_t oh=(x[2]+2*ph-dh*(w[2]-1)-1)/sh+1; int64_t ow=(x[3]+2*pw-dw*(w[3]-1)-1)/sw+1;
-  return {x[0], w[0], std::max<int64_t>(1,oh), std::max<int64_t>(1,ow)};
+
+void SetNzStorage(const ms::Tensor &tensor) {
+  const std::string nz_format = "FRACTAL_NZ";
+  tensor.set_format(nz_format);
+  auto nd_shape = tensor.shape();
+  auto nz_shape =
+    mindspore::trans::DeviceShapeTransfer().GetDeviceShapeByFormat(nd_shape, nz_format, tensor.data_type());
+
+  constexpr int64_t kStrideBase = 1;
+  constexpr int kStrideOffset = 2;
+  auto strides = nd_shape;
+  if (!strides.empty()) {
+    strides.erase(strides.begin());
+  }
+  strides.push_back(kStrideBase);
+  for (int i = static_cast<int>(strides.size()) - kStrideOffset; i >= 0; i--) {
+    strides[i] = strides[i] * strides[i + 1];
+  }
+  auto storage_info = std::make_shared<mindspore::TensorStorageInfo>(nd_shape, strides, nz_shape, strides, true);
+  MS_EXCEPTION_IF_NULL(tensor.tensor());
+  MS_EXCEPTION_IF_NULL(tensor.tensor()->device_address());
+  tensor.tensor()->set_storage_info(storage_info);
 }
 }  // namespace
 
-ms::Tensor npu_quant_matmul_reduce_sum(const ms::Tensor & x1, const ms::Tensor & x2, const std::optional<ms::Tensor> & x1_scale_opt, const std::optional<ms::Tensor> & x2_scale_opt) {
-  auto out=ms::Tensor(ms::TypeId::kNumberTypeFloat32, std::vector<int64_t>{x1.shape()[0]}); auto x1_scale=x1_scale_opt.value_or(ms::Tensor()); auto x2_scale=x2_scale_opt.value_or(ms::Tensor());
+ms::Tensor npu_quant_matmul_reduce_sum(const ms::Tensor &x1, const ms::Tensor &x2,
+                                       const std::optional<ms::Tensor> &x1_scale_opt,
+                                       const std::optional<ms::Tensor> &x2_scale_opt) {
+  auto out = ms::Tensor(ms::TypeId::kNumberTypeBFloat16, ReduceSumShape(x1, x2));
+  auto x1_scale = x1_scale_opt.value_or(ms::Tensor());
+  auto x2_scale = x2_scale_opt.value_or(ms::Tensor());
+  std::optional<ms::Tensor> empty_tensor_opt = std::nullopt;
+  bool transpose_x1 = false;
+  bool transpose_x2 = false;
+  int64_t group_size = -1;
+  auto dims = std::make_pair(std::vector<int64_t>{0}, true);
+  bool keep_dims = false;
+
+  SetNzStorage(x2);
   auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("QuantMatmulReduceSumWeightNz");
-  runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnQuantMatmulReduceSumWeightNz, x1, x2, x1_scale_opt, x2_scale_opt, out));
-  runner->Run({x1,x2,x1_scale,x2_scale}, {out});
+  runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnQuantMatmulReduceSumWeightNz, x1, x2, x1_scale_opt, x2_scale_opt,
+                                          empty_tensor_opt, empty_tensor_opt, empty_tensor_opt, empty_tensor_opt,
+                                          empty_tensor_opt, transpose_x1, transpose_x2, group_size, dims, keep_dims,
+                                          out));
+  runner->Run({x1, x2, x1_scale, x2_scale}, {out});
   return out;
 }
 

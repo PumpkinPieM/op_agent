@@ -53,13 +53,8 @@ def test_npu_gelu_quant_smoke(shape, value_mode, approximate):
         Tensor(x), input_scale=Tensor(input_scale), input_offset=Tensor(input_offset), approximate=approximate
     )
     assert len(actual) == 2
-    try:
-        y_np = actual[0].asnumpy()
-        scale_np = actual[1].asnumpy()
-    except RuntimeError as exc:
-        if "support for 2201 is not implemented" in str(exc).lower():
-            pytest.skip("aclnnGeluQuant is not supported by the CANN package on this host")
-        raise
+    y_np = actual[0].asnumpy()
+    scale_np = actual[1].asnumpy()
     assert y_np.shape == x.shape
     assert y_np.dtype == np.int8
     assert scale_np.shape == shape[:-1]

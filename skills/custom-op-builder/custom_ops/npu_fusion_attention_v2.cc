@@ -1,39 +1,122 @@
+#include <algorithm>
 #include <optional>
 #include <string>
 #include <vector>
 #include "ms_extension/all.h"
 
 namespace custom {
+namespace {
+constexpr int64_t kSoftmaxLastDim = 8;
 
-std::vector<ms::Tensor> npu_fusion_attention_v2(const ms::Tensor &query, const ms::Tensor &key, const ms::Tensor &value, int64_t head_num, const std::string &input_layout, const std::optional<ms::Tensor> &pse_opt, const std::optional<ms::Tensor> &padding_mask_opt, const std::optional<ms::Tensor> &atten_mask_opt, const std::optional<ms::Tensor> &query_rope_opt, const std::optional<ms::Tensor> &key_rope_opt, double scale, double keep_prob, int64_t pre_tokens, int64_t next_tokens, int64_t inner_precise, const std::optional<std::vector<int64_t>> &prefix_opt, const std::optional<std::vector<int64_t>> &actual_seq_qlen_opt, const std::optional<std::vector<int64_t>> &actual_seq_kvlen_opt, int64_t sparse_mode, bool gen_mask_parallel, bool sync, int64_t pse_type, const std::optional<std::vector<int64_t>> &q_start_idx_opt, const std::optional<std::vector<int64_t>> &kv_start_idx_opt, const std::string &softmax_layout, const std::optional<ms::Tensor> &sink_opt, const std::optional<ms::Tensor> &dropout_mask_opt, int64_t seed, int64_t offset) {
+std::string UpperLayout(const std::string &layout) {
+  auto value = layout;
+  std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) { return std::toupper(c); });
+  return value;
+}
+
+std::vector<int64_t> AttentionShape(const ms::Tensor &query, const ms::Tensor &key, const ms::Tensor &value,
+                                    int64_t head_num, const std::string &input_layout) {
+  const auto &q = query.shape();
+  const auto &k = key.shape();
+  const auto &v = value.shape();
+  auto layout = UpperLayout(input_layout);
+  if (layout == "BSH") {
+    int64_t d = q[2] / head_num;
+    int64_t divisor = d == 0 ? 0 : k[2] / d;
+    int64_t d2 = (d == 0 || k[2] == 0 || divisor == 0) ? d : v[2] / divisor;
+    return {q[0], q[1], head_num * d2};
+  }
+  if (layout == "SBH") {
+    int64_t d = q[2] / head_num;
+    int64_t divisor = d == 0 ? 0 : k[2] / d;
+    int64_t d2 = (d == 0 || k[2] == 0 || divisor == 0) ? d : v[2] / divisor;
+    return {q[0], q[1], head_num * d2};
+  }
+  if (layout == "BNSD") {
+    return {q[0], q[1], q[2], v[3]};
+  }
+  if (layout == "BSND") {
+    return {q[0], q[1], q[2], v[3]};
+  }
+  return {q[0], q[1], v[2]};
+}
+
+std::vector<int64_t> SoftmaxShape(const ms::Tensor &query, int64_t head_num, const std::string &input_layout) {
+  const auto &q = query.shape();
+  auto layout = UpperLayout(input_layout);
+  if (layout == "TND") {
+    return {q[0], q[1], kSoftmaxLastDim};
+  }
+  if (layout == "SBH") {
+    return {q[1], head_num, q[0], kSoftmaxLastDim};
+  }
+  if (layout == "BNSD") {
+    return {q[0], head_num, q[2], kSoftmaxLastDim};
+  }
+  return {q[0], head_num, q[1], kSoftmaxLastDim};
+}
+}  // namespace
+
+std::vector<ms::Tensor> npu_fusion_attention_v2(
+    const ms::Tensor &query, const ms::Tensor &key, const ms::Tensor &value, int64_t head_num,
+    const std::string &input_layout, const std::optional<ms::Tensor> &pse_opt,
+    const std::optional<ms::Tensor> &padding_mask_opt, const std::optional<ms::Tensor> &atten_mask_opt,
+    const std::optional<ms::Tensor> &query_rope_opt, const std::optional<ms::Tensor> &key_rope_opt, double scale,
+    double keep_prob, int64_t pre_tokens, int64_t next_tokens, int64_t inner_precise,
+    const std::optional<std::vector<int64_t>> &prefix_opt,
+    const std::optional<std::vector<int64_t>> &actual_seq_qlen_opt,
+    const std::optional<std::vector<int64_t>> &actual_seq_kvlen_opt, int64_t sparse_mode, bool gen_mask_parallel,
+    bool sync, int64_t pse_type, const std::optional<std::vector<int64_t>> &q_start_idx_opt,
+    const std::optional<std::vector<int64_t>> &kv_start_idx_opt, const std::string &softmax_layout,
+    const std::optional<ms::Tensor> &sink_opt, const std::optional<ms::Tensor> &dropout_mask_opt, int64_t seed,
+    int64_t offset) {
   auto pse_value = pse_opt.value_or(ms::Tensor());
   auto padding_mask_value = padding_mask_opt.value_or(ms::Tensor());
   auto atten_mask_value = atten_mask_opt.value_or(ms::Tensor());
   auto query_rope_value = query_rope_opt.value_or(ms::Tensor());
   auto key_rope_value = key_rope_opt.value_or(ms::Tensor());
-  auto prefix = prefix_opt.value_or(std::vector<int64_t>{});
-  auto actual_seq_qlen = actual_seq_qlen_opt.value_or(std::vector<int64_t>{});
-  auto actual_seq_kvlen = actual_seq_kvlen_opt.value_or(std::vector<int64_t>{});
-  auto q_start_idx = q_start_idx_opt.value_or(std::vector<int64_t>{});
-  auto kv_start_idx = kv_start_idx_opt.value_or(std::vector<int64_t>{});
-  auto sink_value = sink_opt.value_or(ms::Tensor());
   auto dropout_mask_value = dropout_mask_opt.value_or(ms::Tensor());
-  auto base_shape = query.shape();
-  auto base_dtype = query.data_type();
-  auto out0 = ms::Tensor(base_dtype, base_shape);
-  auto out1 = ms::Tensor(base_dtype, base_shape);
-  auto out2 = ms::Tensor(base_dtype, base_shape);
-  auto out3 = ms::Tensor(base_dtype, base_shape);
-  auto out4 = ms::Tensor(base_dtype, base_shape);
-  auto out5 = ms::Tensor(base_dtype, base_shape);
-  auto out6 = ms::Tensor(base_dtype, base_shape);
-  auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("QuantFlashAttentionScore");
-  runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnQuantFlashAttentionScore, query, key, value, head_num, input_layout, pse_opt, padding_mask_opt, atten_mask_opt, query_rope_opt, key_rope_opt, scale, keep_prob, pre_tokens, next_tokens, inner_precise, prefix, actual_seq_qlen, actual_seq_kvlen, sparse_mode, gen_mask_parallel, sync, pse_type, q_start_idx, kv_start_idx, softmax_layout, sink_opt, dropout_mask_opt, seed, offset, out0, out1, out2, out3, out4, out5, out6));
-  runner->Run({query, key, value, pse_value, padding_mask_value, atten_mask_value, query_rope_value, key_rope_value, sink_value, dropout_mask_value}, {out0, out1, out2, out3, out4, out5, out6});
-  return {out0, out1, out2, out3, out4, out5, out6};
+  auto prefix = std::make_pair(prefix_opt.value_or(std::vector<int64_t>{}), true);
+  auto actual_seq_qlen = std::make_pair(actual_seq_qlen_opt.value_or(std::vector<int64_t>{}), true);
+  auto actual_seq_kvlen = std::make_pair(actual_seq_kvlen_opt.value_or(std::vector<int64_t>{}), true);
+  auto q_start_idx = std::make_pair(q_start_idx_opt.value_or(std::vector<int64_t>{}), true);
+  auto kv_start_idx = std::make_pair(kv_start_idx_opt.value_or(std::vector<int64_t>{}), true);
+
+  auto attention = ms::Tensor(query.data_type(), AttentionShape(query, key, value, head_num, input_layout));
+  auto softmax_max = ms::Tensor(ms::TypeId::kNumberTypeFloat32, SoftmaxShape(query, head_num, input_layout));
+  auto softmax_sum = ms::Tensor(ms::TypeId::kNumberTypeFloat32, SoftmaxShape(query, head_num, input_layout));
+  auto softmax_out = ms::Tensor(query.data_type(), std::vector<int64_t>{0});
+
+  auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("FlashAttentionScoreV2");
+  if (!actual_seq_qlen_opt.value_or(std::vector<int64_t>{}).empty() &&
+      !actual_seq_kvlen_opt.value_or(std::vector<int64_t>{}).empty() && query_rope_opt.has_value() &&
+      key_rope_opt.has_value()) {
+    runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnFlashAttentionVarLenScoreV3, query, query_rope_opt, key,
+                                            key_rope_opt, value, pse_opt, dropout_mask_opt, padding_mask_opt,
+                                            atten_mask_opt, prefix, actual_seq_qlen, actual_seq_kvlen, q_start_idx,
+                                            kv_start_idx, scale, keep_prob, pre_tokens, next_tokens, head_num,
+                                            input_layout, inner_precise, sparse_mode, pse_type, softmax_max,
+                                            softmax_sum, softmax_out, attention));
+  } else if (!actual_seq_qlen_opt.value_or(std::vector<int64_t>{}).empty() &&
+             !actual_seq_kvlen_opt.value_or(std::vector<int64_t>{}).empty()) {
+    runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnFlashAttentionVarLenScoreV2, query, key, value, pse_opt,
+                                            dropout_mask_opt, padding_mask_opt, atten_mask_opt, prefix,
+                                            actual_seq_qlen, actual_seq_kvlen, q_start_idx, kv_start_idx, scale,
+                                            keep_prob, pre_tokens, next_tokens, head_num, input_layout, inner_precise,
+                                            sparse_mode, pse_type, softmax_max, softmax_sum, softmax_out, attention));
+  } else {
+    runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnFlashAttentionScoreV2, query, key, value, pse_opt, dropout_mask_opt,
+                                            padding_mask_opt, atten_mask_opt, prefix, q_start_idx, kv_start_idx, scale,
+                                            keep_prob, pre_tokens, next_tokens, head_num, input_layout, inner_precise,
+                                            sparse_mode, pse_type, softmax_max, softmax_sum, softmax_out, attention));
+  }
+  runner->Run({query, key, value, pse_value, padding_mask_value, atten_mask_value, query_rope_value, key_rope_value,
+               dropout_mask_value},
+              {attention, softmax_max, softmax_sum, softmax_out});
+  return {attention, softmax_max, softmax_sum, softmax_out};
 }
 
 PYBIND11_MODULE(MS_EXTENSION_NAME, m) {
-  m.def("npu_fusion_attention_v2", PYBOOST_CALLER(7, custom::npu_fusion_attention_v2));
+  m.def("npu_fusion_attention_v2", PYBOOST_CALLER(4, custom::npu_fusion_attention_v2));
 }
 }  // namespace custom

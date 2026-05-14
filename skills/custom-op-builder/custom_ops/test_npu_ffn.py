@@ -22,10 +22,7 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_ffn_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_ffn_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
     return _CUSTOM_OPS
 
 
@@ -110,22 +107,14 @@ def test_npu_ffn_matches_torch_npu():
     x_np = np.array([[1.0, -2.0], [3.0, 0.5]], dtype=np.float16)
     weight1_np = np.array([[0.5, -0.25], [0.25, 0.75]], dtype=np.float16)
     weight2_np = np.array([[0.25, 0.5], [0.75, -0.5]], dtype=np.float16)
-    try:
-        expected = torch_npu.npu_ffn(
-            _torch_from_np(x_np), _torch_from_np(weight1_np), _torch_from_np(weight2_np), "relu",
-            expert_tokens=None, expert_tokens_index=None, bias1=None, bias2=None, scale=None, offset=None,
-            deq_scale1=None, deq_scale2=None, antiquant_scale1=None, antiquant_scale2=None,
-            antiquant_offset1=None, antiquant_offset2=None, inner_precise=0, output_dtype=None)
-        actual = npu_ffn(
-            _ms_from_np(x_np), _ms_from_np(weight1_np), _ms_from_np(weight2_np), "relu",
-            expert_tokens=None, expert_tokens_index=None, bias1=None, bias2=None, scale=None, offset=None,
-            deq_scale1=None, deq_scale2=None, antiquant_scale1=None, antiquant_scale2=None,
-            antiquant_offset1=None, antiquant_offset2=None, inner_precise=0, output_dtype=None)
-    except (RuntimeError, AttributeError, TypeError, ValueError, IndexError) as exc:
-        msg = str(exc).lower()
-        skip_keys = ("not support", "tiling", "hccl", "workspace", "not implemented", "has no attribute",
-                     "not initialized", "hcom", "not in libopapi.so", "does not support optype")
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
+    expected = torch_npu.npu_ffn(
+        _torch_from_np(x_np), _torch_from_np(weight1_np), _torch_from_np(weight2_np), "relu",
+        expert_tokens=None, expert_tokens_index=None, bias1=None, bias2=None, scale=None, offset=None,
+        deq_scale1=None, deq_scale2=None, antiquant_scale1=None, antiquant_scale2=None,
+        antiquant_offset1=None, antiquant_offset2=None, inner_precise=0, output_dtype=None)
+    actual = npu_ffn(
+        _ms_from_np(x_np), _ms_from_np(weight1_np), _ms_from_np(weight2_np), "relu",
+        expert_tokens=None, expert_tokens_index=None, bias1=None, bias2=None, scale=None, offset=None,
+        deq_scale1=None, deq_scale2=None, antiquant_scale1=None, antiquant_scale2=None,
+        antiquant_offset1=None, antiquant_offset2=None, inner_precise=0, output_dtype=None)
     _assert_close(expected, actual)

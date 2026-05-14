@@ -4,6 +4,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+
 import mindspore as ms
 from mindspore import Tensor, context
 
@@ -22,63 +23,16 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_hans_decode_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder(
+            f"custom_ops_npu_hans_decode_test_{os.getpid()}",
+            [str(KERNEL_SOURCE)],
+            backend="Ascend",
+        ).load()
     return _CUSTOM_OPS
 
 
-def _torch_tensor(arr, dtype=None):
-    t = torch.from_numpy(np.array(arr, copy=True)).npu()
-    if dtype is not None:
-        t = t.to(dtype)
-    return t
-
-
-def _ms_tensor(arr, dtype=None):
-    t = Tensor(np.array(arr, copy=True))
-    if dtype is not None:
-        t = t.astype(dtype)
-    return t
-
-
-def _np_from_torch(value):
-    if value is None:
-        return None
-    if value.dtype == torch.bfloat16:
-        value = value.float()
-    return value.detach().cpu().numpy()
-
-
-def _np_from_ms(value):
-    if value is None:
-        return None
-    if value.dtype == ms.bfloat16:
-        value = value.astype(ms.float32)
-    return value.asnumpy()
-
-
-def _as_tuple(value):
-    if value is None:
-        return ()
-    if isinstance(value, (tuple, list)):
-        return tuple(value)
-    return (value,)
-
-
-def _assert_close(expected, actual, rtol=1e-3, atol=1e-3):
-    expected = _as_tuple(expected)
-    actual = _as_tuple(actual)
-    assert len(expected) == len(actual)
-    for exp, act in zip(expected, actual):
-        exp_np = _np_from_torch(exp)
-        act_np = _np_from_ms(act)
-        assert exp_np.shape == act_np.shape
-        if exp_np.dtype.kind in "iu" or act_np.dtype.kind in "iu" or exp_np.dtype == np.bool_:
-            np.testing.assert_array_equal(exp_np, act_np)
-        else:
-            np.testing.assert_allclose(exp_np, act_np, rtol=rtol, atol=atol, equal_nan=True)
+def npu_hans_decode(mantissa, fixed, var, pdf, reshuff=False):
+    return _ops().npu_hans_decode(mantissa, fixed, var, pdf, reshuff)
 
 
 @pytest.fixture(autouse=True)
@@ -90,36 +44,64 @@ def _cleanup():
         ms.hal.empty_cache()
 
 
+def _torch_tensor(array, dtype):
+    tensor = torch.from_numpy(np.array(array, copy=True)).npu()
+    if dtype == "bf16":
+        return tensor.to(torch.bfloat16)
+    if dtype == "fp16":
+        return tensor.to(torch.float16)
+    return tensor.to(torch.float32)
 
-def npu_hans_decode(mantissa, fixed, var, pdf, reshuff=False):
-    return _ops().npu_hans_decode(mantissa, fixed, var, pdf, reshuff)
+
+def _ms_from_torch(tensor):
+    array = tensor.float().cpu().numpy() if tensor.dtype == torch.bfloat16 else tensor.cpu().numpy()
+    out = Tensor(array)
+    if tensor.dtype == torch.bfloat16:
+        return out.astype(ms.bfloat16)
+    if tensor.dtype == torch.float16:
+        return out.astype(ms.float16)
+    return out.astype(ms.float32)
 
 
-CASES = [{"id":"reshuff_false","torch":lambda: torch_npu.npu_hans_decode(_torch_tensor(np.zeros((8,),np.int32)),_torch_tensor(np.zeros((8,),np.int32)),_torch_tensor(np.zeros((8,),np.int32)),_torch_tensor(np.ones((8,),np.int32)),reshuff=False),"ms":lambda: npu_hans_decode(_ms_tensor(np.zeros((8,),np.int32)),_ms_tensor(np.zeros((8,),np.int32)),_ms_tensor(np.zeros((8,),np.int32)),_ms_tensor(np.ones((8,),np.int32)),reshuff=False)},{"id":"reshuff_true","torch":lambda: torch_npu.npu_hans_decode(_torch_tensor(np.zeros((8,),np.int32)),_torch_tensor(np.zeros((8,),np.int32)),_torch_tensor(np.zeros((8,),np.int32)),_torch_tensor(np.ones((8,),np.int32)),reshuff=True),"ms":lambda: npu_hans_decode(_ms_tensor(np.zeros((8,),np.int32)),_ms_tensor(np.zeros((8,),np.int32)),_ms_tensor(np.zeros((8,),np.int32)),_ms_tensor(np.ones((8,),np.int32)),reshuff=True)}]
+def _np_from_torch(tensor):
+    return tensor.float().cpu().numpy() if tensor.dtype == torch.bfloat16 else tensor.cpu().numpy()
 
 
-@pytest.mark.parametrize("case", CASES, ids=lambda c: c["id"])
-def test_npu_hans_decode_matches_torch_npu(case):
-    try:
-        expected = case["torch"]()
-        actual = case["ms"]()
-    except (RuntimeError, AttributeError, TypeError, ValueError) as exc:
-        msg = str(exc).lower()
-        skip_keys = (
-            "not support",
-            "tiling",
-            "hccl",
-            "workspace",
-            "not implemented",
-            "has no attribute",
-            "expected at most",
-            "unknown keyword",
-            "missing value",
-            "takes",
-            "expected a value of type",
-            "declaration:",
-        )
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
-    _assert_close(expected, actual, case.get("rtol", 1e-3), case.get("atol", 1e-3))
+def _np_from_ms(tensor):
+    return tensor.astype(ms.float32).asnumpy() if tensor.dtype == ms.bfloat16 else tensor.asnumpy()
+
+
+def _encode_inputs(input_tensor, statistic, reshuff):
+    input_numel = input_tensor.numel()
+    element_size = input_tensor.element_size()
+    mantissa_numel = input_numel * (element_size - 1) // element_size
+    compressed_bound_bytes = input_numel + input_numel // 64 + 8448 * 64
+    compressed_bound_numel = (compressed_bound_bytes + element_size - 1) // element_size
+    var_numel = input_numel if reshuff else compressed_bound_numel
+    pdf = torch.zeros(256, dtype=torch.int32, device=input_tensor.device)
+    mantissa = torch.zeros(mantissa_numel, dtype=input_tensor.dtype, device=input_tensor.device)
+    fixed = torch.zeros(compressed_bound_numel, dtype=input_tensor.dtype, device=input_tensor.device)
+    var = torch.zeros(var_numel, dtype=input_tensor.dtype, device=input_tensor.device)
+    return torch_npu.npu_hans_encode(input_tensor, statistic, reshuff, out=(pdf, mantissa, fixed, var))
+
+
+@pytest.mark.parametrize("dtype", ["fp16", "fp32"])
+@pytest.mark.parametrize("reshuff", [False, True])
+def test_npu_hans_decode_roundtrip_matches_torch_npu(dtype, reshuff):
+    rng = np.random.default_rng(23)
+    x_np = rng.normal(size=(32768,)).astype(np.float32)
+    torch_x = _torch_tensor(x_np, dtype)
+    pdf, mantissa, fixed, var = _encode_inputs(torch_x, True, reshuff)
+    recover = torch.zeros_like(torch_x)
+    expected = torch_npu.npu_hans_decode(mantissa, fixed, var, pdf, reshuff, out=recover)
+    actual = npu_hans_decode(_ms_from_torch(mantissa), _ms_from_torch(fixed), _ms_from_torch(var),
+                             Tensor(pdf.cpu().numpy()), reshuff)
+
+    expected_np = _np_from_torch(expected)
+    actual_np = _np_from_ms(actual)
+    assert expected_np.shape == actual_np.shape == (32768,)
+    np.testing.assert_allclose(expected_np, actual_np, rtol=0, atol=0)
+
+
+def test_npu_hans_decode_builder_loads():
+    assert hasattr(_ops(), "npu_hans_decode")

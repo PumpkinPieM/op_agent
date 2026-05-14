@@ -26,7 +26,8 @@ std::vector<ms::Tensor> npu_top_k_top_p_sample(
                                           is_need_logits, top_k_guess, ks_max, input_is_logits,
                                           is_need_sample_result, logits_select_idx, logits_top_kp_select, logits_idx,
                                           logits_sort_masked));
-  runner->Run({logits, top_k, top_p, q, min_ps}, {logits_select_idx, logits_top_kp_select});
+  runner->Run({logits, top_k, top_p, q, min_ps},
+              {logits_select_idx, logits_top_kp_select, logits_idx, logits_sort_masked});
   return {logits_select_idx, logits_top_kp_select};
 }
 

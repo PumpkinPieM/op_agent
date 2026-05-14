@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <optional>
 #include <string>
-#include <tuple>
 #include <vector>
 #include "ms_extension/all.h"
 
@@ -32,7 +31,17 @@ std::vector<int64_t> MatmulShape(const ms::Tensor &x1, const ms::Tensor &x2) {
   return out;
 }
 std::vector<int64_t> Conv2dShape(const ms::Tensor &input, const ms::Tensor &weight, const std::vector<int64_t> &strides, const std::vector<int64_t> &pads, const std::vector<int64_t> &dilations) {
-  auto x=input.shape(); auto w=weight.shape(); if (x.size()!=4 || w.size()!=4) return x;
+  auto x=input.shape(); auto w=weight.shape();
+  if (x.size()==5 && w.size()==5) {
+    int64_t sd=strides.empty()?1:strides[0], sh=strides.size()>1?strides[1]:sd, sw=strides.size()>2?strides[2]:sh;
+    int64_t pd=pads.empty()?0:pads[0], ph=pads.size()>1?pads[1]:pd, pw=pads.size()>2?pads[2]:ph;
+    int64_t dd=dilations.empty()?1:dilations[0], dh=dilations.size()>1?dilations[1]:dd, dw=dilations.size()>2?dilations[2]:dh;
+    int64_t od=(x[2]+2*pd-dd*(w[2]-1)-1)/sd+1;
+    int64_t oh=(x[3]+2*ph-dh*(w[3]-1)-1)/sh+1;
+    int64_t ow=(x[4]+2*pw-dw*(w[4]-1)-1)/sw+1;
+    return {x[0], w[0], std::max<int64_t>(1,od), std::max<int64_t>(1,oh), std::max<int64_t>(1,ow)};
+  }
+  if (x.size()!=4 || w.size()!=4) return x;
   int64_t sh=strides.empty()?1:strides[0], sw=strides.size()>1?strides[1]:sh;
   int64_t ph=pads.empty()?0:pads[0], pw=pads.size()>1?pads[1]:ph;
   int64_t dh=dilations.empty()?1:dilations[0], dw=dilations.size()>1?dilations[1]:dh;
@@ -42,9 +51,12 @@ std::vector<int64_t> Conv2dShape(const ms::Tensor &input, const ms::Tensor &weig
 }  // namespace
 
 ms::Tensor npu_quant_conv2d(const ms::Tensor & input, const ms::Tensor & weight, const ms::Tensor & scale, const std::vector<int64_t> & strides, const std::vector<int64_t> & pads, const std::vector<int64_t> & dilations, int64_t groups, int64_t offset_x, const std::string & round_mode, const std::optional<int64_t> & output_dtype_opt, const std::optional<ms::Tensor> & bias_opt, const std::optional<ms::Tensor> & offset_opt, const std::optional<int64_t> & input_dtype_opt, const std::optional<int64_t> & weight_dtype_opt) {
-  auto out=ms::Tensor(DTypeFromOptional(output_dtype_opt.value_or(-1), ms::TypeId::kNumberTypeInt8), Conv2dShape(input, weight, strides, pads, dilations)); auto bias=bias_opt.value_or(ms::Tensor()); auto offset=offset_opt.value_or(ms::Tensor()); bool transposed=false; std::vector<int64_t> output_padding{0,0};
+  (void)input_dtype_opt;
+  (void)weight_dtype_opt;
+  auto out=ms::Tensor(DTypeFromOptional(output_dtype_opt.value_or(-1), ms::TypeId::kNumberTypeFloat16), Conv2dShape(input, weight, strides, pads, dilations)); auto bias=bias_opt.value_or(ms::Tensor()); auto offset=offset_opt.value_or(ms::Tensor()); bool transposed=false; std::vector<int64_t> output_padding{};
+  int32_t offset_x_value = static_cast<int32_t>(offset_x);
   auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("QuantConvolution");
-  runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnQuantConvolution, input, weight, bias_opt, scale, offset_opt, strides, pads, dilations, transposed, output_padding, groups, offset_x, round_mode, out));
+  runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnQuantConvolution, input, weight, bias_opt, scale, offset_opt, strides, pads, dilations, transposed, output_padding, groups, offset_x_value, round_mode, out));
   runner->Run({input,weight,scale,bias,offset}, {out});
   return out;
 }

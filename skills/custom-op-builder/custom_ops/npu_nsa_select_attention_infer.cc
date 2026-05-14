@@ -1,50 +1,42 @@
-#include <algorithm>
 #include <optional>
 #include <string>
-#include <tuple>
 #include <vector>
 #include "ms_extension/all.h"
 
 namespace custom {
 namespace {
-ms::TypeId DTypeFromOptional(const std::optional<int64_t> &dtype, ms::TypeId fallback) {
-  if (!dtype.has_value() || dtype.value() < 0) { return fallback; }
-  switch (dtype.value()) {
-    case 0: return ms::TypeId::kNumberTypeUInt8;
-    case 1: return ms::TypeId::kNumberTypeInt8;
-    case 2: return ms::TypeId::kNumberTypeInt16;
-    case 3: return ms::TypeId::kNumberTypeInt32;
-    case 4: return ms::TypeId::kNumberTypeInt64;
-    case 5: return ms::TypeId::kNumberTypeFloat16;
-    case 6: return ms::TypeId::kNumberTypeFloat32;
-    case 27: return ms::TypeId::kNumberTypeBFloat16;
-    default: return fallback;
+std::vector<int64_t> OutputShape(const ms::Tensor &query, const ms::Tensor &value, int64_t head_num,
+                                 int64_t key_value_head_num, const std::string &layout) {
+  const auto query_shape = query.shape();
+  const auto value_shape = value.shape();
+  if (layout == "BSH" && query_shape.size() >= 3 && value_shape.size() >= 3 && key_value_head_num > 0) {
+    const auto key_head_dim = value_shape[2] / key_value_head_num;
+    return {query_shape[0], query_shape[1], head_num * key_head_dim};
   }
-}
-std::vector<int64_t> MatmulShape(const ms::Tensor &x1, const ms::Tensor &x2) {
-  auto s1 = x1.shape();
-  auto s2 = x2.shape();
-  if (s1.size() < 2 || s2.size() < 2) { return s1; }
-  std::vector<int64_t> out;
-  if (s1.size() > 2) { out.insert(out.end(), s1.begin(), s1.end() - 2); }
-  out.push_back(s1[s1.size() - 2]);
-  out.push_back(s2.back());
-  return out;
-}
-std::vector<int64_t> Conv2dShape(const ms::Tensor &input, const ms::Tensor &weight, const std::vector<int64_t> &strides, const std::vector<int64_t> &pads, const std::vector<int64_t> &dilations) {
-  auto x=input.shape(); auto w=weight.shape(); if (x.size()!=4 || w.size()!=4) return x;
-  int64_t sh=strides.empty()?1:strides[0], sw=strides.size()>1?strides[1]:sh;
-  int64_t ph=pads.empty()?0:pads[0], pw=pads.size()>1?pads[1]:ph;
-  int64_t dh=dilations.empty()?1:dilations[0], dw=dilations.size()>1?dilations[1]:dh;
-  int64_t oh=(x[2]+2*ph-dh*(w[2]-1)-1)/sh+1; int64_t ow=(x[3]+2*pw-dw*(w[3]-1)-1)/sw+1;
-  return {x[0], w[0], std::max<int64_t>(1,oh), std::max<int64_t>(1,ow)};
+  if (layout == "TND" && query_shape.size() >= 2 && value_shape.size() >= 3 && key_value_head_num > 0) {
+    const auto key_head_dim = value_shape[2] / key_value_head_num;
+    return {query_shape[0], query_shape[1], key_head_dim};
+  }
+  if (query_shape.size() >= 3 && value_shape.size() >= 4) {
+    return {query_shape[0], query_shape[1], query_shape[2], value_shape[3]};
+  }
+  return query_shape;
 }
 }  // namespace
 
 ms::Tensor npu_nsa_select_attention_infer(const ms::Tensor & query, const ms::Tensor & key, const ms::Tensor & value, const ms::Tensor & topk_indices, double scale_value, int64_t head_num, int64_t key_value_head_num, int64_t select_block_size, int64_t select_block_count, int64_t page_block_size, const std::optional<std::string> & layout_opt, const std::optional<ms::Tensor> & atten_mask_opt, const std::optional<ms::Tensor> & block_table_opt, const std::optional<std::vector<int64_t>> & actual_seq_qlen_opt, const std::optional<std::vector<int64_t>> & actual_seq_kvlen_opt) {
-  auto out=ms::Tensor(query.data_type(), query.shape()); auto layout=layout_opt.value_or("BSND"); auto atten_mask=atten_mask_opt.value_or(ms::Tensor()); auto block_table=block_table_opt.value_or(ms::Tensor()); auto actual_seq_qlen=std::make_pair(actual_seq_qlen_opt.value_or(std::vector<int64_t>{}), true); auto actual_seq_kvlen=std::make_pair(actual_seq_kvlen_opt.value_or(std::vector<int64_t>{}), true);
+  auto layout=layout_opt.value_or("BSND");
+  auto out=ms::Tensor(query.data_type(), OutputShape(query, value, head_num, key_value_head_num, layout));
+  auto atten_mask=atten_mask_opt.value_or(ms::Tensor());
+  auto block_table=block_table_opt.value_or(ms::Tensor());
+  auto actual_seq_qlen=std::make_pair(actual_seq_qlen_opt.value_or(std::vector<int64_t>{}), true);
+  auto actual_seq_kvlen=std::make_pair(actual_seq_kvlen_opt.value_or(std::vector<int64_t>{}), true);
+  int64_t sparse_mode = 0;
   auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("NsaSelectedAttentionInfer");
-  runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnNsaSelectedAttentionInfer, query, key, value, topk_indices, scale_value, head_num, key_value_head_num, select_block_size, select_block_count, page_block_size, layout, atten_mask_opt, block_table_opt, actual_seq_qlen, actual_seq_kvlen, out));
+  runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnNsaSelectedAttentionInfer, query, key, value, topk_indices,
+                                          atten_mask_opt, block_table_opt, actual_seq_qlen, actual_seq_kvlen, layout,
+                                          head_num, key_value_head_num, select_block_size, select_block_count,
+                                          page_block_size, scale_value, sparse_mode, out));
   runner->Run({query,key,value,topk_indices,atten_mask,block_table}, {out});
   return out;
 }

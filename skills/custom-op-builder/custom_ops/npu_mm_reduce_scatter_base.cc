@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <optional>
 #include <string>
-#include <tuple>
 #include <vector>
 #include "ms_extension/all.h"
 
@@ -31,21 +30,44 @@ std::vector<int64_t> MatmulShape(const ms::Tensor &x1, const ms::Tensor &x2) {
   out.push_back(s2.back());
   return out;
 }
-std::vector<int64_t> Conv2dShape(const ms::Tensor &input, const ms::Tensor &weight, const std::vector<int64_t> &strides, const std::vector<int64_t> &pads, const std::vector<int64_t> &dilations) {
-  auto x=input.shape(); auto w=weight.shape(); if (x.size()!=4 || w.size()!=4) return x;
-  int64_t sh=strides.empty()?1:strides[0], sw=strides.size()>1?strides[1]:sh;
-  int64_t ph=pads.empty()?0:pads[0], pw=pads.size()>1?pads[1]:ph;
-  int64_t dh=dilations.empty()?1:dilations[0], dw=dilations.size()>1?dilations[1]:dh;
-  int64_t oh=(x[2]+2*ph-dh*(w[2]-1)-1)/sh+1; int64_t ow=(x[3]+2*pw-dw*(w[3]-1)-1)/sw+1;
-  return {x[0], w[0], std::max<int64_t>(1,oh), std::max<int64_t>(1,ow)};
-}
 }  // namespace
 
 ms::Tensor npu_mm_reduce_scatter_base(const ms::Tensor & self, const ms::Tensor & x2, const std::string & hcom, int64_t world_size, const std::optional<std::string> & reduce_op_opt, const std::optional<ms::Tensor> & bias_opt, const std::optional<ms::Tensor> & x1_scale_opt, const std::optional<ms::Tensor> & x2_scale_opt, int64_t comm_turn, const std::optional<int64_t> & output_dtype_opt, const std::optional<std::string> & comm_mode_opt) {
-  auto shape = MatmulShape(self, x2); if (!shape.empty()) shape[0] = std::max<int64_t>(1, shape[0] / std::max<int64_t>(1, world_size)); auto out=ms::Tensor(DTypeFromOptional(output_dtype_opt.value_or(-1),self.data_type()), shape); auto bias=bias_opt.value_or(ms::Tensor()); auto x1_scale=x1_scale_opt.value_or(ms::Tensor()); auto x2_scale=x2_scale_opt.value_or(ms::Tensor()); auto reduce_op=reduce_op_opt.value_or("sum"); auto comm_mode=comm_mode_opt.value_or("");
-  auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("MatmulReduceScatterV2");
-  runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnMatmulReduceScatterV2, self, x2, hcom, world_size, reduce_op, bias_opt, x1_scale_opt, x2_scale_opt, comm_turn, output_dtype_opt.value_or(-1), comm_mode, out));
-  runner->Run({self,x2,bias,x1_scale,x2_scale}, {out});
+  auto shape = MatmulShape(self, x2);
+  if (!shape.empty()) {
+    shape[0] = std::max<int64_t>(1, shape[0] / std::max<int64_t>(1, world_size));
+  }
+  const bool has_quant = x2_scale_opt.has_value();
+  auto out_dtype = self.data_type();
+  if (has_quant) {
+    out_dtype = x2_scale_opt.value().data_type() == ms::TypeId::kNumberTypeInt64
+                    ? ms::TypeId::kNumberTypeFloat16
+                    : DTypeFromOptional(output_dtype_opt, ms::TypeId::kNumberTypeBFloat16);
+  }
+  auto out=ms::Tensor(out_dtype, shape);
+  auto bias=bias_opt.value_or(ms::Tensor());
+  auto x1_scale=x1_scale_opt.value_or(ms::Tensor());
+  auto x2_scale=x2_scale_opt.value_or(ms::Tensor());
+  auto reduce_op=reduce_op_opt.value_or("sum");
+  auto comm_mode=comm_mode_opt.value_or("ai_cpu");
+  int64_t stream_mode = 1;
+  if (comm_mode == "ai_cpu") {
+    auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("MatmulReduceScatter");
+    runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnMatmulReduceScatter, self, x2, bias_opt, hcom, reduce_op,
+                                            comm_turn, stream_mode, out));
+    runner->Run({self,x2,bias}, {out});
+  } else {
+    std::optional<ms::Tensor> quant_scale_opt = std::nullopt;
+    auto quant_scale = quant_scale_opt.value_or(ms::Tensor());
+    int64_t block_size = 0;
+    int64_t group_size = 0;
+    std::optional<ms::Tensor> amax_out_opt = std::nullopt;
+    auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("MatmulReduceScatterV2");
+    runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnMatmulReduceScatterV2, self, x2, bias_opt, x1_scale_opt,
+                                            x2_scale_opt, quant_scale_opt, block_size, hcom, reduce_op, comm_turn,
+                                            stream_mode, group_size, comm_mode, out, amax_out_opt));
+    runner->Run({self,x2,bias,x1_scale,x2_scale,quant_scale}, {out});
+  }
   return out;
 }
 

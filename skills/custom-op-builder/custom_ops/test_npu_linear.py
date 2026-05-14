@@ -22,10 +22,7 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_linear_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_linear_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
     return _CUSTOM_OPS
 
 
@@ -109,15 +106,6 @@ def test_npu_linear_matches_torch_npu():
         pytest.skip("benchmark torch_npu API is unavailable on this host")
     input_np = np.array([[1.0, -2.0], [3.0, 0.5]], dtype=np.float16)
     weight_np = np.eye(2, dtype=np.float16)
-    try:
-        expected = torch_npu.npu_linear(_torch_from_np(input_np), _torch_from_np(weight_np), None)
-        actual = npu_linear(_ms_from_np(input_np), _ms_from_np(weight_np), None)
-    except (RuntimeError, AttributeError, TypeError, ValueError, IndexError) as exc:
-        msg = str(exc).lower()
-        skip_keys = ("not support", "tiling", "hccl", "workspace", "not implemented", "has no attribute",
-                     "expected at most", "unknown keyword", "missing value", "takes", "expected a value of type",
-                     "declaration:", "invalid", "not initialized", "hcom", "dimension out of range", "parameter_error", "storageshape", "storage shape")
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
+    expected = torch_npu.npu_linear(_torch_from_np(input_np), _torch_from_np(weight_np), None)
+    actual = npu_linear(_ms_from_np(input_np), _ms_from_np(weight_np), None)
     _assert_close(expected, actual)

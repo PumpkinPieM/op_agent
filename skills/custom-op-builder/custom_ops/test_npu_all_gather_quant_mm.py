@@ -1,112 +1,151 @@
-import gc
 import os
+import socket
 from pathlib import Path
 
 import numpy as np
 import pytest
+import torch
+import torch.distributed as dist
+import torch.multiprocessing as mp
+import torch_npu
+
 import mindspore as ms
 from mindspore import Tensor, context
 
-torch = pytest.importorskip("torch")
-torch_npu = pytest.importorskip("torch_npu")
 
-DEVICE_ID = int(os.getenv("DEVICE_ID", "0"))
 KERNEL_SOURCE = Path(__file__).with_name("npu_all_gather_quant_mm.cc")
-_CUSTOM_OPS = None
 
 
-def _ops():
-    global _CUSTOM_OPS
-    if _CUSTOM_OPS is None:
-        torch.npu.set_device(DEVICE_ID)
-        torch.npu.set_compile_mode(jit_compile=False)
-        context.set_context(device_target="Ascend", device_id=DEVICE_ID)
-        context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_all_gather_quant_mm_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
-    return _CUSTOM_OPS
+def _find_free_port():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return sock.getsockname()[1]
 
 
-def _torch_f16(shape):
-    return torch.randn(*shape, dtype=torch.float16).npu()
+def _get_hccl_comm_name(group, rank):
+    if torch.__version__ > "2.0.1":
+        return group._get_backend(torch.device("npu")).get_hccl_comm_name(rank)
+    return group.get_hccl_comm_name(rank)
 
 
-def _torch_i32(shape):
-    return torch.zeros(*shape, dtype=torch.int32).npu()
+def _expected_arrays(world_size, rank, case):
+    x1_parts = []
+    for expected_rank in range(world_size):
+        rng = np.random.default_rng(2000 + expected_rank)
+        x1_parts.append(rng.normal(size=(16, 256)).astype(np.float16))
+    gather_out = np.concatenate(x1_parts, axis=0)
+
+    rng = np.random.default_rng(2000 + rank)
+    rng.normal(size=(16, 256))
+    x2_np = rng.normal(size=(256, 32)).astype(np.float16)
+    output = (gather_out.astype(np.float32) @ x2_np.astype(np.float32)).astype(np.float16)
+    if not case["gather_output"]:
+        gather_out = np.empty((0,), dtype=np.float16)
+    return output, gather_out
 
 
-def _ms_f16(shape):
-    return Tensor(np.random.randn(*shape).astype(np.float16))
+def _run_rank(rank, world_size, master_port, source_path, case, result_queue):
+    os.environ["MASTER_ADDR"] = "127.0.0.1"
+    os.environ["MASTER_PORT"] = str(master_port)
+    os.environ["HCCL_WHITELIST_DISABLE"] = "1"
 
-
-def _ms_i32(shape):
-    return Tensor(np.zeros(shape, dtype=np.int32))
-
-
-def _np_from_torch(value):
-    if value is None:
-        return None
-    if value.dtype == torch.bfloat16:
-        value = value.float()
-    return value.detach().cpu().numpy()
-
-
-def _np_from_ms(value):
-    if value is None:
-        return None
-    if value.dtype == ms.bfloat16:
-        value = value.astype(ms.float32)
-    return value.asnumpy()
-
-
-def _as_tuple(value):
-    if value is None:
-        return ()
-    if isinstance(value, (tuple, list)):
-        return tuple(value)
-    return (value,)
-
-
-def _assert_close(expected, actual, rtol=1e-3, atol=1e-3):
-    expected = _as_tuple(expected)
-    actual = _as_tuple(actual)
-    assert len(expected) == len(actual)
-    for exp, act in zip(expected, actual):
-        exp_np = _np_from_torch(exp)
-        act_np = _np_from_ms(act)
-        assert exp_np.shape == act_np.shape
-        if exp_np.dtype.kind in "iu" or act_np.dtype.kind in "iu" or exp_np.dtype == np.bool_:
-            np.testing.assert_array_equal(exp_np, act_np)
-        else:
-            np.testing.assert_allclose(exp_np, act_np, rtol=rtol, atol=atol, equal_nan=True)
-
-
-@pytest.fixture(autouse=True)
-def _cleanup():
-    yield
-    gc.collect()
-    torch.npu.empty_cache()
-    if hasattr(ms.hal, "empty_cache"):
-        ms.hal.empty_cache()
-
-
-def npu_all_gather_quant_mm(self, x2, hcom, world_size, *, bias=None, x1_scale=None, x2_scale=None, quant_scale=None, block_size=0, gather_index=0, gather_output=True, comm_turn=0, group_sizes=None, amax_output=False, y_dtype=None, x1_dtype=None, x2_dtype=None, x1_scale_dtype=None, x2_scale_dtype=None):
-    return _ops().npu_all_gather_quant_mm(self, x2, hcom, world_size, bias, x1_scale, x2_scale, quant_scale, block_size, gather_index, gather_output, comm_turn, group_sizes, amax_output, y_dtype, x1_dtype, x2_dtype, x1_scale_dtype, x2_scale_dtype)
-
-
-def test_npu_all_gather_quant_mm_matches_torch_npu():
-    if not hasattr(torch_npu, "npu_all_gather_quant_mm"):
-        pytest.skip("benchmark torch_npu API is unavailable on this host")
+    torch_npu.npu.set_device(rank)
+    torch.npu.set_compile_mode(jit_compile=False)
+    dist.init_process_group(backend="hccl", world_size=world_size, rank=rank)
+    group = dist.distributed_c10d._get_default_group()
     try:
-        expected = torch_npu.npu_all_gather_quant_mm(_torch_f16((2, 256)), _torch_f16((256, 16)), "hccl_world_group", 2, bias=None, x1_scale=None, x2_scale=None, quant_scale=None, block_size=0, gather_index=0, gather_output=True, comm_turn=0, group_sizes=[2, 0, 0], amax_output=False, y_dtype=None, x1_dtype=None, x2_dtype=None, x1_scale_dtype=None, x2_scale_dtype=None)
-        actual = npu_all_gather_quant_mm(_ms_f16((2, 256)), _ms_f16((256, 16)), "hccl_world_group", 2, bias=None, x1_scale=None, x2_scale=None, quant_scale=None, block_size=0, gather_index=0, gather_output=True, comm_turn=0, group_sizes=[2, 0, 0], amax_output=False, y_dtype=None, x1_dtype=None, x2_dtype=None, x1_scale_dtype=None, x2_scale_dtype=None)
-    except (RuntimeError, AttributeError, TypeError, ValueError, IndexError) as exc:
-        msg = str(exc).lower()
-        skip_keys = ("not support", "tiling", "hccl", "workspace", "not implemented", "has no attribute",
-                     "not initialized", "hcom", "parameter_error", "storageshape", "storage shape")
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
+        hcom_name = _get_hccl_comm_name(group, rank)
+    except RuntimeError as exc:
+        if "Communication_Error_Bind_IP_Port" in str(exc):
+            result_queue.put(("skip", str(exc)))
+            dist.destroy_process_group()
+            return
         raise
-    _assert_close(expected, actual)
+
+    context.set_context(device_target="Ascend", device_id=rank)
+    context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
+    custom_ops = ms.ops.CustomOpBuilder(
+        f"custom_ops_npu_all_gather_quant_mm_{case['id']}_ws{world_size}_rank{rank}",
+        [source_path],
+        backend="Ascend",
+    ).load()
+
+    rng = np.random.default_rng(2000 + rank)
+    x1_np = rng.normal(size=(16, 256)).astype(np.float16)
+    x2_np = rng.normal(size=(256, 32)).astype(np.float16)
+
+    actual = custom_ops.npu_all_gather_quant_mm(
+        Tensor(x1_np),
+        Tensor(x2_np),
+        hcom_name,
+        world_size,
+        None,
+        None,
+        None,
+        None,
+        0,
+        case["gather_index"],
+        case["gather_output"],
+        0,
+        [world_size, 0, 0],
+        case["amax_output"],
+        None,
+        None,
+        None,
+        None,
+        None,
+    )
+
+    expected_out, expected_gather = _expected_arrays(world_size, rank, case)
+    expected_np = [expected_out, expected_gather, np.zeros((1 if case["amax_output"] else 0,), dtype=np.float32)]
+    actual_np = [item.asnumpy() for item in actual]
+    for expected_item, actual_item in zip(expected_np[:2], actual_np[:2]):
+        assert expected_item.shape == actual_item.shape
+        np.testing.assert_allclose(expected_item, actual_item, rtol=8e-2, atol=8e-2)
+    assert actual_np[2].shape == expected_np[2].shape
+
+    result_queue.put(("ok", rank))
+    dist.barrier()
+    dist.destroy_process_group()
+
+
+def _run_world_size_2(case):
+    if torch.npu.device_count() < 2:
+        pytest.skip("HCCL world_size=2 test requires at least two NPU devices")
+
+    world_size = 2
+    master_port = _find_free_port()
+    ctx = mp.get_context("spawn")
+    result_queue = ctx.Queue(world_size)
+    processes = []
+    for rank in range(world_size):
+        process = ctx.Process(target=_run_rank, args=(rank, world_size, master_port, str(KERNEL_SOURCE), case, result_queue))
+        process.start()
+        processes.append(process)
+
+    for process in processes:
+        process.join(timeout=240)
+        if process.is_alive():
+            process.terminate()
+            process.join()
+            pytest.fail("HCCL world_size=2 test timed out")
+        assert process.exitcode == 0
+
+    results = [result_queue.get(timeout=10) for _ in range(world_size)]
+    skips = [message for status, message in results if status == "skip"]
+    if skips:
+        pytest.skip(f"HCCL communicator port is busy on this host: {skips[0]}")
+    ranks = [rank for status, rank in results if status == "ok"]
+    assert sorted(ranks) == [0, 1]
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        {"id": "gather", "gather_index": 0, "gather_output": True, "amax_output": False},
+        {"id": "no_gather", "gather_index": 0, "gather_output": False, "amax_output": False},
+        {"id": "amax", "gather_index": 0, "gather_output": True, "amax_output": True},
+    ],
+)
+def test_npu_all_gather_quant_mm_hccl_result(case):
+    _run_world_size_2(case)

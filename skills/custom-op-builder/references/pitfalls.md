@@ -90,6 +90,27 @@ Allocate every output tensor required by the ACLNN workspace-size signature, eve
 
 Return only the tensors required by the target Python interface, but never pass null output tensors to ACLNN unless the ACLNN document explicitly permits that exact output to be null or optional.
 
+## In-place outputs may alias an input tensor
+
+### Symptom
+
+An adapter for an in-place or in-place-like torch_npu interface builds and launches without an ACLNN error, but the returned custom-op tensor contains unchanged input data or uninitialized output data. Allocating a fresh output tensor from the ACLNN output metadata does not match the op-plugin behavior.
+
+One confirmed case is `torch_npu.npu_batch_gather_matmul` and `torch_npu.npu_batch_gather_matmul_`, which call `aclnnAddLora`. The op-plugin passes `self` as the ACLNN `out` argument, and the ACLNN kernel writes the update through that same tensor. Passing a separately allocated output tensor produced no useful result in the MindSpore custom-op runner path.
+
+### Rule
+
+For in-place interfaces, or functional wrappers backed by an in-place ACLNN implementation, mirror the op-plugin aliasing exactly:
+
+```cpp
+runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnAddLora, self, x, weight_b, indices, weight_a_opt, layer_idx, scale,
+                                        y_offset, y_slice_size, self));
+runner->Run({self, x, weight_b, indices, weight_a_value}, {self});
+return {self};
+```
+
+Do not allocate a new output tensor when the source implementation intentionally uses an input tensor as the ACLNN output. Treat the input tensor as the output tensor and include it in `runner->Run(..., outputs)` so PyBoost tracks the write dependency.
+
 ## Avoid std::vector<bool> for ACLNN bool arrays
 
 ### Symptom
@@ -201,6 +222,72 @@ After copying a fixed `.cc` file to the remote host, pytest appears to run the o
 
 If a changed adapter still behaves like the previous build, force rebuild by changing the `CustomOpBuilder` module name or clearing the relevant build/cache artifacts. This is especially important when iterating remotely on C++ adapter source.
 
+## NZ-format tensors need both Python format_cast and adapter-side storage metadata
+
+### Symptom
+
+An ACLNN interface that requires `FRACTAL_NZ` input rejects a tensor even though the Python test called a format-cast API:
+
+```text
+AclNN_Parameter_Error(EZ1001): x2 format(47) only support NZ(29).
+```
+
+One confirmed case is `aclnnQuantMatmulReduceSumWeightNz`, used by `npu_quant_matmul_reduce_sum`.
+
+### Root Cause
+
+Creating a NumPy array with an NZ-shaped physical layout is not enough. ACLNN checks the tensor format metadata passed through `aclCreateTensor`, not just the buffer shape or strides.
+
+MindSpore has an NZ creation/conversion interface, but in some installed builds it is exposed through the generated namespace rather than the public top-level ops namespace:
+
+```python
+ms.ops.auto_generate.format_cast(x, 29)  # 29 = ACL_FORMAT_FRACTAL_NZ
+```
+
+The repository documentation may also show `mindspore.ops.format_cast(input, acl_format)`, but validate the installed package before using the top-level name. On one verified MindSpore 2.9.0 environment, `ms.ops.format_cast` was absent while `ms.ops.auto_generate.format_cast` existed.
+
+For CustomOpBuilder adapters, the Python cast alone may still not be sufficient. The custom `ms::Tensor` wrapper may reach ACLNN with MindSpore's internal format value instead of ACL `FRACTAL_NZ` unless the adapter sets both format and storage info before launching ACLNN.
+
+### Rule
+
+In Python tests, create the MindSpore NZ tensor with `ms.ops.auto_generate.format_cast(tensor, 29)`. If using torch_npu as the benchmark, enable internal formats before `torch_npu.npu_format_cast`:
+
+```python
+torch.npu.config.allow_internal_format = True
+torch_x2 = torch_npu.npu_format_cast(torch_x2.contiguous(), 29)
+ms_x2 = ms.ops.auto_generate.format_cast(ms_x2, 29)
+```
+
+In the C++ adapter, mirror MindSpore's own custom-op-builder ST pattern: set the tensor format to `"FRACTAL_NZ"` and attach `TensorStorageInfo` based on `DeviceShapeTransfer`.
+
+```cpp
+void SetNzStorage(const ms::Tensor &tensor) {
+  const std::string nz_format = "FRACTAL_NZ";
+  tensor.set_format(nz_format);
+  auto nd_shape = tensor.shape();
+  auto nz_shape =
+    mindspore::trans::DeviceShapeTransfer().GetDeviceShapeByFormat(nd_shape, nz_format, tensor.data_type());
+
+  constexpr int64_t kStrideBase = 1;
+  constexpr int kStrideOffset = 2;
+  auto strides = nd_shape;
+  if (!strides.empty()) {
+    strides.erase(strides.begin());
+  }
+  strides.push_back(kStrideBase);
+  for (int i = static_cast<int>(strides.size()) - kStrideOffset; i >= 0; i--) {
+    strides[i] = strides[i] * strides[i + 1];
+  }
+
+  auto storage_info = std::make_shared<mindspore::TensorStorageInfo>(nd_shape, strides, nz_shape, strides, true);
+  MS_EXCEPTION_IF_NULL(tensor.tensor());
+  MS_EXCEPTION_IF_NULL(tensor.tensor()->device_address());
+  tensor.tensor()->set_storage_info(storage_info);
+}
+```
+
+Call this before `LAUNCH_ACLNN_FUNC` for the ACLNN argument that must be NZ.
+
 ## Match scalar wrapper type to the ACLNN C signature
 
 ### Symptom
@@ -263,6 +350,52 @@ Before writing `LAUNCH_ACLNN_FUNC`, check the ACLNN workspace-size signature:
 - If the parameter is a plain C/C++ scalar such as `int64_t`, `int`, `bool`, or `double`, pass the raw scalar value, casting as needed.
 - If the parameter is `aclScalar *`, pass a MindSpore `ScalarPtr`, usually from `mindspore::MakeValue<T>(value)`.
 - Keep scalar attributes out of `runner->Run(...)`; it should contain tensor dependencies only.
+
+## Raw scalar literals must match the ACLNN scalar width
+
+### Symptom
+
+`GetWorkspaceSize` fails with an impossible or pointer-like attribute value even though the visible launch argument looks
+correct.
+
+One confirmed case is `aclnnFusedInferAttentionScoreV4` through `torch_npu.npu_fused_infer_attention_score_v2`. The
+ACLNN document declares `antiquantMode` as `int64_t`, but the adapter passed literal `0` into `LAUNCH_ACLNN_FUNC`.
+CANN then rejected the call with errors like:
+
+```text
+antiquant_mode attr value only supports 0, 1, but got 281466386776064
+```
+
+Changing nearby optional placeholders changed the bad value, which made the failure look like an argument-order problem.
+The real issue was that literal `0` is a C++ `int`, so `LAUNCH_ACLNN_FUNC` inferred a workspace-size function pointer
+with a 32-bit argument where ACLNN expects a 64-bit argument.
+
+### Rule
+
+For every raw scalar in `LAUNCH_ACLNN_FUNC`, declare a typed variable or cast to the exact ACLNN C signature type. Do not
+rely on C++ literal inference for `0`, `1`, `false`, or default constants when the ACLNN signature uses a specific width.
+
+### Bad
+
+```cpp
+runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnFusedInferAttentionScoreV4, /* inputs */,
+                                        block_size, 0, return_softmax_lse,
+                                        key_quant_mode, value_quant_mode, query_quant_mode,
+                                        attention_out, softmax_lse));
+```
+
+### Good
+
+```cpp
+const int64_t antiquant_mode = 0;
+runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnFusedInferAttentionScoreV4, /* inputs */,
+                                        block_size, antiquant_mode, return_softmax_lse,
+                                        key_quant_mode, value_quant_mode, query_quant_mode,
+                                        attention_out, softmax_lse));
+```
+
+This is separate from `aclScalar *` handling: here the ACLNN parameter is a native scalar, but the native scalar type must
+still match exactly.
 
 ## Dynamic TensorList outputs need a custom pybind caller
 
@@ -331,3 +464,99 @@ void ConvertStubArg(std::optional<ms::Tensor> *tensor) {
 ```
 
 Apply this before `std::apply(func, cast_args)` in the dispatched task. This is especially important for torch_npu-style interfaces with many optional `Tensor[]?` arguments, such as `bias`, `scale`, `offset`, `antiquant_scale`, and `per_token_scale`.
+
+## Optional ACLNN outputs may require nullptr, not empty tensors
+
+### Symptom
+
+The adapter allocates zero-shape or placeholder tensors for disabled optional outputs, but CANN rejects the call during
+`GetWorkspaceSize`:
+
+```text
+Check dequantScaleQNopeOut == nullptr failed
+Check dequantScaleQNormOut == nullptr failed
+queryNorm expected shape [1, 1, 1536], but got [0]
+```
+
+One confirmed case is `aclnnMlaPrologV3WeightNz` through `torch_npu.npu_mla_prolog_v3`. The public torch_npu API always
+returns five tensors, but several ACLNN outputs are optional and must be null when disabled by mode flags such as
+`query_norm_flag` or by non-quant paths.
+
+### Root Cause
+
+Public API return arity and ACLNN launch requirements can differ. A placeholder return tensor is not necessarily a valid
+ACLNN output argument. For optional ACLNN outputs, CANN may distinguish a real zero-shape tensor from a null pointer and
+require the latter for a disabled output.
+
+### Rule
+
+If the ACLNN document marks an output as optional, pass `std::nullopt` to `LAUNCH_ACLNN_FUNC` when that output is disabled.
+Allocate any public placeholder tensor separately for the wrapper return value.
+
+```cpp
+auto dequant_scale_q_nope = ms::Tensor(ms::TypeId::kNumberTypeFloat32, std::vector<int64_t>{0});
+auto query_norm = ms::Tensor(weight_uq_qr.data_type(), std::vector<int64_t>{0});
+auto dequant_scale_q_norm = ms::Tensor(ms::TypeId::kNumberTypeFloat32, std::vector<int64_t>{0});
+
+std::optional<ms::Tensor> dequant_scale_q_nope_out_opt =
+    quant_query_path ? std::optional<ms::Tensor>(dequant_scale_q_nope) : std::nullopt;
+std::optional<ms::Tensor> query_norm_out_opt =
+    query_norm_flag ? std::optional<ms::Tensor>(query_norm) : std::nullopt;
+std::optional<ms::Tensor> dequant_scale_q_norm_out_opt =
+    need_dequant_scale_q_norm ? std::optional<ms::Tensor>(dequant_scale_q_norm) : std::nullopt;
+
+runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnMlaPrologV3WeightNz, /* inputs and attrs */,
+                                        query, query_rope, dequant_scale_q_nope_out_opt,
+                                        query_norm_out_opt, dequant_scale_q_norm_out_opt));
+runner->Run({/* tensor inputs */}, {query, query_rope, dequant_scale_q_nope, query_norm, dequant_scale_q_norm});
+return {query, query_rope, dequant_scale_q_nope, query_norm, dequant_scale_q_norm};
+```
+
+Tests should also treat disabled placeholder outputs carefully. If the benchmark returns a placeholder whose value is not
+semantically defined, compare shape, dtype, and materialization rather than numeric contents.
+
+## Optional ACLNN inputs may need wrapper-side semantic defaults
+
+### Symptom
+
+An ACLNN input is documented as optional and the torch_npu public API accepts `None`, but passing `std::nullopt` or an
+empty `ms::Tensor()` through `LAUNCH_ACLNN_FUNC` fails or crashes in the MindSpore custom-op runner path.
+
+One confirmed case is `torch_npu.npu_fused_floyd_attention(..., atten_mask=None)`. The ACLNN document marks
+`attenMaskOptional` as optional, but these custom-op variants failed:
+
+```cpp
+// Segfaults in the ACLNN path on the tested host.
+runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnFusedFloydAttention, query, key1, value1, key2, value2,
+                                        atten_mask_opt, scale, softmax_max, softmax_sum, attention_out));
+
+// Fails in MindSpore's ACLNN converter with "The pointer[tensor] is null."
+auto atten_mask = atten_mask_opt.value_or(ms::Tensor());
+runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnFusedFloydAttention, query, key1, value1, key2, value2,
+                                        atten_mask, scale, softmax_max, softmax_sum, attention_out));
+```
+
+Trying to synthesize the default mask inside C++ with a fresh `ms::Tensor` and initialize it through `aclnnInplaceZero`
+also failed because the newly constructed tensor was treated as uninitialized when used as an input.
+
+### Rule
+
+For optional ACLNN inputs, first test whether `std::nullopt` is actually safe in the MindSpore custom-op runner path. If
+it is not safe and the API has a clear semantic default, implement the public `None` behavior in the Python test/wrapper
+by constructing a real tensor and pass a required tensor to the C++ adapter.
+
+For `npu_fused_floyd_attention`, ACLNN defines an attention-mask value of `0` as "participates in attention", so
+`atten_mask=None` can be represented by an explicit all-zero `uint8` mask:
+
+```python
+def npu_fused_floyd_attention(query, key1, value1, key2, value2, *, atten_mask=None, scale_value=1.0):
+    if atten_mask is None:
+        q_shape = query.shape
+        k_shape = key1.shape
+        atten_mask = Tensor(np.zeros((q_shape[0], 1, q_shape[2], 1, k_shape[3]), dtype=np.uint8))
+    return custom_ops.npu_fused_floyd_attention(query, key1, value1, key2, value2, atten_mask, scale_value)
+```
+
+Then make the C++ adapter accept `const ms::Tensor &atten_mask` and always pass a real tensor to ACLNN. Do not invent a
+default tensor for optional inputs unless the ACLNN document or reference implementation makes the default semantics
+unambiguous.

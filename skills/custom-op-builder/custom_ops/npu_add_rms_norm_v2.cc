@@ -22,7 +22,7 @@ ms::Tensor npu_add_rms_norm_v2(const ms::Tensor &x1, const ms::Tensor &x2, const
   auto y = ms::Tensor(ms::TypeId::kNumberTypeFloat32, ParamReducedShape(x1, gamma));
   auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("InplaceAddRmsNorm");
   runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnInplaceAddRmsNorm, x1_ref, x2_ref, gamma, epsilon, y));
-  runner->Run({x1_ref, x2_ref, gamma}, {y});
+  runner->Run({x1_ref, x2_ref, gamma}, {y, x1_ref, x2_ref});
   return y;
 }
 

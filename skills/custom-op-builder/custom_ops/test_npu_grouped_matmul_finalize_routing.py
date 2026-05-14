@@ -14,6 +14,8 @@ DEVICE_ID = int(os.getenv("DEVICE_ID", "0"))
 KERNEL_SOURCE = Path(__file__).with_name("npu_grouped_matmul_finalize_routing.cc")
 _CUSTOM_OPS = None
 
+torch_npu.npu.config.allow_internal_format = True
+
 
 def _ops():
     global _CUSTOM_OPS
@@ -22,65 +24,9 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_grouped_matmul_finalize_routing_test_v3", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        module_name = f"custom_ops_npu_grouped_matmul_finalize_routing_test_{os.getpid()}"
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder(module_name, [str(KERNEL_SOURCE)], backend="Ascend").load()
     return _CUSTOM_OPS
-
-
-def _torch_f16(shape):
-    return torch.randn(*shape, dtype=torch.float16).npu()
-
-
-def _torch_i32(shape):
-    return torch.zeros(*shape, dtype=torch.int32).npu()
-
-
-def _ms_f16(shape):
-    return Tensor(np.random.randn(*shape).astype(np.float16))
-
-
-def _ms_i32(shape):
-    return Tensor(np.zeros(shape, dtype=np.int32))
-
-
-def _np_from_torch(value):
-    if value is None:
-        return None
-    if value.dtype == torch.bfloat16:
-        value = value.float()
-    return value.detach().cpu().numpy()
-
-
-def _np_from_ms(value):
-    if value is None:
-        return None
-    if value.dtype == ms.bfloat16:
-        value = value.astype(ms.float32)
-    return value.asnumpy()
-
-
-def _as_tuple(value):
-    if value is None:
-        return ()
-    if isinstance(value, (tuple, list)):
-        return tuple(value)
-    return (value,)
-
-
-def _assert_close(expected, actual, rtol=1e-3, atol=1e-3):
-    expected = _as_tuple(expected)
-    actual = _as_tuple(actual)
-    assert len(expected) == len(actual)
-    for exp, act in zip(expected, actual):
-        exp_np = _np_from_torch(exp)
-        act_np = _np_from_ms(act)
-        assert exp_np.shape == act_np.shape
-        if exp_np.dtype.kind in "iu" or act_np.dtype.kind in "iu" or exp_np.dtype == np.bool_:
-            np.testing.assert_array_equal(exp_np, act_np)
-        else:
-            np.testing.assert_allclose(exp_np, act_np, rtol=rtol, atol=atol, equal_nan=True)
 
 
 @pytest.fixture(autouse=True)
@@ -92,21 +38,119 @@ def _cleanup():
         ms.hal.empty_cache()
 
 
-def npu_grouped_matmul_finalize_routing(x, w, group_list, *, scale=_torch_f16((1,)), bias=None, offset=None, pertoken_scale=_torch_f16((2,)), shared_input=None, logit=_torch_f16((2,)), row_index=_torch_i32((2,)), dtype=None, shared_input_weight=1.0, shared_input_offset=0, output_bs=0, group_list_type=1, tuning_config=None, x_dtype=None, w_dtype=None, scale_dtype=None, pertoken_scale_dtype=None):
-    return _ops().npu_grouped_matmul_finalize_routing(x, w, group_list, scale, bias, offset, pertoken_scale, shared_input, logit, row_index, dtype, shared_input_weight, shared_input_offset, output_bs, group_list_type, tuning_config, x_dtype, w_dtype, scale_dtype, pertoken_scale_dtype)
+def _to_torch(array):
+    return torch.from_numpy(array).npu()
 
 
-def test_npu_grouped_matmul_finalize_routing_matches_torch_npu():
+def _to_ms(array):
+    return Tensor(array)
+
+
+def _to_ms_nz(array):
+    return ms.ops.auto_generate.format_cast(_to_ms(array), 29)
+
+
+def _make_case(m=16, k=2048, n=7168, expert=1, group_list_type=1):
+    rng = np.random.default_rng(20260516 + m + expert + group_list_type)
+    x = rng.integers(-5, 5, size=(m, k), dtype=np.int8)
+    weight = rng.integers(-5, 5, size=(expert, k, n), dtype=np.int8)
+    scale = rng.uniform(0.001, 0.01, size=(expert, n)).astype(np.float32)
+    pertoken_scale = rng.uniform(0.001, 0.01, size=(m,)).astype(np.float32)
+    logit = np.ones((m,), dtype=np.float32)
+    row_index = np.arange(m, dtype=np.int64)
+    counts = np.asarray([m // expert] * expert, dtype=np.int64)
+    group_list = counts if group_list_type == 1 else np.cumsum(counts)
+    return x, weight, group_list, scale, pertoken_scale, logit, row_index, group_list_type
+
+
+def npu_grouped_matmul_finalize_routing(
+    x,
+    w,
+    group_list,
+    scale=None,
+    bias=None,
+    offset=None,
+    pertoken_scale=None,
+    shared_input=None,
+    logit=None,
+    row_index=None,
+    dtype=None,
+    shared_input_weight=1.0,
+    shared_input_offset=0,
+    output_bs=0,
+    group_list_type=1,
+    tuning_config=None,
+    x_dtype=None,
+    w_dtype=None,
+    scale_dtype=None,
+    pertoken_scale_dtype=None,
+):
+    return _ops().npu_grouped_matmul_finalize_routing(
+        x,
+        w,
+        group_list,
+        scale,
+        bias,
+        offset,
+        pertoken_scale,
+        shared_input,
+        logit,
+        row_index,
+        dtype,
+        shared_input_weight,
+        shared_input_offset,
+        output_bs,
+        group_list_type,
+        tuning_config,
+        x_dtype,
+        w_dtype,
+        scale_dtype,
+        pertoken_scale_dtype,
+    )
+
+
+def test_custom_op_builds():
+    assert hasattr(_ops(), "npu_grouped_matmul_finalize_routing")
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        _make_case(m=16, expert=1, group_list_type=1),
+        _make_case(m=16, expert=1, group_list_type=0),
+    ],
+)
+def test_npu_grouped_matmul_finalize_routing_matches_torch_npu(case):
     if not hasattr(torch_npu, "npu_grouped_matmul_finalize_routing"):
         pytest.skip("benchmark torch_npu API is unavailable on this host")
-    try:
-        expected = torch_npu.npu_grouped_matmul_finalize_routing(_torch_f16((2, 16)), _torch_f16((1, 16, 16)), _torch_i32((1,)), scale=_torch_f16((1,)), bias=None, offset=None, pertoken_scale=_torch_f16((2,)), shared_input=None, logit=_torch_f16((2,)), row_index=_torch_i32((2,)), dtype=None, shared_input_weight=1.0, shared_input_offset=0, output_bs=0, group_list_type=1, tuning_config=[2], x_dtype=None, w_dtype=None, scale_dtype=None, pertoken_scale_dtype=None)
-        actual = npu_grouped_matmul_finalize_routing(_ms_f16((2, 16)), _ms_f16((1, 16, 16)), _ms_i32((1,)), scale=_ms_f16((1,)), bias=None, offset=None, pertoken_scale=_ms_f16((2,)), shared_input=None, logit=_ms_f16((2,)), row_index=_ms_i32((2,)), dtype=None, shared_input_weight=1.0, shared_input_offset=0, output_bs=0, group_list_type=1, tuning_config=[2], x_dtype=None, w_dtype=None, scale_dtype=None, pertoken_scale_dtype=None)
-    except (RuntimeError, AttributeError, TypeError, ValueError, IndexError) as exc:
-        msg = str(exc).lower()
-        skip_keys = ("not support", "tiling", "hccl", "workspace", "not implemented", "has no attribute",
-                     "not initialized", "hcom", "storageshape", "storage shape")
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
-    _assert_close(expected, actual)
+    x, weight, group_list, scale, pertoken_scale, logit, row_index, group_list_type = case
+    torch_weight = torch_npu.npu_format_cast(_to_torch(weight).contiguous(), 29)
+    expected = torch_npu.npu_grouped_matmul_finalize_routing(
+        _to_torch(x),
+        torch_weight,
+        _to_torch(group_list),
+        scale=_to_torch(scale),
+        pertoken_scale=_to_torch(pertoken_scale),
+        logit=_to_torch(logit),
+        row_index=_to_torch(row_index),
+        output_bs=x.shape[0],
+        group_list_type=group_list_type,
+    )
+    actual = npu_grouped_matmul_finalize_routing(
+        _to_ms(x),
+        _to_ms_nz(weight),
+        _to_ms(group_list),
+        scale=_to_ms(scale),
+        pertoken_scale=_to_ms(pertoken_scale),
+        logit=_to_ms(logit),
+        row_index=_to_ms(row_index),
+        output_bs=x.shape[0],
+        group_list_type=group_list_type,
+    )
+    actual = actual[0] if isinstance(actual, (list, tuple)) else actual
+    expected_np = expected.detach().cpu().numpy()
+    actual_np = actual.asnumpy()
+
+    assert actual_np.shape == expected_np.shape
+    assert actual_np.dtype == np.float32
+    np.testing.assert_allclose(actual_np, expected_np, rtol=1e-3, atol=1e-3)

@@ -4,6 +4,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+
 import mindspore as ms
 from mindspore import Tensor, context
 
@@ -22,63 +23,45 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_transpose_batchmatmul_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder(
+            "custom_ops_npu_transpose_batchmatmul_test_v3", [str(KERNEL_SOURCE)], backend="Ascend"
+        ).load()
     return _CUSTOM_OPS
 
 
-def _torch_tensor(arr, dtype=None):
-    t = torch.from_numpy(np.array(arr, copy=True)).npu()
-    if dtype is not None:
-        t = t.to(dtype)
-    return t
+def _torch_tensor(arr, dtype):
+    return torch.from_numpy(np.array(arr, copy=True)).to(dtype).npu()
 
 
-def _ms_tensor(arr, dtype=None):
-    t = Tensor(np.array(arr, copy=True))
-    if dtype is not None:
-        t = t.astype(dtype)
-    return t
+def _ms_tensor(arr, dtype):
+    return Tensor(np.array(arr, copy=True)).astype(dtype)
 
 
 def _np_from_torch(value):
-    if value is None:
-        return None
     if value.dtype == torch.bfloat16:
         value = value.float()
     return value.detach().cpu().numpy()
 
 
 def _np_from_ms(value):
-    if value is None:
-        return None
     if value.dtype == ms.bfloat16:
         value = value.astype(ms.float32)
     return value.asnumpy()
 
 
-def _as_tuple(value):
-    if value is None:
-        return ()
-    if isinstance(value, (tuple, list)):
-        return tuple(value)
-    return (value,)
-
-
 def _assert_close(expected, actual, rtol=1e-3, atol=1e-3):
-    expected = _as_tuple(expected)
-    actual = _as_tuple(actual)
-    assert len(expected) == len(actual)
-    for exp, act in zip(expected, actual):
-        exp_np = _np_from_torch(exp)
-        act_np = _np_from_ms(act)
-        assert exp_np.shape == act_np.shape
-        if exp_np.dtype.kind in "iu" or act_np.dtype.kind in "iu" or exp_np.dtype == np.bool_:
-            np.testing.assert_array_equal(exp_np, act_np)
-        else:
-            np.testing.assert_allclose(exp_np, act_np, rtol=rtol, atol=atol, equal_nan=True)
+    exp_np = _np_from_torch(expected)
+    act_np = _np_from_ms(actual)
+    assert exp_np.shape == act_np.shape
+    assert exp_np.dtype == act_np.dtype or exp_np.dtype == np.float32
+    np.testing.assert_allclose(exp_np, act_np, rtol=rtol, atol=atol)
+
+
+def npu_transpose_batchmatmul(x, weight, bias=None, scale=None, perm_x1=None, perm_x2=None, perm_y=None,
+                              batch_split_factor=1):
+    return _ops().npu_transpose_batchmatmul(
+        x, weight, bias, scale, perm_x1, perm_x2, perm_y, batch_split_factor
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -90,40 +73,60 @@ def _cleanup():
         ms.hal.empty_cache()
 
 
-
-
-def npu_transpose_batchmatmul(x, weight, *, bias=None, perm_x1=False, perm_x2=False):
-    return _ops().npu_transpose_batchmatmul(x, weight, bias, perm_x1, perm_x2)
-
-
-CASES = [
- {"id":"perm_x1_false","torch":lambda: torch_npu.npu_transpose_batchmatmul(_torch_tensor(np.ones((1,2,8),np.float16)),_torch_tensor(np.ones((1,8,4),np.float16)),perm_x1=False,perm_x2=False),"ms":lambda: npu_transpose_batchmatmul(_ms_tensor(np.ones((1,2,8),np.float16)),_ms_tensor(np.ones((1,8,4),np.float16)),perm_x1=False,perm_x2=False)},
- {"id":"perm_x1_true","torch":lambda: torch_npu.npu_transpose_batchmatmul(_torch_tensor(np.ones((1,8,2),np.float16)),_torch_tensor(np.ones((1,8,4),np.float16)),perm_x1=True,perm_x2=False),"ms":lambda: npu_transpose_batchmatmul(_ms_tensor(np.ones((1,8,2),np.float16)),_ms_tensor(np.ones((1,8,4),np.float16)),perm_x1=True,perm_x2=False)},
-]
-
-
-@pytest.mark.parametrize("case", CASES, ids=lambda c: c["id"])
+@pytest.mark.parametrize(
+    "case",
+    [
+        {
+            "id": "default_perms",
+            "x_shape": (16, 32, 512),
+            "w_shape": (16, 512, 128),
+            "perm_x1": [0, 1, 2],
+            "perm_x2": [0, 1, 2],
+            "perm_y": [1, 0, 2],
+            "batch_split_factor": 1,
+        },
+        {
+            "id": "transpose_x1",
+            "x_shape": (32, 16, 512),
+            "w_shape": (16, 512, 128),
+            "perm_x1": [1, 0, 2],
+            "perm_x2": [0, 1, 2],
+            "perm_y": [1, 0, 2],
+            "batch_split_factor": 1,
+        },
+        {
+            "id": "batch_split",
+            "x_shape": (32, 16, 512),
+            "w_shape": (16, 512, 128),
+            "perm_x1": [1, 0, 2],
+            "perm_x2": [0, 1, 2],
+            "perm_y": [1, 0, 2],
+            "batch_split_factor": 2,
+        },
+    ],
+    ids=lambda c: c["id"],
+)
 def test_npu_transpose_batchmatmul_matches_torch_npu(case):
-    try:
-        expected = case["torch"]()
-        actual = case["ms"]()
-    except (RuntimeError, AttributeError, TypeError, ValueError) as exc:
-        msg = str(exc).lower()
-        skip_keys = (
-            "not support",
-            "tiling",
-            "hccl",
-            "workspace",
-            "not implemented",
-            "has no attribute",
-            "expected at most",
-            "unknown keyword",
-            "missing value",
-            "takes",
-            "expected a value of type",
-            "declaration:",
-        )
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
-    _assert_close(expected, actual, case.get("rtol", 1e-3), case.get("atol", 1e-3))
+    rng = np.random.default_rng(10)
+    x_np = rng.normal(size=case["x_shape"]).astype(np.float16)
+    w_np = rng.normal(size=case["w_shape"]).astype(np.float16)
+    expected = torch_npu.npu_transpose_batchmatmul(
+        _torch_tensor(x_np, torch.float16),
+        _torch_tensor(w_np, torch.float16),
+        scale=None,
+        perm_x1=case["perm_x1"],
+        perm_x2=case["perm_x2"],
+        perm_y=case["perm_y"],
+        batch_split_factor=case["batch_split_factor"],
+    )
+    actual = npu_transpose_batchmatmul(
+        _ms_tensor(x_np, ms.float16),
+        _ms_tensor(w_np, ms.float16),
+        None,
+        None,
+        case["perm_x1"],
+        case["perm_x2"],
+        case["perm_y"],
+        case["batch_split_factor"],
+    )
+    _assert_close(expected, actual, rtol=1e-3, atol=1e-3)

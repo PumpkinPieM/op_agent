@@ -4,11 +4,11 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+import torch
+import torch_npu
 import mindspore as ms
 from mindspore import Tensor, context
 
-torch = pytest.importorskip("torch")
-torch_npu = pytest.importorskip("torch_npu")
 
 DEVICE_ID = int(os.getenv("DEVICE_ID", "0"))
 KERNEL_SOURCE = Path(__file__).with_name("npu_apply_adam_w.cc")
@@ -22,65 +22,59 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_apply_adam_w_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder(
+            "custom_ops_npu_apply_adam_w_test",
+            [str(KERNEL_SOURCE)],
+            backend="Ascend",
+        ).load()
     return _CUSTOM_OPS
 
 
-def _torch_f16(shape):
-    return torch.randn(*shape, dtype=torch.float16).npu()
+def _ms_tensor(array):
+    return Tensor(np.array(array, copy=True))
 
 
-def _torch_i32(shape):
-    return torch.zeros(*shape, dtype=torch.int32).npu()
+def _ms_scalar(value):
+    return Tensor(np.array([value], dtype=np.float32))
 
 
-def _ms_f16(shape):
-    return Tensor(np.random.randn(*shape).astype(np.float16))
+def _torch_tensor(array):
+    return torch.from_numpy(np.array(array, copy=True)).npu()
 
 
-def _ms_i32(shape):
-    return Tensor(np.zeros(shape, dtype=np.int32))
+def _cpu_apply_adam_w(var, m, v, grad, max_grad_norm, beta1_power, beta2_power, lr, weight_decay,
+                      beta1, beta2, epsilon, amsgrad, maximize):
+    gt = -grad if maximize else grad
+    m_out = m * beta1 - (beta1 - 1.0) * gt
+    v_out = v * beta2 - (beta2 - 1.0) * gt * gt
+    var_t = var * (1.0 - lr * weight_decay)
+    beta1_power_out = beta1_power * beta1
+    beta2_power_out = beta2_power * beta2
+    denom_src = np.maximum(max_grad_norm, v_out) if amsgrad else v_out
+    denom = np.sqrt(denom_src / (1.0 - beta2_power_out)) + epsilon
+    var_out = var_t + (-lr * m_out / (1.0 - beta1_power_out)) / denom
+    return var_out.astype(np.float32), m_out.astype(np.float32), v_out.astype(np.float32)
 
 
-def _np_from_torch(value):
-    if value is None:
-        return None
-    if value.dtype == torch.bfloat16:
-        value = value.float()
-    return value.detach().cpu().numpy()
-
-
-def _np_from_ms(value):
-    if value is None:
-        return None
-    if value.dtype == ms.bfloat16:
-        value = value.astype(ms.float32)
-    return value.asnumpy()
-
-
-def _as_tuple(value):
-    if value is None:
-        return ()
-    if isinstance(value, (tuple, list)):
-        return tuple(value)
-    return (value,)
-
-
-def _assert_close(expected, actual, rtol=1e-3, atol=1e-3):
-    expected = _as_tuple(expected)
-    actual = _as_tuple(actual)
-    assert len(expected) == len(actual)
-    for exp, act in zip(expected, actual):
-        exp_np = _np_from_torch(exp)
-        act_np = _np_from_ms(act)
-        assert exp_np.shape == act_np.shape
-        if exp_np.dtype.kind in "iu" or act_np.dtype.kind in "iu" or exp_np.dtype == np.bool_:
-            np.testing.assert_array_equal(exp_np, act_np)
-        else:
-            np.testing.assert_allclose(exp_np, act_np, rtol=rtol, atol=atol, equal_nan=True)
+def npu_apply_adam_w(beta1_power, beta2_power, lr, weight_decay, beta1, beta2, epsilon, grad,
+                     max_grad_norm, amsgrad, maximize, out):
+    var, m, v = out
+    return _ops().npu_apply_adam_w(
+        var,
+        m,
+        v,
+        _ms_scalar(beta1_power),
+        _ms_scalar(beta2_power),
+        _ms_scalar(lr),
+        _ms_scalar(weight_decay),
+        _ms_scalar(beta1),
+        _ms_scalar(beta2),
+        _ms_scalar(epsilon),
+        grad,
+        max_grad_norm,
+        amsgrad,
+        maximize,
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -92,22 +86,63 @@ def _cleanup():
         ms.hal.empty_cache()
 
 
-def npu_apply_adam_w(beta1_power, beta2_power, lr, weight_decay, beta1, beta2, epsilon, grad, max_grad_norm, amsgrad, maximize):
-    return _ops().npu_apply_adam_w(beta1_power, beta2_power, lr, weight_decay, beta1, beta2, epsilon, grad, max_grad_norm, amsgrad, maximize)
+@pytest.mark.parametrize(
+    "shape,maximize",
+    [
+        ((1024,), False),
+        ((17, 19), True),
+    ],
+)
+def test_npu_apply_adam_w_out_matches_torch_npu_and_formula(shape, maximize):
+    rng = np.random.default_rng(20260517 + int(maximize))
+    var = rng.uniform(10.0, 20.0, shape).astype(np.float32)
+    m = rng.uniform(5.0, 10.0, shape).astype(np.float32)
+    v = rng.uniform(0.1, 5.0, shape).astype(np.float32)
+    grad = rng.uniform(-5.0, 5.0, shape).astype(np.float32)
 
+    beta1_power = 0.12
+    beta2_power = 0.23
+    lr = 0.003
+    weight_decay = 0.01
+    beta1 = 0.9
+    beta2 = 0.999
+    epsilon = 1e-5
+    amsgrad = False
+    max_grad_norm = None
 
-def test_npu_apply_adam_w_matches_torch_npu():
-    if not hasattr(torch_npu, "npu_apply_adam_w"):
-        pytest.skip("benchmark torch_npu API is unavailable on this host")
-    try:
-        expected = torch_npu.npu_apply_adam_w(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, _torch_f16((2, 2)), _torch_f16((2, 2)), False, False)
-        actual = npu_apply_adam_w(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, _ms_f16((2, 2)), _ms_f16((2, 2)), False, False)
-    except (RuntimeError, AttributeError, TypeError, ValueError, IndexError) as exc:
-        msg = str(exc).lower()
-        skip_keys = ("not support", "tiling", "hccl", "workspace", "not implemented", "has no attribute",
-                     "expected at most", "unknown keyword", "missing value", "takes", "expected a value of type",
-                     "declaration:", "invalid", "not initialized", "hcom", "dimension out of range", "parameter_error", "storageshape", "storage shape")
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
-    _assert_close(expected, actual)
+    expected_cpu = _cpu_apply_adam_w(
+        var, m, v, grad, max_grad_norm, beta1_power, beta2_power, lr, weight_decay,
+        beta1, beta2, epsilon, amsgrad, maximize,
+    )
+    expected_torch = torch_npu.npu_apply_adam_w(
+        beta1_power,
+        beta2_power,
+        lr,
+        weight_decay,
+        beta1,
+        beta2,
+        epsilon,
+        _torch_tensor(grad),
+        None,
+        amsgrad,
+        maximize,
+        out=(_torch_tensor(var), _torch_tensor(m), _torch_tensor(v)),
+    )
+    actual = npu_apply_adam_w(
+        beta1_power,
+        beta2_power,
+        lr,
+        weight_decay,
+        beta1,
+        beta2,
+        epsilon,
+        _ms_tensor(grad),
+        None,
+        amsgrad,
+        maximize,
+        out=(_ms_tensor(var), _ms_tensor(m), _ms_tensor(v)),
+    )
+
+    for cpu_value, torch_value, ms_value in zip(expected_cpu, expected_torch, actual):
+        np.testing.assert_allclose(torch_value.detach().cpu().numpy(), cpu_value, rtol=2e-3, atol=2e-3)
+        np.testing.assert_allclose(ms_value.asnumpy(), torch_value.detach().cpu().numpy(), rtol=2e-3, atol=2e-3)

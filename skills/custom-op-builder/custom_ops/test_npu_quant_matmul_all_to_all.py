@@ -5,94 +5,164 @@ from pathlib import Path
 import numpy as np
 import pytest
 import torch
+import torch.distributed as dist
+import torch.multiprocessing as mp
 import torch_npu
 import mindspore as ms
 from mindspore import Tensor, context
-DEVICE_ID = int(os.getenv("DEVICE_ID", "0"))
+
 KERNEL_SOURCE = Path(__file__).with_name("npu_quant_matmul_all_to_all.cc")
 
-torch.npu.set_device(DEVICE_ID)
-torch.npu.set_compile_mode(jit_compile=False)
-context.set_context(device_target="Ascend", device_id=DEVICE_ID)
-context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-_custom_ops = ms.ops.CustomOpBuilder("custom_ops_npu_quant_matmul_all_to_all_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-def npu_quant_matmul_all_to_all(*args):
-    return _custom_ops.npu_quant_matmul_all_to_all(*args)
+
 @pytest.fixture(autouse=True)
 def _cleanup():
     yield
     gc.collect()
-def _pta(x):
-    if x is None:
-        return None
-    t = torch.from_numpy(x).npu()
-    return t
 
-def _ms(x):
-    if x is None:
-        return None
-    return Tensor(x)
 
-def _np(x):
-    if isinstance(x, (tuple, list)):
-        return [_np(v) for v in x]
-    if isinstance(x, torch.Tensor):
-        if x.dtype == torch.bfloat16:
-            return x.float().cpu().numpy()
-        return x.cpu().numpy()
-    if hasattr(x, "asnumpy"):
-        if x.dtype == ms.bfloat16:
-            return x.astype(ms.float32).asnumpy()
-        return x.asnumpy()
-    return np.asarray(x)
+def _get_hccl_comm_name(group, rank):
+    if torch.__version__ > "2.0.1":
+        return group._get_backend(torch.device("npu")).get_hccl_comm_name(rank)
+    return group.get_hccl_comm_name(rank)
 
-def _assert_close(expected, actual, rtol=1e-2, atol=1e-2):
-    e=_np(expected); a=_np(actual)
-    if not isinstance(e, list): e=[e]
-    if not isinstance(a, list): a=[a]
-    assert len(e)==len(a)
-    for ev,av in zip(e,a):
-        assert ev.shape == av.shape
-        np.testing.assert_allclose(ev, av, rtol=rtol, atol=atol, equal_nan=True)
-def _case():
-    x2 = np.random.default_rng(0).normal(size=(2, 4)).astype(np.float16)
-    x1 = np.random.default_rng(0).normal(size=(2, 4)).astype(np.float16)
-    hcom = ""
-    world_size = 1
-    bias_opt = None
-    x1_scale_opt = None
-    x2_scale_opt = None
-    common_scale_opt = None
-    x1_offset_opt = None
-    x2_offset_opt = None
-    x1_quant_mode_opt = 0
-    x2_quant_mode_opt = 0
-    common_quant_mode_opt = 0
-    group_sizes_opt = None
-    all2all_axes_opt = None
-    comm_quant_dtype_opt = None
-    x1_dtype_opt = None
-    x2_dtype_opt = None
-    x1_scale_dtype_opt = None
-    x2_scale_dtype_opt = None
-    output_scale_dtype_opt = None
-    comm_scale_dtype_opt = None
-    y_dtype_opt = None
-    return (_pta(x1), _pta(x2), hcom, world_size, _pta(bias_opt), _pta(x1_scale_opt), _pta(x2_scale_opt), _pta(common_scale_opt), _pta(x1_offset_opt), _pta(x2_offset_opt), x1_quant_mode_opt, x2_quant_mode_opt, common_quant_mode_opt, group_sizes_opt, all2all_axes_opt, comm_quant_dtype_opt, x1_dtype_opt, x2_dtype_opt, x1_scale_dtype_opt, x2_scale_dtype_opt, output_scale_dtype_opt, comm_scale_dtype_opt, y_dtype_opt), (_ms(x1), _ms(x2), hcom, world_size, _ms(bias_opt), _ms(x1_scale_opt), _ms(x2_scale_opt), _ms(common_scale_opt), _ms(x1_offset_opt), _ms(x2_offset_opt), x1_quant_mode_opt, x2_quant_mode_opt, common_quant_mode_opt, group_sizes_opt, all2all_axes_opt, comm_quant_dtype_opt, x1_dtype_opt, x2_dtype_opt, x1_scale_dtype_opt, x2_scale_dtype_opt, output_scale_dtype_opt, comm_scale_dtype_opt, y_dtype_opt)
-def _torch_reference(torch_args):
-    required_count = 23
-    keyword_names = []
-    kwargs = {name: value for name, value in zip(keyword_names, torch_args[required_count:]) if value is not None}
 
-    dtype_map = {5: torch.float16, 6: torch.float32, 27: torch.bfloat16}
-    for key, value in list(kwargs.items()):
-        if key.endswith("dtype") and isinstance(value, int) and value in dtype_map:
-            kwargs[key] = dtype_map[value]
-    return torch_npu.npu_quant_matmul_all_to_all(*torch_args[:required_count], **kwargs)
+def _torch_tensor(array, dtype=None):
+    tensor = torch.tensor(array)
+    if dtype is not None:
+        tensor = tensor.to(dtype)
+    return tensor.npu()
 
-def test_npu_quant_matmul_all_to_all_against_torch_npu_benchmark():
+
+def _ms_tensor(array, dtype=None):
+    if dtype is None:
+        return Tensor(array)
+    return Tensor(array, dtype)
+
+
+def _to_numpy(value):
+    if isinstance(value, torch.Tensor):
+        return value.float().cpu().numpy()
+    if hasattr(value, "asnumpy"):
+        return value.astype(ms.float32).asnumpy()
+    return np.asarray(value)
+
+
+def _make_case(rank):
+    rng = np.random.default_rng(rank)
+    m, k, n = 16, 32, 32
+    x1 = rng.integers(-5, 5, size=(m, k), dtype=np.int8)
+    x2 = rng.integers(-5, 5, size=(k, n), dtype=np.int8)
+    x1_scale = rng.uniform(0.1, 1, size=(m,)).astype(np.float32)
+    x2_scale = rng.uniform(0.1, 1, size=(n,)).astype(np.float32)
+    bias = rng.uniform(-0.5, 0.5, size=(n,)).astype(np.float32)
+    return x1, x2, x1_scale, x2_scale, bias
+
+
+def _run_rank(rank, world_size, master_port, source_path, result_queue):
+    os.environ["MASTER_ADDR"] = "127.0.0.1"
+    os.environ["MASTER_PORT"] = str(master_port)
+    os.environ["HCCL_WHITELIST_DISABLE"] = "1"
+
+    torch_npu.npu.set_device(rank)
+    torch.npu.set_compile_mode(jit_compile=False)
+    dist.init_process_group(backend="hccl", world_size=world_size, rank=rank)
+    group = dist.distributed_c10d._get_default_group()
+    hcom_name = _get_hccl_comm_name(group, rank)
+
+    context.set_context(device_target="Ascend", device_id=rank)
+    context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
+    custom_ops = ms.ops.CustomOpBuilder(
+        f"custom_ops_npu_quant_matmul_all_to_all_ws2_rank{rank}",
+        [source_path],
+        backend="Ascend",
+    ).load()
+
+    x1, x2, x1_scale, x2_scale, bias = _make_case(rank)
+    torch_args = (
+        _torch_tensor(x1),
+        _torch_tensor(x2),
+        hcom_name,
+        world_size,
+        _torch_tensor(bias),
+        _torch_tensor(x1_scale),
+        _torch_tensor(x2_scale),
+        None,
+        None,
+        None,
+        3,
+        2,
+        0,
+        [0, 0, 0],
+        [-1, -2],
+        -1,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        15,
+    )
+    ms_args = (
+        _ms_tensor(x1),
+        _ms_tensor(x2),
+        hcom_name,
+        world_size,
+        _ms_tensor(bias),
+        _ms_tensor(x1_scale),
+        _ms_tensor(x2_scale),
+        None,
+        None,
+        None,
+        3,
+        2,
+        0,
+        [0, 0, 0],
+        [-1, -2],
+        -1,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        15,
+    )
+
+    expected = torch_npu.npu_quant_matmul_all_to_all(*torch_args)
+    expected_np = _to_numpy(expected)
+    dist.barrier()
+
+    actual = custom_ops.npu_quant_matmul_all_to_all(*ms_args)
+    actual_np = _to_numpy(actual)
+    np.testing.assert_allclose(expected_np, actual_np, rtol=1e-2, atol=1e-2, equal_nan=True)
+    result_queue.put((rank, expected_np.shape, actual_np.shape, float(np.max(np.abs(expected_np - actual_np)))))
+    dist.barrier()
+    dist.destroy_process_group()
+
+
+def test_npu_quant_matmul_all_to_all_world_size_2_against_torch_npu_benchmark():
     assert hasattr(torch_npu, "npu_quant_matmul_all_to_all")
-    torch_args, ms_args = _case()
-    expected = _torch_reference(torch_args)
-    actual = npu_quant_matmul_all_to_all(*ms_args)
-    _assert_close(expected, actual)
+    if torch.npu.device_count() < 2:
+        pytest.skip("npu_quant_matmul_all_to_all world_size=2 requires at least two NPU devices")
+
+    world_size = 2
+    master_port = int(os.environ.get("MASTER_PORT", str(51000 + os.getpid() % 1000)))
+    ctx = mp.get_context("spawn")
+    result_queue = ctx.Queue(world_size)
+    processes = []
+    for rank in range(world_size):
+        process = ctx.Process(target=_run_rank, args=(rank, world_size, master_port, str(KERNEL_SOURCE), result_queue))
+        process.start()
+        processes.append(process)
+
+    for process in processes:
+        process.join(timeout=240)
+        if process.is_alive():
+            process.terminate()
+            process.join()
+            pytest.fail("npu_quant_matmul_all_to_all world_size=2 test timed out")
+        assert process.exitcode == 0
+
+    results = [result_queue.get(timeout=10) for _ in range(world_size)]
+    assert sorted(rank for rank, _, _, _ in results) == [0, 1]

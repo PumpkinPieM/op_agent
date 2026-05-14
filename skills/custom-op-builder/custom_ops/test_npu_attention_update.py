@@ -22,63 +22,12 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_attention_update_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder(
+            f"custom_ops_npu_attention_update_test_{os.getpid()}",
+            [str(KERNEL_SOURCE)],
+            backend="Ascend",
+        ).load()
     return _CUSTOM_OPS
-
-
-def _torch_tensor(arr, dtype=None):
-    t = torch.from_numpy(np.array(arr, copy=True)).npu()
-    if dtype is not None:
-        t = t.to(dtype)
-    return t
-
-
-def _ms_tensor(arr, dtype=None):
-    t = Tensor(np.array(arr, copy=True))
-    if dtype is not None:
-        t = t.astype(dtype)
-    return t
-
-
-def _np_from_torch(value):
-    if value is None:
-        return None
-    if value.dtype == torch.bfloat16:
-        value = value.float()
-    return value.detach().cpu().numpy()
-
-
-def _np_from_ms(value):
-    if value is None:
-        return None
-    if value.dtype == ms.bfloat16:
-        value = value.astype(ms.float32)
-    return value.asnumpy()
-
-
-def _as_tuple(value):
-    if value is None:
-        return ()
-    if isinstance(value, (tuple, list)):
-        return tuple(value)
-    return (value,)
-
-
-def _assert_close(expected, actual, rtol=1e-3, atol=1e-3):
-    expected = _as_tuple(expected)
-    actual = _as_tuple(actual)
-    assert len(expected) == len(actual)
-    for exp, act in zip(expected, actual):
-        exp_np = _np_from_torch(exp)
-        act_np = _np_from_ms(act)
-        assert exp_np.shape == act_np.shape
-        if exp_np.dtype.kind in "iu" or act_np.dtype.kind in "iu" or exp_np.dtype == np.bool_:
-            np.testing.assert_array_equal(exp_np, act_np)
-        else:
-            np.testing.assert_allclose(exp_np, act_np, rtol=rtol, atol=atol, equal_nan=True)
 
 
 @pytest.fixture(autouse=True)
@@ -90,36 +39,71 @@ def _cleanup():
         ms.hal.empty_cache()
 
 
-
-def npu_attention_update(attention_out, value, attention_in, kv_index, num_heads):
-    return _ops().npu_attention_update(attention_out, value, attention_in, kv_index, num_heads)
-
-
-CASES = [{"id":"fp16_ones","torch":lambda: torch_npu.npu_attention_update(_torch_tensor(np.ones((1,2,8),np.float16)),_torch_tensor(np.ones((1,2,8),np.float16)),_torch_tensor(np.ones((1,2,8),np.float16)),_torch_tensor(np.zeros((1,2),np.int32)),1),"ms":lambda: npu_attention_update(_ms_tensor(np.ones((1,2,8),np.float16)),_ms_tensor(np.ones((1,2,8),np.float16)),_ms_tensor(np.ones((1,2,8),np.float16)),_ms_tensor(np.zeros((1,2),np.int32)),1)}]
+def _to_torch(arr, dtype):
+    t = torch.from_numpy(np.array(arr, copy=True)).npu()
+    return t.to(dtype) if dtype is not None else t
 
 
-@pytest.mark.parametrize("case", CASES, ids=lambda c: c["id"])
-def test_npu_attention_update_matches_torch_npu(case):
+def _to_ms(arr, dtype):
+    t = Tensor(np.array(arr, copy=True))
+    return t.astype(dtype) if dtype is not None else t
+
+
+def _np_from_torch(value):
+    if value.dtype == torch.bfloat16:
+        value = value.float()
+    return value.detach().cpu().numpy()
+
+
+def _np_from_ms(value):
+    if value.dtype == ms.bfloat16:
+        value = value.astype(ms.float32)
+    return value.asnumpy()
+
+
+def _assert_close(expected, actual, rtol, atol, check_lse):
+    assert len(actual) == 2
+    np.testing.assert_allclose(_np_from_torch(expected[0]), _np_from_ms(actual[0]), rtol=rtol, atol=atol)
+    if check_lse:
+        np.testing.assert_allclose(_np_from_torch(expected[1]), _np_from_ms(actual[1]), rtol=1e-4, atol=1e-4)
+
+
+def _case_inputs(n, head_dim, sp, dtype):
+    rng = np.random.default_rng(20260517 + n + head_dim + sp)
+    lse = [rng.normal(0.0, 0.5, size=(n,)).astype(np.float32) for _ in range(sp)]
+    local_out = [rng.normal(0.0, 0.25, size=(n, head_dim)).astype(np.float32) for _ in range(sp)]
+    torch_lse = [_to_torch(x, torch.float32) for x in lse]
+    torch_local_out = [_to_torch(x, dtype) for x in local_out]
+    ms_lse = [_to_ms(x, ms.float32) for x in lse]
+    ms_dtype = {torch.float32: ms.float32, torch.float16: ms.float16, torch.bfloat16: ms.bfloat16}[dtype]
+    ms_local_out = [_to_ms(x, ms_dtype) for x in local_out]
+    return torch_lse, torch_local_out, ms_lse, ms_local_out
+
+
+def npu_attention_update(lse, local_out, update_type):
+    return _ops().npu_attention_update(lse, local_out, update_type)
+
+
+@pytest.mark.parametrize(
+    "n,head_dim,sp,update_type,dtype,rtol,atol",
+    [
+        (4, 8, 1, 0, torch.float32, 1e-4, 1e-4),
+        (8, 32, 2, 1, torch.float32, 1e-4, 1e-4),
+        (8, 64, 3, 1, torch.float16, 1e-3, 1e-3),
+        (16, 128, 2, 0, torch.bfloat16, 4e-3, 4e-3),
+    ],
+)
+def test_npu_attention_update_matches_torch_npu(n, head_dim, sp, update_type, dtype, rtol, atol):
+    if not hasattr(torch_npu, "npu_attention_update"):
+        pytest.skip("benchmark torch_npu API is unavailable on this host")
+    torch_lse, torch_local_out, ms_lse, ms_local_out = _case_inputs(n, head_dim, sp, dtype)
     try:
-        expected = case["torch"]()
-        actual = case["ms"]()
-    except (RuntimeError, AttributeError, TypeError, ValueError) as exc:
-        msg = str(exc).lower()
-        skip_keys = (
-            "not support",
-            "tiling",
-            "hccl",
-            "workspace",
-            "not implemented",
-            "has no attribute",
-            "expected at most",
-            "unknown keyword",
-            "missing value",
-            "takes",
-            "expected a value of type",
-            "declaration:",
-        )
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
+        expected = torch_npu.npu_attention_update(torch_lse, torch_local_out, update_type)
+        actual = npu_attention_update(ms_lse, ms_local_out, update_type)
+        _assert_close(expected, actual, rtol, atol, update_type == 1)
+    except RuntimeError as exc:
+        if "aclnnattentionupdate" in str(exc).lower() and (
+            "not in" in str(exc).lower() or "not support" in str(exc).lower() or "does not has any binary" in str(exc).lower()
+        ):
+            pytest.skip(f"aclnnAttentionUpdate is unavailable on this host: {exc}")
         raise
-    _assert_close(expected, actual, case.get("rtol", 1e-3), case.get("atol", 1e-3))

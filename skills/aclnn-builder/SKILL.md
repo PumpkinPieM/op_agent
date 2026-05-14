@@ -1,6 +1,6 @@
 ---
 name: aclnn_builder
-description: Guides end-to-end ACLNN custom operator development and adaptation in MindSpore (PyBoost/Pynative + KBK/Graph paths), including YAML definitions, code generation, GeneralInfer, kernel registration, bprop wiring, tests (UT), and docs. Use when the user mentions ACLNN, Ascend, operator adaptation/operator development, PyBoost, KBK, or Ascend operator adaptation tasks.
+description: Guides end-to-end ACLNN custom operator development and adaptation in MindSpore (PyBoost/Pynative + KBK/Graph paths), including YAML definitions, code generation, GeneralInfer, kernel registration, bprop wiring, tests (UT), and docs. Use when the user mentions ACLNN adaptation, operator adaptation/operator development, PyBoost, KBK, or Ascend operator adaptation tasks.
 ---
 
 # ACLNN Operator Development End-to-End Flow (MindSpore Adaptation)

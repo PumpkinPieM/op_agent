@@ -22,10 +22,7 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_moe_token_unpermute_with_routing_map_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_moe_token_unpermute_with_routing_map_test_v4", [str(KERNEL_SOURCE)], backend="Ascend").load()
     return _CUSTOM_OPS
 
 
@@ -72,6 +69,8 @@ def _assert_close(expected, actual, rtol=1e-3, atol=1e-3):
     actual = _as_tuple(actual)
     assert len(expected) == len(actual)
     for exp, act in zip(expected, actual):
+        if exp is None:
+            continue
         exp_np = _np_from_torch(exp)
         act_np = _np_from_ms(act)
         assert exp_np.shape == act_np.shape
@@ -98,32 +97,13 @@ def npu_moe_token_unpermute_with_routing_map(permuted_tokens, sorted_indices, re
 
 CASES = [
  {"id":"drop_and_pad_false_with_probs","torch":lambda: torch_npu.npu_moe_token_unpermute_with_routing_map(_torch_tensor(np.ones((4,8),np.float16)),_torch_tensor(np.arange(4,dtype=np.int32)),[4,8],probs=_torch_tensor(np.eye(4,dtype=np.float16)),routing_map=_torch_tensor(np.eye(4,dtype=np.int8)),drop_and_pad=False),"ms":lambda: npu_moe_token_unpermute_with_routing_map(_ms_tensor(np.ones((4,8),np.float16)),_ms_tensor(np.arange(4,dtype=np.int32)),[4,8],probs=_ms_tensor(np.eye(4,dtype=np.float16)),routing_map=_ms_tensor(np.eye(4,dtype=np.int8)),drop_and_pad=False)},
- {"id":"drop_and_pad_true_with_probs","torch":lambda: torch_npu.npu_moe_token_unpermute_with_routing_map(_torch_tensor(np.ones((4,8),np.float16)),_torch_tensor(np.arange(4,dtype=np.int32)),[4,8],probs=_torch_tensor(np.ones((4,),np.float16)),routing_map=_torch_tensor(np.eye(4,dtype=np.int8)),drop_and_pad=True),"ms":lambda: npu_moe_token_unpermute_with_routing_map(_ms_tensor(np.ones((4,8),np.float16)),_ms_tensor(np.arange(4,dtype=np.int32)),[4,8],probs=_ms_tensor(np.ones((4,),np.float16)),routing_map=_ms_tensor(np.eye(4,dtype=np.int8)),drop_and_pad=True)},
+ {"id":"drop_and_pad_false_without_probs","torch":lambda: torch_npu.npu_moe_token_unpermute_with_routing_map(_torch_tensor(np.arange(32,dtype=np.float16).reshape(4,8)),_torch_tensor(np.arange(4,dtype=np.int32)),[4,8],probs=None,routing_map=None,drop_and_pad=False),"ms":lambda: npu_moe_token_unpermute_with_routing_map(_ms_tensor(np.arange(32,dtype=np.float16).reshape(4,8)),_ms_tensor(np.arange(4,dtype=np.int32)),[4,8],probs=None,routing_map=None,drop_and_pad=False)},
+ {"id":"drop_and_pad_true_without_probs","torch":lambda: torch_npu.npu_moe_token_unpermute_with_routing_map(_torch_tensor(np.arange(32,dtype=np.float16).reshape(4,8)),_torch_tensor(np.arange(4,dtype=np.int32)),[4,8],probs=None,routing_map=None,drop_and_pad=True),"ms":lambda: npu_moe_token_unpermute_with_routing_map(_ms_tensor(np.arange(32,dtype=np.float16).reshape(4,8)),_ms_tensor(np.arange(4,dtype=np.int32)),[4,8],probs=None,routing_map=None,drop_and_pad=True)},
 ]
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda c: c["id"])
 def test_npu_moe_token_unpermute_with_routing_map_matches_torch_npu(case):
-    try:
-        expected = case["torch"]()
-        actual = case["ms"]()
-    except (RuntimeError, AttributeError, TypeError, ValueError) as exc:
-        msg = str(exc).lower()
-        skip_keys = (
-            "not support",
-            "tiling",
-            "hccl",
-            "workspace",
-            "not implemented",
-            "has no attribute",
-            "expected at most",
-            "unknown keyword",
-            "missing value",
-            "takes",
-            "expected a value of type",
-            "declaration:",
-        )
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
+    expected = case["torch"]()
+    actual = case["ms"]()
     _assert_close(expected, actual, case.get("rtol", 1e-3), case.get("atol", 1e-3))

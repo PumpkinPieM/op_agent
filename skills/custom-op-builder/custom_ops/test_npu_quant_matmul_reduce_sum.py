@@ -13,6 +13,7 @@ KERNEL_SOURCE = Path(__file__).with_name("npu_quant_matmul_reduce_sum.cc")
 
 torch.npu.set_device(DEVICE_ID)
 torch.npu.set_compile_mode(jit_compile=False)
+torch.npu.config.allow_internal_format = True
 context.set_context(device_target="Ascend", device_id=DEVICE_ID)
 context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
 _custom_ops = ms.ops.CustomOpBuilder("custom_ops_npu_quant_matmul_reduce_sum_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
@@ -55,11 +56,19 @@ def _assert_close(expected, actual, rtol=1e-2, atol=1e-2):
         assert ev.shape == av.shape
         np.testing.assert_allclose(ev, av, rtol=rtol, atol=atol, equal_nan=True)
 def _case():
-    x2 = np.random.default_rng(0).normal(size=(2, 4)).astype(np.float16)
-    x1 = np.random.default_rng(0).normal(size=(2, 4)).astype(np.float16)
-    x1_scale_opt = None
-    x2_scale_opt = None
-    return (_pta(x1), _pta(x2), _pta(x1_scale_opt), _pta(x2_scale_opt)), (_ms(x1), _ms(x2), _ms(x1_scale_opt), _ms(x2_scale_opt))
+    rng = np.random.default_rng(0)
+    batch, m, k, n = 2, 128, 256, 128
+    x1 = rng.integers(-5, 5, size=(batch, m, k), dtype=np.int8)
+    x2 = rng.integers(-5, 5, size=(batch, k, n), dtype=np.int8)
+    x1_scale = rng.random(size=(batch, m), dtype=np.float32)
+    x2_scale = rng.random(size=(n,), dtype=np.float32)
+
+    torch_x2 = torch_npu.npu_format_cast(_pta(x2).contiguous(), 29)
+    ms_x2 = ms.ops.auto_generate.format_cast(_ms(x2), 29)
+    return (
+        (_pta(x1), torch_x2, _pta(x1_scale), _pta(x2_scale).to(torch.bfloat16)),
+        (_ms(x1), ms_x2, _ms(x1_scale), _ms(x2_scale).astype(ms.bfloat16)),
+    )
 def _torch_reference(torch_args):
     required_count = 2
     keyword_names = ['x1_scale', 'x2_scale']

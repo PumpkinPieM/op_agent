@@ -11,7 +11,8 @@ std::vector<ms::Tensor> _npu_moe_token_unpermute_with_routing_map(const ms::Tens
   auto out = ms::Tensor(permuted_tokens.data_type(), restore_shape);
   auto out_index = ms::Tensor(sorted_indices.data_type(), sorted_indices.shape());
   auto permuted_token_id = ms::Tensor(sorted_indices.data_type(), sorted_indices.shape());
-  auto permute_probs = ms::Tensor(permuted_tokens.data_type(), sorted_indices.shape());
+  auto permute_probs = probs_opt.has_value() ? ms::Tensor(probs_opt->data_type(), sorted_indices.shape())
+                                             : ms::Tensor(permuted_tokens.data_type(), std::vector<int64_t>{0});
   auto runner = std::make_shared<ms::pynative::AclnnOpRunner>("MoeTokenUnpermuteWithRoutingMap");
   runner->SetLaunchFunc(LAUNCH_ACLNN_FUNC(aclnnMoeTokenUnpermuteWithRoutingMap, permuted_tokens, sorted_indices,
                                           routing_map_opt, probs_opt, drop_and_pad, restore_shape, out, out_index,

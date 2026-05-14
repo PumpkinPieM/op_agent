@@ -4,88 +4,118 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-import torch
-import torch_npu
+
 import mindspore as ms
 from mindspore import Tensor, context
+
+
 DEVICE_ID = int(os.getenv("DEVICE_ID", "0"))
 KERNEL_SOURCE = Path(__file__).with_name("npu_quant_conv2d.cc")
 
-torch.npu.set_device(DEVICE_ID)
-torch.npu.set_compile_mode(jit_compile=False)
 context.set_context(device_target="Ascend", device_id=DEVICE_ID)
 context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-_custom_ops = ms.ops.CustomOpBuilder("custom_ops_npu_quant_conv2d_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
+
+_custom_ops = ms.ops.CustomOpBuilder(
+    "custom_ops_npu_quant_conv2d_test",
+    [str(KERNEL_SOURCE)],
+    backend="Ascend",
+).load()
+
+
 def npu_quant_conv2d(*args):
     return _custom_ops.npu_quant_conv2d(*args)
+
+
 @pytest.fixture(autouse=True)
 def _cleanup():
     yield
     gc.collect()
-def _pta(x):
-    if x is None:
-        return None
-    t = torch.from_numpy(x).npu()
-    return t
+    if hasattr(ms.hal, "empty_cache"):
+        ms.hal.empty_cache()
 
-def _ms(x):
-    if x is None:
-        return None
-    return Tensor(x)
 
-def _np(x):
-    if isinstance(x, (tuple, list)):
-        return [_np(v) for v in x]
-    if isinstance(x, torch.Tensor):
-        if x.dtype == torch.bfloat16:
-            return x.float().cpu().numpy()
-        return x.cpu().numpy()
-    if hasattr(x, "asnumpy"):
-        if x.dtype == ms.bfloat16:
-            return x.astype(ms.float32).asnumpy()
-        return x.asnumpy()
-    return np.asarray(x)
+def _ms_tensor(array):
+    return Tensor(array)
 
-def _assert_close(expected, actual, rtol=1e-2, atol=1e-2):
-    e=_np(expected); a=_np(actual)
-    if not isinstance(e, list): e=[e]
-    if not isinstance(a, list): a=[a]
-    assert len(e)==len(a)
-    for ev,av in zip(e,a):
-        assert ev.shape == av.shape
-        np.testing.assert_allclose(ev, av, rtol=rtol, atol=atol, equal_nan=True)
-def _case():
-    input = np.random.default_rng(0).integers(-1, 1, size=(1, 1, 4, 4), dtype=np.int8)
-    scale_ms = np.ones((1,), dtype=np.float32)
-    scale_torch = scale_ms.view(np.uint32).astype(np.uint64)
-    weight = np.random.default_rng(1).integers(-1, 1, size=(1, 1, 3, 3), dtype=np.int8)
-    strides = [1, 1]
-    pads = [0, 0]
-    dilations = [1, 1]
-    groups = 1
-    offset_x = 0
-    round_mode = "rint"
-    output_dtype_opt = 5
-    bias_torch = np.zeros((1,), dtype=np.int32)
-    bias_ms = np.zeros((1,), dtype=np.float32)
-    offset_opt = None
-    input_dtype_opt = None
-    weight_dtype_opt = None
-    return (_pta(input), _pta(weight), _pta(scale_torch), strides, pads, dilations, groups, offset_x, round_mode, torch.float16, _pta(bias_torch), _pta(offset_opt), input_dtype_opt, weight_dtype_opt), (_ms(input), _ms(weight), _ms(scale_ms), strides, pads, dilations, groups, offset_x, round_mode, output_dtype_opt, _ms(bias_ms), _ms(offset_opt), input_dtype_opt, weight_dtype_opt)
-def _torch_reference(torch_args):
-    required_count = 14
-    keyword_names = []
-    kwargs = {name: value for name, value in zip(keyword_names, torch_args[required_count:]) if value is not None}
 
-    dtype_map = {5: torch.float16, 6: torch.float32, 27: torch.bfloat16}
-    for key, value in list(kwargs.items()):
-        if key.endswith("dtype") and isinstance(value, int) and value in dtype_map:
-            kwargs[key] = dtype_map[value]
-    return torch_npu.npu_quant_conv2d(*torch_args[:required_count], **kwargs)
+def _to_numpy(value):
+    if value.dtype == ms.bfloat16:
+        return value.astype(ms.float32).asnumpy()
+    return value.asnumpy()
 
-def test_npu_quant_conv2d_against_torch_npu_benchmark():
-    assert hasattr(torch_npu, "npu_quant_conv2d")
-    torch_args, ms_args = _case()
-    expected = _torch_reference(torch_args)
-    actual = npu_quant_conv2d(*ms_args)
-    _assert_close(expected, actual)
+
+def _conv3d_quant_reference(input_array, weight_array, scale, bias, strides, pads, dilations):
+    n, _, in_d, in_h, in_w = input_array.shape
+    cout, cin, kd, kh, kw = weight_array.shape
+    sd, sh, sw = strides
+    pd, ph, pw = pads
+    dd, dh, dw = dilations
+    out_d = (in_d + 2 * pd - dd * (kd - 1) - 1) // sd + 1
+    out_h = (in_h + 2 * ph - dh * (kh - 1) - 1) // sh + 1
+    out_w = (in_w + 2 * pw - dw * (kw - 1) - 1) // sw + 1
+
+    padded = np.pad(
+        input_array.astype(np.int32),
+        ((0, 0), (0, 0), (pd, pd), (ph, ph), (pw, pw)),
+        mode="constant",
+    )
+    out = np.zeros((n, cout, out_d, out_h, out_w), dtype=np.float32)
+    for batch in range(n):
+        for co in range(cout):
+            for od in range(out_d):
+                for oh in range(out_h):
+                    for ow in range(out_w):
+                        acc = 0
+                        for ci in range(cin):
+                            for kdi in range(kd):
+                                for khi in range(kh):
+                                    for kwi in range(kw):
+                                        id_pos = od * sd + kdi * dd
+                                        ih_pos = oh * sh + khi * dh
+                                        iw_pos = ow * sw + kwi * dw
+                                        acc += int(padded[batch, ci, id_pos, ih_pos, iw_pos]) * int(
+                                            weight_array[co, ci, kdi, khi, kwi]
+                                        )
+                        out[batch, co, od, oh, ow] = acc * scale[co] + bias[co]
+    return out.astype(np.float16)
+
+
+def _run_case(seed, input_shape, weight_shape, strides, pads, dilations):
+    rng = np.random.default_rng(seed)
+    input_array = rng.integers(-2, 3, size=input_shape, dtype=np.int8)
+    weight_array = rng.integers(-2, 3, size=weight_shape, dtype=np.int8)
+    scale = rng.uniform(0.25, 1.0, size=(weight_shape[0],)).astype(np.float32)
+    bias = rng.uniform(-0.5, 0.5, size=(weight_shape[0],)).astype(np.float32)
+    expected = _conv3d_quant_reference(input_array, weight_array, scale, bias, strides, pads, dilations)
+
+    actual = npu_quant_conv2d(
+        _ms_tensor(input_array),
+        _ms_tensor(weight_array),
+        _ms_tensor(scale),
+        strides,
+        pads,
+        dilations,
+        1,
+        0,
+        "rint",
+        5,
+        _ms_tensor(bias),
+        None,
+        None,
+        None,
+    )
+    actual_np = _to_numpy(actual)
+    assert actual.dtype == ms.float16
+    assert actual_np.shape == expected.shape
+    np.testing.assert_allclose(actual_np, expected, rtol=1e-2, atol=1e-2)
+
+
+@pytest.mark.parametrize(
+    "input_shape,weight_shape,strides,pads,dilations",
+    [
+        ((1, 1, 1, 4, 4), (1, 1, 1, 3, 3), [1, 1, 1], [0, 0, 0], [1, 1, 1]),
+        ((1, 2, 2, 5, 6), (3, 2, 1, 3, 2), [1, 1, 2], [0, 1, 0], [1, 1, 1]),
+    ],
+)
+def test_npu_quant_conv2d_5d_aclnn(input_shape, weight_shape, strides, pads, dilations):
+    _run_case(3, input_shape, weight_shape, strides, pads, dilations)

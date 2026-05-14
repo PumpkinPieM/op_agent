@@ -1,18 +1,35 @@
 import gc
 import os
+import socket
+import traceback
 from pathlib import Path
 
 import numpy as np
 import pytest
+
 import mindspore as ms
 from mindspore import Tensor, context
 
 torch = pytest.importorskip("torch")
 torch_npu = pytest.importorskip("torch_npu")
+dist = pytest.importorskip("torch.distributed")
+mp = pytest.importorskip("torch.multiprocessing")
 
 DEVICE_ID = int(os.getenv("DEVICE_ID", "0"))
 KERNEL_SOURCE = Path(__file__).with_name("npu_matmul_all_to_all.cc")
 _CUSTOM_OPS = None
+
+
+def _find_free_port():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return sock.getsockname()[1]
+
+
+def _get_hccl_comm_name(group, rank):
+    if torch.__version__ > "2.0.1":
+        return group._get_backend(torch.device("npu")).get_hccl_comm_name(rank)
+    return group.get_hccl_comm_name(rank)
 
 
 def _ops():
@@ -22,108 +39,143 @@ def _ops():
         torch.npu.set_compile_mode(jit_compile=False)
         context.set_context(device_target="Ascend", device_id=DEVICE_ID)
         context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
-        try:
-            _CUSTOM_OPS = ms.ops.CustomOpBuilder("custom_ops_npu_matmul_all_to_all_test", [str(KERNEL_SOURCE)], backend="Ascend").load()
-        except Exception as exc:  # pragma: no cover
-            pytest.skip(f"custom op build/load unavailable on this host: {exc}")
+        _CUSTOM_OPS = ms.ops.CustomOpBuilder(
+            f"custom_ops_npu_matmul_all_to_all_test_{os.getpid()}",
+            [str(KERNEL_SOURCE)],
+            backend="Ascend",
+        ).load()
     return _CUSTOM_OPS
 
 
-def _torch_tensor(arr, dtype=None):
-    t = torch.from_numpy(np.array(arr, copy=True)).npu()
-    if dtype is not None:
-        t = t.to(dtype)
-    return t
-
-
-def _ms_tensor(arr, dtype=None):
-    t = Tensor(np.array(arr, copy=True))
-    if dtype is not None:
-        t = t.astype(dtype)
-    return t
-
-
 def _np_from_torch(value):
-    if value is None:
-        return None
-    if value.dtype == torch.bfloat16:
-        value = value.float()
-    return value.detach().cpu().numpy()
+    return value.float().cpu().numpy() if value.dtype == torch.bfloat16 else value.cpu().numpy()
 
 
 def _np_from_ms(value):
-    if value is None:
-        return None
-    if value.dtype == ms.bfloat16:
-        value = value.astype(ms.float32)
-    return value.asnumpy()
-
-
-def _as_tuple(value):
-    if value is None:
-        return ()
-    if isinstance(value, (tuple, list)):
-        return tuple(value)
-    return (value,)
-
-
-def _assert_close(expected, actual, rtol=1e-3, atol=1e-3):
-    expected = _as_tuple(expected)
-    actual = _as_tuple(actual)
-    assert len(expected) == len(actual)
-    for exp, act in zip(expected, actual):
-        exp_np = _np_from_torch(exp)
-        act_np = _np_from_ms(act)
-        assert exp_np.shape == act_np.shape
-        if exp_np.dtype.kind in "iu" or act_np.dtype.kind in "iu" or exp_np.dtype == np.bool_:
-            np.testing.assert_array_equal(exp_np, act_np)
-        else:
-            np.testing.assert_allclose(exp_np, act_np, rtol=rtol, atol=atol, equal_nan=True)
+    return value.astype(ms.float32).asnumpy() if value.dtype == ms.bfloat16 else value.asnumpy()
 
 
 @pytest.fixture(autouse=True)
 def _cleanup():
     yield
     gc.collect()
-    torch.npu.empty_cache()
+    if hasattr(torch, "npu"):
+        torch.npu.empty_cache()
     if hasattr(ms.hal, "empty_cache"):
         ms.hal.empty_cache()
 
 
+def test_npu_matmul_all_to_all_builder_loads():
+    assert hasattr(_ops(), "npu_matmul_all_to_all")
 
 
-def npu_matmul_all_to_all(x1, x2, hcom, world_size, bias=None, axes=None, out_flag=True):
-    return _ops().npu_matmul_all_to_all(x1, x2, hcom, world_size, bias, axes, out_flag)
-
-
-CASES = [
- {"id":"out_flag_true","torch":lambda: torch_npu.npu_matmul_all_to_all(_torch_tensor(np.ones((2,8),np.float16)),_torch_tensor(np.ones((8,4),np.float16)),"hccl_world_group",1,all2all_out_flag=True),"ms":lambda: npu_matmul_all_to_all(_ms_tensor(np.ones((2,8),np.float16)),_ms_tensor(np.ones((8,4),np.float16)),"hccl_world_group",1,out_flag=True)},
- {"id":"out_flag_false","torch":lambda: torch_npu.npu_matmul_all_to_all(_torch_tensor(np.ones((2,8),np.float16)),_torch_tensor(np.ones((8,4),np.float16)),"hccl_world_group",1,all2all_out_flag=False),"ms":lambda: npu_matmul_all_to_all(_ms_tensor(np.ones((2,8),np.float16)),_ms_tensor(np.ones((8,4),np.float16)),"hccl_world_group",1,out_flag=False)},
-]
-
-
-@pytest.mark.parametrize("case", CASES, ids=lambda c: c["id"])
-def test_npu_matmul_all_to_all_matches_torch_npu(case):
+def _run_rank(rank, world_size, master_port, source_path, result_queue):
+    process_group_initialized = False
     try:
-        expected = case["torch"]()
-        actual = case["ms"]()
-    except (RuntimeError, AttributeError, TypeError, ValueError) as exc:
-        msg = str(exc).lower()
-        skip_keys = (
-            "not support",
-            "tiling",
-            "hccl",
-            "workspace",
-            "not implemented",
-            "has no attribute",
-            "expected at most",
-            "unknown keyword",
-            "missing value",
-            "takes",
-            "expected a value of type",
-            "declaration:",
-        )
-        if any(key in msg for key in skip_keys):
-            pytest.skip(f"benchmark/runtime constraint on this host: {exc}")
-        raise
-    _assert_close(expected, actual, case.get("rtol", 1e-3), case.get("atol", 1e-3))
+        os.environ["MASTER_ADDR"] = "127.0.0.1"
+        os.environ["MASTER_PORT"] = str(master_port)
+        os.environ["HCCL_IF_BASE_PORT"] = str(master_port + 100)
+        os.environ["HCCL_WHITELIST_DISABLE"] = "1"
+
+        device_id = DEVICE_ID + rank
+        torch_npu.npu.set_device(device_id)
+        torch.npu.set_compile_mode(jit_compile=False)
+        dist.init_process_group(backend="hccl", world_size=world_size, rank=rank)
+        process_group_initialized = True
+        group = dist.distributed_c10d._get_default_group()
+        try:
+            hcom = _get_hccl_comm_name(group, rank)
+        except RuntimeError as exc:
+            if "Communication_Error_Bind_IP_Port" in str(exc):
+                result_queue.put(("skip", rank, str(exc)))
+                return
+            raise
+
+        context.set_context(device_target="Ascend", device_id=device_id)
+        context.set_context(mode=ms.PYNATIVE_MODE, deterministic="ON", pynative_synchronize=False)
+        custom_ops = ms.ops.CustomOpBuilder(
+            f"custom_ops_npu_matmul_all_to_all_ws{world_size}_rank{rank}_{os.getpid()}",
+            [source_path],
+            backend="Ascend",
+        ).load()
+
+        cases = [
+            {"dtype": "fp16", "with_bias": False, "axes": None, "seed": 13},
+            {"dtype": "fp16", "with_bias": True, "axes": [-1, -2], "seed": 17},
+            {"dtype": "bf16", "with_bias": False, "axes": [-1, -2], "seed": 19},
+        ]
+        for case in cases:
+            rng = np.random.default_rng(case["seed"] + rank)
+            x1_np = rng.normal(size=(2, 8)).astype(np.float32)
+            x2_np = rng.normal(size=(8, 4 * world_size)).astype(np.float32)
+            bias_np = rng.normal(size=(4 * world_size,)).astype(np.float32) if case["with_bias"] else None
+
+            torch_dtype = torch.bfloat16 if case["dtype"] == "bf16" else torch.float16
+            ms_dtype = ms.bfloat16 if case["dtype"] == "bf16" else ms.float16
+            x1_t = torch.from_numpy(x1_np).npu().to(torch_dtype)
+            x2_t = torch.from_numpy(x2_np).npu().to(torch_dtype)
+            bias_t = torch.from_numpy(bias_np).npu().to(torch_dtype) if bias_np is not None else None
+
+            expected = torch_npu.npu_matmul_all_to_all(
+                x1_t,
+                x2_t,
+                hcom,
+                world_size,
+                bias=bias_t,
+                all2all_axes=case["axes"],
+            )
+            actual = custom_ops.npu_matmul_all_to_all(
+                Tensor(x1_np).astype(ms_dtype),
+                Tensor(x2_np).astype(ms_dtype),
+                hcom,
+                world_size,
+                Tensor(bias_np).astype(ms_dtype) if bias_np is not None else None,
+                case["axes"],
+            )
+            expected_np = _np_from_torch(expected)
+            actual_np = _np_from_ms(actual)
+            assert expected_np.shape == actual_np.shape == (2 * world_size, 4)
+            np.testing.assert_allclose(expected_np, actual_np, rtol=1e-2, atol=1e-2)
+
+        result_queue.put(("ok", rank, None))
+        dist.barrier()
+    except Exception:
+        result_queue.put(("error", rank, traceback.format_exc()))
+    finally:
+        if process_group_initialized:
+            try:
+                dist.destroy_process_group()
+            except Exception:
+                pass
+
+
+def test_npu_matmul_all_to_all_matches_torch_npu_hccl_group():
+    if not hasattr(torch_npu, "npu_matmul_all_to_all"):
+        pytest.skip("benchmark torch_npu API is unavailable on this host")
+    if torch.npu.device_count() < DEVICE_ID + 2:
+        pytest.skip("HCCL world_size=2 test requires at least two NPU devices")
+
+    world_size = 2
+    master_port = _find_free_port()
+    ctx = mp.get_context("spawn")
+    result_queue = ctx.Queue(world_size)
+    processes = []
+    for rank in range(world_size):
+        process = ctx.Process(target=_run_rank, args=(rank, world_size, master_port, str(KERNEL_SOURCE), result_queue))
+        process.start()
+        processes.append(process)
+
+    for process in processes:
+        process.join(timeout=300)
+        if process.is_alive():
+            process.terminate()
+            process.join()
+            pytest.fail("HCCL world_size=2 test timed out")
+        assert process.exitcode == 0
+
+    results = [result_queue.get(timeout=10) for _ in range(world_size)]
+    skips = [message for status, _, message in results if status == "skip"]
+    if skips:
+        pytest.skip(f"HCCL communicator port is busy on this host: {skips[0]}")
+    failures = [item for item in results if item[0] != "ok"]
+    assert not failures, "\n".join(f"rank {rank} failed:\n{error}" for _, rank, error in failures)

@@ -19,7 +19,6 @@
 #include <vector>
 #include <optional>
 #include "ms_extension/all.h"
-#include "module.h"
 
 namespace custom {
 namespace {
