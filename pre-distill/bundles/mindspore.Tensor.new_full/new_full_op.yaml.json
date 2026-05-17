@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.Tensor.new_full::new_full_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.new_full",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "new_full",
+    "op_branch": "new_full_op.yaml",
+    "op": "new_full",
+    "primitive": "NewFull"
+  },
+  "resolver": {
+    "py_method": "tensor_new_full",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "new_full",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/new_full.yaml",
+    "source_file": "mindspore/ops/api_def/new_full.yaml"
+  },
+  "coverage": {
+    "coverage_key": "new_full::NewFull",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/new_full_op.yaml",
+    "class_name": "NewFull",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "NewFullAscend",
+    "aclnn": [
+      "aclnnInplaceFillScalar"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/new_full.cc",
+      "mindspore/ops/infer/ops_func_impl/new_full.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/new_full.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/new_full.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/new_full_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/new_full_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_new_full.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.new_full::new_full_op.yaml",
+    "coverage_key": "new_full::NewFull"
+  }
+}

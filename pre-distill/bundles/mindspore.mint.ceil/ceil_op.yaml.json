@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.mint.ceil::ceil_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.ceil",
+    "public_surface": "mindspore.mint",
+    "api_name": "ceil",
+    "op_branch": "ceil_op.yaml",
+    "op": "ceil",
+    "primitive": "Ceil"
+  },
+  "resolver": {
+    "py_method": "tensor_ceil",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.functional",
+    "target_symbol": "ceil",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional.ceil",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "ceil::Ceil",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/ceil_op.yaml",
+    "class_name": "Ceil",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnCeil"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/ceil.cc",
+      "mindspore/ops/infer/ops_func_impl/ceil.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/ceil.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_ceil.cc"
+    ],
+    "st": [
+      "tests/st/ops/cpu/test_ceil_op.py",
+      "tests/st/ops/gpu/test_ceil_op.py",
+      "tests/st/ops/test_ops_ceil.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/ceil_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.ceil::ceil_op.yaml",
+    "coverage_key": "ceil::Ceil"
+  }
+}

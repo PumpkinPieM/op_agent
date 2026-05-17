@@ -1,0 +1,64 @@
+{
+  "bundle_key": "mindspore.mint.narrow::narrow_view_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.narrow",
+    "public_surface": "mindspore.mint",
+    "api_name": "narrow",
+    "op_branch": "narrow_view_op.yaml",
+    "op": "narrow_view",
+    "primitive": "NarrowView"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.auto_generate",
+    "target_symbol": "narrow_view",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.narrow_view",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "narrow_view::NarrowView",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/narrow_view_op.yaml",
+    "class_name": "NarrowView",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnNarrowView"
+    ],
+    "aclnn_source": [
+      "default_guess"
+    ],
+    "infer": true,
+    "pyboost": false,
+    "kbk": false,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/narrow_view.h"
+    ],
+    "pyboost": [],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/narrow_view_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.narrow::narrow_view_op.yaml",
+    "coverage_key": "narrow_view::NarrowView"
+  }
+}

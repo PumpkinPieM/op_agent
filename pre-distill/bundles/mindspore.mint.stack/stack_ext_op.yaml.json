@@ -1,0 +1,69 @@
+{
+  "bundle_key": "mindspore.mint.stack::stack_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.stack",
+    "public_surface": "mindspore.mint",
+    "api_name": "stack",
+    "op_branch": "stack_ext_op.yaml",
+    "op": "stack_ext",
+    "primitive": "StackExt"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.auto_generate",
+    "target_symbol": "stack_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.stack_ext",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "stack_ext::StackExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/stack_ext_op.yaml",
+    "class_name": "StackExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnStack"
+    ],
+    "aclnn_source": [
+      "aclnn_config"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": false,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/stack_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/stack_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/stack_ext.h"
+    ],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_stack_ext.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/stack_ext_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.stack::stack_ext_op.yaml",
+    "coverage_key": "stack_ext::StackExt"
+  }
+}

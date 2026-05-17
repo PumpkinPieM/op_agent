@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.Tensor.add_::inplace_adds_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.add_",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "add_",
+    "op_branch": "inplace_adds_ext_op.yaml",
+    "op": "inplace_adds_ext",
+    "primitive": "InplaceAddsExt"
+  },
+  "resolver": {
+    "py_method": "tensor_add_ext",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "add_",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/add_.yaml",
+    "source_file": "mindspore/ops/api_def/add_.yaml"
+  },
+  "coverage": {
+    "coverage_key": "inplace_adds_ext::InplaceAddsExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/inplace_adds_ext_op.yaml",
+    "class_name": "InplaceAddsExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "InplaceAddsExtAscend",
+    "aclnn": [
+      "aclnnInplaceAdds"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/inplace_adds_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/inplace_adds_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_adds_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/inplace_adds_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/inplace_add_ext_common.h",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/inplace_adds_ext_aclnn_kernel.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_inplace_adds_ext.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.add_::inplace_adds_ext_op.yaml",
+    "coverage_key": "inplace_adds_ext::InplaceAddsExt"
+  }
+}

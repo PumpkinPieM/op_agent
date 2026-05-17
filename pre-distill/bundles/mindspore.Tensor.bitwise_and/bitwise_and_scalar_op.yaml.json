@@ -1,0 +1,67 @@
+{
+  "bundle_key": "mindspore.Tensor.bitwise_and::bitwise_and_scalar_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.bitwise_and",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "bitwise_and",
+    "op_branch": "bitwise_and_scalar_op.yaml",
+    "op": "bitwise_and_scalar",
+    "primitive": "BitwiseAndScalar"
+  },
+  "resolver": {
+    "py_method": "deprecated_bitwise_and",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "bitwise_and",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/bitwise_and.yaml",
+    "source_file": "mindspore/ops/api_def/bitwise_and.yaml"
+  },
+  "coverage": {
+    "coverage_key": "bitwise_and_scalar::BitwiseAndScalar",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/bitwise_and_scalar_op.yaml",
+    "class_name": "BitwiseAndScalar",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnBitwiseAndScalar"
+    ],
+    "aclnn_source": [
+      "default_guess"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": false,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/bitwise_and_scalar.cc",
+      "mindspore/ops/infer/ops_func_impl/bitwise_and_scalar.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/bitwise_and_scalar.h"
+    ],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/bitwise_and_scalar_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.bitwise_and::bitwise_and_scalar_op.yaml",
+    "coverage_key": "bitwise_and_scalar::BitwiseAndScalar"
+  }
+}

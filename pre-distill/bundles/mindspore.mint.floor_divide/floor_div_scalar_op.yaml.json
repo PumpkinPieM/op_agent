@@ -1,0 +1,69 @@
+{
+  "bundle_key": "mindspore.mint.floor_divide::floor_div_scalar_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.floor_divide",
+    "public_surface": "mindspore.mint",
+    "api_name": "floor_divide",
+    "op_branch": "floor_div_scalar_op.yaml",
+    "op": "floor_div_scalar",
+    "primitive": "FloorDivScalar"
+  },
+  "resolver": {
+    "py_method": "tensor_floor_div_scalar",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "floor_divide",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.floor_divide",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "floor_div_scalar::FloorDivScalar",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/floor_div_scalar_op.yaml",
+    "class_name": "FloorDivScalar",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "FloorDivScalarAscend",
+    "aclnn": [
+      "aclnnFloorDivides"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/floor_div_scalar.cc",
+      "mindspore/ops/infer/ops_func_impl/floor_div_scalar.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/floor_div_scalar.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/floor_div_scalar.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/floor_div_scalar_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/floor_div_scalar_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.floor_divide::floor_div_scalar_op.yaml",
+    "coverage_key": "floor_div_scalar::FloorDivScalar"
+  }
+}

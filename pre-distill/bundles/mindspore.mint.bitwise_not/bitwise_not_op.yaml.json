@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.mint.bitwise_not::bitwise_not_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.bitwise_not",
+    "public_surface": "mindspore.mint",
+    "api_name": "bitwise_not",
+    "op_branch": "bitwise_not_op.yaml",
+    "op": "bitwise_not",
+    "primitive": "BitwiseNot"
+  },
+  "resolver": {
+    "py_method": "tensor_bitwise_not",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "bitwise_not",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.bitwise_not",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "bitwise_not::BitwiseNot",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/bitwise_not_op.yaml",
+    "class_name": "BitwiseNot",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnBitwiseNot"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/bitwise_not.cc",
+      "mindspore/ops/infer/ops_func_impl/bitwise_not.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/bitwise_not.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_bitwise_not.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/api_def/function_doc/bitwise_not_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.bitwise_not::bitwise_not_op.yaml",
+    "coverage_key": "bitwise_not::BitwiseNot"
+  }
+}

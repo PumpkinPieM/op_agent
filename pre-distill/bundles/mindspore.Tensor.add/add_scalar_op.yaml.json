@@ -1,0 +1,69 @@
+{
+  "bundle_key": "mindspore.Tensor.add::add_scalar_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.add",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "add",
+    "op_branch": "add_scalar_op.yaml",
+    "op": "add_scalar",
+    "primitive": "AddScalar"
+  },
+  "resolver": {
+    "py_method": "tensor_add_ext",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "add",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/add.yaml",
+    "source_file": "mindspore/ops/api_def/add.yaml"
+  },
+  "coverage": {
+    "coverage_key": "add_scalar::AddScalar",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/add_scalar_op.yaml",
+    "class_name": "AddScalar",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "AddScalarAscend",
+    "aclnn": [
+      "aclnnAdds"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/add_scalar.cc",
+      "mindspore/ops/infer/ops_func_impl/add_scalar.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/add_scalar.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/add_scalar.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/add_scalar_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/add_scalar_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.add::add_scalar_op.yaml",
+    "coverage_key": "add_scalar::AddScalar"
+  }
+}

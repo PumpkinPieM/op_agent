@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.mint.normal::normal_tensor_float_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.normal",
+    "public_surface": "mindspore.mint",
+    "api_name": "normal",
+    "op_branch": "normal_tensor_float_op.yaml",
+    "op": "normal_tensor_float",
+    "primitive": "NormalTensorFloat"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.random_func",
+    "target_symbol": "normal_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.random_func.normal_tensor_float_op",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "normal_tensor_float::NormalTensorFloat",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/normal_tensor_float_op.yaml",
+    "class_name": "NormalTensorFloat",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "NormalTensorFloatAscend",
+    "aclnn": [
+      "aclnnNormalTensorFloat"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/normal_tensor_float.cc",
+      "mindspore/ops/infer/ops_func_impl/normal_tensor_float.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/normal_tensor_float.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/normal_tensor_float.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/normal_tensor_float_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/normal_tensor_float_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_normal_tensor_float.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.normal::normal_tensor_float_op.yaml",
+    "coverage_key": "normal_tensor_float::NormalTensorFloat"
+  }
+}

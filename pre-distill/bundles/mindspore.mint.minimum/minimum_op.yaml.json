@@ -1,0 +1,77 @@
+{
+  "bundle_key": "mindspore.mint.minimum::minimum_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.minimum",
+    "public_surface": "mindspore.mint",
+    "api_name": "minimum",
+    "op_branch": "minimum_op.yaml",
+    "op": "minimum",
+    "primitive": "Minimum"
+  },
+  "resolver": {
+    "py_method": "tensor_minimum",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.functional",
+    "target_symbol": "minimum",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional.minimum",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "minimum::Minimum",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/minimum_op.yaml",
+    "class_name": "Minimum",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnMinimum"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/minimum.cc",
+      "mindspore/ops/infer/ops_func_impl/minimum.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/minimum.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_minimum.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_minimum_op.py",
+      "tests/st/ops/ascend/test_tbe_ops/test_minimum.py",
+      "tests/st/ops/cpu/test_minimum_op.py",
+      "tests/st/ops/gpu/test_minimum_op.py",
+      "tests/st/ops/test_ops_minimum.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/minimum_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.minimum::minimum_op.yaml",
+    "coverage_key": "minimum::Minimum"
+  }
+}

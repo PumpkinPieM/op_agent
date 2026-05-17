@@ -1,0 +1,66 @@
+{
+  "bundle_key": "mindspore.Tensor.unbind::unstack_ext_view_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.unbind",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "unbind",
+    "op_branch": "unstack_ext_view_op.yaml",
+    "op": "unstack_ext_view",
+    "primitive": "UnstackExtView"
+  },
+  "resolver": {
+    "py_method": "deprecated_tensor_unbind",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "unbind",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/unbind.yaml",
+    "source_file": "mindspore/ops/api_def/unbind.yaml"
+  },
+  "coverage": {
+    "coverage_key": "unstack_ext_view::UnstackExtView",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/unstack_ext_view_op.yaml",
+    "class_name": "UnstackExtView",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnUnstackExtView"
+    ],
+    "aclnn_source": [
+      "default_guess"
+    ],
+    "infer": true,
+    "pyboost": false,
+    "kbk": false,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/unstack_ext_view.cc",
+      "mindspore/ops/infer/ops_func_impl/unstack_ext_view.cc",
+      "mindspore/ops/infer/ops_func_impl/unstack_ext_view.h"
+    ],
+    "pyboost": [],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_unstack_ext_view.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.unbind::unstack_ext_view_op.yaml",
+    "coverage_key": "unstack_ext_view::UnstackExtView"
+  }
+}

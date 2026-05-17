@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.mint.addmv::addmv_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.addmv",
+    "public_surface": "mindspore.mint",
+    "api_name": "addmv",
+    "op_branch": "addmv_op.yaml",
+    "op": "addmv",
+    "primitive": "Addmv"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.math_func",
+    "target_symbol": "addmv_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.addmv_op",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "addmv::Addmv",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/addmv_op.yaml",
+    "class_name": "Addmv",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "AddmvAscend",
+    "aclnn": [
+      "aclnnAddmv"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/addmv.cc",
+      "mindspore/ops/infer/ops_func_impl/addmv.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/addmv.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/addmv.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/addmv_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/addmv_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_addmv.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_addmv_op.py",
+      "tests/st/ops/cpu/test_addmv_op.py",
+      "tests/st/ops/gpu/test_addmv_op.py"
+    ],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.addmv::addmv_op.yaml",
+    "coverage_key": "addmv::Addmv"
+  }
+}

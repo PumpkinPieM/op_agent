@@ -1,0 +1,69 @@
+{
+  "bundle_key": "mindspore.mint.addmm::addmm_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.addmm",
+    "public_surface": "mindspore.mint",
+    "api_name": "addmm",
+    "op_branch": "addmm_op.yaml",
+    "op": "addmm",
+    "primitive": "Addmm"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.math_func",
+    "target_symbol": "addmm_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.addmm_op",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "addmm::Addmm",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/addmm_op.yaml",
+    "class_name": "Addmm",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "AddmmAscend",
+    "aclnn": [
+      "aclnnAddmm"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/addmm.cc",
+      "mindspore/ops/infer/ops_func_impl/addmm.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/addmm.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/addmm.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/addmm_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/addmm_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.addmm::addmm_op.yaml",
+    "coverage_key": "addmm::Addmm"
+  }
+}

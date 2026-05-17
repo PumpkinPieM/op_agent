@@ -1,0 +1,67 @@
+{
+  "bundle_key": "mindspore.Tensor.t::t_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.t",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "t",
+    "op_branch": "t_ext_op.yaml",
+    "op": "t_ext",
+    "primitive": "TExt"
+  },
+  "resolver": {
+    "py_method": "tensor_t",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "t",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/t.yaml",
+    "source_file": "mindspore/ops/api_def/t.yaml"
+  },
+  "coverage": {
+    "coverage_key": "t_ext::TExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/t_ext_op.yaml",
+    "class_name": "TExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnTExt"
+    ],
+    "aclnn_source": [
+      "default_guess"
+    ],
+    "infer": true,
+    "pyboost": false,
+    "kbk": false,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/t_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/t_ext.h"
+    ],
+    "pyboost": [],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_t_ext.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/t_ext_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.t::t_ext_op.yaml",
+    "coverage_key": "t_ext::TExt"
+  }
+}

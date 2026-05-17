@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.mint.conv2d::conv2d_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.conv2d",
+    "public_surface": "mindspore.mint",
+    "api_name": "conv2d",
+    "op_branch": "conv2d_ext_op.yaml",
+    "op": "conv2d_ext",
+    "primitive": "Conv2DExt"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.nn_func",
+    "target_symbol": "conv2d_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.nn_func.conv2d_ext",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "conv2d_ext::Conv2DExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/conv2d_ext_op.yaml",
+    "class_name": "Conv2DExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "Conv2DExtAscend",
+    "aclnn": [
+      "aclnnConvolution"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/conv2d_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/conv2d_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/conv2d_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/conv2d_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/conv2d_ext_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/conv2d_ext_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_nn_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_conv2d_ext.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.conv2d::conv2d_ext_op.yaml",
+    "coverage_key": "conv2d_ext::Conv2DExt"
+  }
+}

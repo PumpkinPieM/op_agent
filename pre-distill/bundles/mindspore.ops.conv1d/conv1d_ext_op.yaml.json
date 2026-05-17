@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.ops.conv1d::conv1d_ext_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.ops.conv1d",
+    "public_surface": "mindspore.ops",
+    "api_name": "conv1d",
+    "op_branch": "conv1d_ext_op.yaml",
+    "op": "conv1d_ext",
+    "primitive": "Conv1DExt"
+  },
+  "resolver": {
+    "py_method": "conv1d",
+    "interface": "function",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "conv1d",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/conv1d.yaml",
+    "source_file": "mindspore/ops/api_def/conv1d.yaml"
+  },
+  "coverage": {
+    "coverage_key": "conv1d_ext::Conv1DExt",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/conv1d_ext_op.yaml",
+    "class_name": "Conv1DExt",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "Conv1DExtAscend",
+    "aclnn": [
+      "aclnnConvolution"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/conv1d_ext.cc",
+      "mindspore/ops/infer/ops_func_impl/conv1d_ext.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/conv1d_ext.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/conv1d_ext.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/conv1d_ext_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/conv1d_ext_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_nn_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_conv1d_ext.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_conv1d_ext.py"
+    ],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.ops.conv1d::conv1d_ext_op.yaml",
+    "coverage_key": "conv1d_ext::Conv1DExt"
+  }
+}

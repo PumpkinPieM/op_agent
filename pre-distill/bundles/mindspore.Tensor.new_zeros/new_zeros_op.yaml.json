@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.Tensor.new_zeros::new_zeros_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.new_zeros",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "new_zeros",
+    "op_branch": "new_zeros_op.yaml",
+    "op": "new_zeros",
+    "primitive": "NewZeros"
+  },
+  "resolver": {
+    "py_method": "tensor_new_zeros",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "new_zeros",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/new_zeros.yaml",
+    "source_file": "mindspore/ops/api_def/new_zeros.yaml"
+  },
+  "coverage": {
+    "coverage_key": "new_zeros::NewZeros",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/new_zeros_op.yaml",
+    "class_name": "NewZeros",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "NewZerosAscend",
+    "aclnn": [
+      "aclnnInplaceZero"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/new_zeros.cc",
+      "mindspore/ops/infer/ops_func_impl/new_zeros.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/new_zeros.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/new_zeros.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/new_zeros_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/new_zeros_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_new_zeros.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_new_zeros.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/new_zeros_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.new_zeros::new_zeros_op.yaml",
+    "coverage_key": "new_zeros::NewZeros"
+  }
+}

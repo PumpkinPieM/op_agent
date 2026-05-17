@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.mint.gcd::gcd_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.gcd",
+    "public_surface": "mindspore.mint",
+    "api_name": "gcd",
+    "op_branch": "gcd_op.yaml",
+    "op": "gcd",
+    "primitive": "Gcd"
+  },
+  "resolver": {
+    "py_method": "tensor_gcd",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.auto_generate",
+    "target_symbol": "gcd",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.auto_generate.gcd",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "gcd::Gcd",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/gcd_op.yaml",
+    "class_name": "Gcd",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnGcd"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": false,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/gcd.cc",
+      "mindspore/ops/infer/ops_func_impl/gcd.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/gcd.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_gcd.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_gcd.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/gcd_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.gcd::gcd_op.yaml",
+    "coverage_key": "gcd::Gcd"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "bundle_key": "mindspore.mint.greater_equal::greater_equal_scalar_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.greater_equal",
+    "public_surface": "mindspore.mint",
+    "api_name": "greater_equal",
+    "op_branch": "greater_equal_scalar_op.yaml",
+    "op": "greater_equal_scalar",
+    "primitive": "GreaterEqualScalar"
+  },
+  "resolver": {
+    "py_method": "tensor_greater_equal",
+    "interface": "tensor, function",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "greater_equal",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.greater_equal",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "greater_equal_scalar::GreaterEqualScalar",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/greater_equal_scalar_op.yaml",
+    "class_name": "GreaterEqualScalar",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnGeScalar"
+    ],
+    "aclnn_source": [
+      "aclnn_config",
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/greater_equal_scalar.cc",
+      "mindspore/ops/infer/ops_func_impl/greater_equal_scalar.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/greater_equal_scalar.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/greater_equal_scalar_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/aclnn_auto_gen/greater_equal_scalar_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_greater_equal_scalar.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_greater_equal_scalar.py"
+    ],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.greater_equal::greater_equal_scalar_op.yaml",
+    "coverage_key": "greater_equal_scalar::GreaterEqualScalar"
+  }
+}

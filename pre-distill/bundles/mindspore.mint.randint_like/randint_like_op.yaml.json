@@ -1,0 +1,67 @@
+{
+  "bundle_key": "mindspore.mint.randint_like::randint_like_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.randint_like",
+    "public_surface": "mindspore.mint",
+    "api_name": "randint_like",
+    "op_branch": "randint_like_op.yaml",
+    "op": "randint_like",
+    "primitive": "RandIntLike"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.random_func",
+    "target_symbol": "randint_like_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.random_func.randint_like_",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "randint_like::RandIntLike",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/randint_like_op.yaml",
+    "class_name": "RandIntLike",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "RandIntLikeAscend",
+    "aclnn": [
+      "aclnnInplaceRandom"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/randint_like.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/randint_like.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/randint_like.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/randint_aclnn_kernel.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_other_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.randint_like::randint_like_op.yaml",
+    "coverage_key": "randint_like::RandIntLike"
+  }
+}

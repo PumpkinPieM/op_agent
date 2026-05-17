@@ -1,0 +1,76 @@
+{
+  "bundle_key": "mindspore.Tensor.exp::exp_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.exp",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "exp",
+    "op_branch": "exp_op.yaml",
+    "op": "exp",
+    "primitive": "Exp"
+  },
+  "resolver": {
+    "py_method": "tensor_exp",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "exp",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/exp.yaml",
+    "source_file": "mindspore/ops/api_def/exp.yaml"
+  },
+  "coverage": {
+    "coverage_key": "exp::Exp",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/exp_op.yaml",
+    "class_name": "Exp",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnExp"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/exp.cc",
+      "mindspore/ops/infer/ops_func_impl/exp.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/exp.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_exp.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_exp_op.py",
+      "tests/st/ops/cpu/test_exp_op.py",
+      "tests/st/ops/gpu/test_exp_op.py",
+      "tests/st/ops/test_ops_exp.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/exp_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.exp::exp_op.yaml",
+    "coverage_key": "exp::Exp"
+  }
+}

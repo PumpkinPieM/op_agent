@@ -1,0 +1,66 @@
+{
+  "bundle_key": "mindspore.Tensor.split::split_with_size_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.split",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "split",
+    "op_branch": "split_with_size_op.yaml",
+    "op": "split_with_size",
+    "primitive": "SplitWithSize"
+  },
+  "resolver": {
+    "py_method": "tensor_split_with_size",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "split",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/split.yaml",
+    "source_file": "mindspore/ops/api_def/split.yaml"
+  },
+  "coverage": {
+    "coverage_key": "split_with_size::SplitWithSize",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/split_with_size_op.yaml",
+    "class_name": "SplitWithSize",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnSplitWithSize"
+    ],
+    "aclnn_source": [
+      "default_guess"
+    ],
+    "infer": true,
+    "pyboost": false,
+    "kbk": false,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_frontend_func_impl/split_with_size.cc",
+      "mindspore/ops/infer/ops_func_impl/split_with_size.cc",
+      "mindspore/ops/infer/ops_func_impl/split_with_size.h"
+    ],
+    "pyboost": [],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/view/test_split_with_size.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.split::split_with_size_op.yaml",
+    "coverage_key": "split_with_size::SplitWithSize"
+  }
+}

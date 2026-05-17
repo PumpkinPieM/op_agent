@@ -1,0 +1,71 @@
+{
+  "bundle_key": "mindspore.mint.full::fill_scalar_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.full",
+    "public_surface": "mindspore.mint",
+    "api_name": "full",
+    "op_branch": "fill_scalar_op.yaml",
+    "op": "fill_scalar",
+    "primitive": "FillScalar"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.function.array_func",
+    "target_symbol": "full_ext",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.function.array_func.fill_scalar_",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "fill_scalar::FillScalar",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/fill_scalar_op.yaml",
+    "class_name": "FillScalar",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "FillScalarAscend",
+    "aclnn": [
+      "aclnnInplaceFillScalar"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/fill_scalar.cc",
+      "mindspore/ops/infer/ops_func_impl/fill_scalar.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/fill_scalar.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/fill_scalar.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/fill_scalar_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/fill_scalar_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_inner_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/fill_scalar_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.full::fill_scalar_op.yaml",
+    "coverage_key": "fill_scalar::FillScalar"
+  }
+}

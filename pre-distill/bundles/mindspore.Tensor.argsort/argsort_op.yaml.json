@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.Tensor.argsort::argsort_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.argsort",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "argsort",
+    "op_branch": "argsort_op.yaml",
+    "op": "argsort",
+    "primitive": "ArgSort"
+  },
+  "resolver": {
+    "py_method": "tensor_argsort",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "argsort",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/argsort.yaml",
+    "source_file": "mindspore/ops/api_def/argsort.yaml"
+  },
+  "coverage": {
+    "coverage_key": "argsort::ArgSort",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/argsort_op.yaml",
+    "class_name": "ArgSort",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "ArgSortAscend",
+    "aclnn": [
+      "aclnnSort"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/argsort.cc",
+      "mindspore/ops/infer/ops_func_impl/argsort.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/argsort.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/argsort.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/argsort_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/argsort_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_argsort.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_func_argsort.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/argsort_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.argsort::argsort_op.yaml",
+    "coverage_key": "argsort::ArgSort"
+  }
+}

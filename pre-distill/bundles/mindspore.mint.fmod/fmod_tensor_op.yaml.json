@@ -1,0 +1,67 @@
+{
+  "bundle_key": "mindspore.mint.fmod::fmod_tensor_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.fmod",
+    "public_surface": "mindspore.mint",
+    "api_name": "fmod",
+    "op_branch": "fmod_tensor_op.yaml",
+    "op": "fmod_tensor",
+    "primitive": "FmodTensor"
+  },
+  "resolver": {
+    "py_method": "fmod_tensor",
+    "interface": "function, tensor",
+    "target_module": "mindspore.ops.functional_overload",
+    "target_symbol": "fmod",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.functional_overload.fmod",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "fmod_tensor::FmodTensor",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/fmod_tensor_op.yaml",
+    "class_name": "FmodTensor",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnFmodTensor"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": false,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/fmod_tensor.cc",
+      "mindspore/ops/infer/ops_func_impl/fmod_tensor.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/fmod_tensor.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.fmod::fmod_tensor_op.yaml",
+    "coverage_key": "fmod_tensor::FmodTensor"
+  }
+}

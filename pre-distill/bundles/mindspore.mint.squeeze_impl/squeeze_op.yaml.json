@@ -1,0 +1,76 @@
+{
+  "bundle_key": "mindspore.mint.squeeze_impl::squeeze_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.squeeze_impl",
+    "public_surface": "mindspore.mint",
+    "api_name": "squeeze_impl",
+    "op_branch": "squeeze_op.yaml",
+    "op": "squeeze",
+    "primitive": "Squeeze"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.auto_generate.pyboost_inner_prim",
+    "target_symbol": "squeeze_impl",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.pyboost_inner_prim.squeeze_impl",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "squeeze::Squeeze",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/squeeze_op.yaml",
+    "class_name": "Squeeze",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnSqueeze"
+    ],
+    "aclnn_source": [
+      "default_guess"
+    ],
+    "infer": true,
+    "pyboost": false,
+    "kbk": false,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/squeeze.cc",
+      "mindspore/ops/infer/ops_func_impl/squeeze.h",
+      "mindspore/ops/infer/symbol_ops_impl/squeeze.cc"
+    ],
+    "pyboost": [],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_squeeze.cc",
+      "tests/ut/cpp/ops/view/test_squeeze.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_aicpu_ops/test_squeeze.py",
+      "tests/st/ops/cpu/test_squeeze_op.py",
+      "tests/st/ops/dynamic_shape/grad/test_squeeze.py",
+      "tests/st/ops/gpu/test_squeeze_op.py",
+      "tests/st/ops/test_func_squeeze.py",
+      "tests/st/ops/test_ops_squeeze.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/squeeze_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.squeeze_impl::squeeze_op.yaml",
+    "coverage_key": "squeeze::Squeeze"
+  }
+}

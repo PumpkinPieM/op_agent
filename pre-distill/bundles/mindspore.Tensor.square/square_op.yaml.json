@@ -1,0 +1,78 @@
+{
+  "bundle_key": "mindspore.Tensor.square::square_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.square",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "square",
+    "op_branch": "square_op.yaml",
+    "op": "square",
+    "primitive": "Square"
+  },
+  "resolver": {
+    "py_method": "tensor_square",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "square",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/square.yaml",
+    "source_file": "mindspore/ops/api_def/square.yaml"
+  },
+  "coverage": {
+    "coverage_key": "square::Square",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/square_op.yaml",
+    "class_name": "Square",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "SquareAscend",
+    "aclnn": [
+      "aclnnMul"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/square.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/square.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/square.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/square_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/square_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_square.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_tbe_ops/test_square.py",
+      "tests/st/ops/cpu/test_square_op.py",
+      "tests/st/ops/custom_ops_tbe/test_square.py",
+      "tests/st/ops/gpu/test_square_op.py",
+      "tests/st/ops/test_ops_square.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/square_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.square::square_op.yaml",
+    "coverage_key": "square::Square"
+  }
+}

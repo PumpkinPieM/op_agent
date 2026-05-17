@@ -1,0 +1,75 @@
+{
+  "bundle_key": "mindspore.mint.mv::mv_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.mv",
+    "public_surface": "mindspore.mint",
+    "api_name": "mv",
+    "op_branch": "mv_op.yaml",
+    "op": "mv",
+    "primitive": "Mv"
+  },
+  "resolver": {
+    "py_method": "",
+    "interface": "",
+    "target_module": "mindspore.ops.auto_generate",
+    "target_symbol": "mv",
+    "resolver_kind": "op_def",
+    "resolver_path": "mindspore.ops.auto_generate.mv",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "mv::Mv",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/mv_op.yaml",
+    "class_name": "Mv",
+    "dispatch_enable": true,
+    "dispatch_kind": "customize",
+    "dispatch_ascend": "MvAscend",
+    "aclnn": [
+      "aclnnMv"
+    ],
+    "aclnn_source": [
+      "customize_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/mv.cc",
+      "mindspore/ops/infer/ops_func_impl/mv.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/mv.cc",
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/customize/mv.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/mv_aclnn_kernel.cc",
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/customize/mv_aclnn_kernel.h"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_mv.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_ops_mv.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/mv_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.mv::mv_op.yaml",
+    "coverage_key": "mv::Mv"
+  }
+}

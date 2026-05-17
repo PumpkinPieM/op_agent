@@ -1,0 +1,72 @@
+{
+  "bundle_key": "mindspore.mint.logaddexp2::logaddexp2_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.mint.logaddexp2",
+    "public_surface": "mindspore.mint",
+    "api_name": "logaddexp2",
+    "op_branch": "logaddexp2_op.yaml",
+    "op": "logaddexp2",
+    "primitive": "LogAddExp2"
+  },
+  "resolver": {
+    "py_method": "deprecated_tensor_logaddexp2",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.auto_generate",
+    "target_symbol": "logaddexp2",
+    "resolver_kind": "api_def",
+    "resolver_path": "mindspore.ops.auto_generate.logaddexp2",
+    "source_file": "mindspore/python/mindspore/mint/__init__.py"
+  },
+  "coverage": {
+    "coverage_key": "logaddexp2::LogAddExp2",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/logaddexp2_op.yaml",
+    "class_name": "LogAddExp2",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnLogAddExp2"
+    ],
+    "aclnn_source": [
+      "aclnn_config",
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": false,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/logaddexp2.cc",
+      "mindspore/ops/infer/ops_func_impl/logaddexp2.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/logaddexp2.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_logaddexp2.cc"
+    ],
+    "st": [],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/logaddexp2_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.mint.logaddexp2::logaddexp2_op.yaml",
+    "coverage_key": "logaddexp2::LogAddExp2"
+  }
+}

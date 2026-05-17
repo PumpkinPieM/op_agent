@@ -1,0 +1,69 @@
+{
+  "bundle_key": "mindspore.Tensor.chunk::chunk_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.chunk",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "chunk",
+    "op_branch": "chunk_op.yaml",
+    "op": "chunk",
+    "primitive": "Chunk"
+  },
+  "resolver": {
+    "py_method": "tensor_chunk",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "chunk",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/chunk.yaml",
+    "source_file": "mindspore/ops/api_def/chunk.yaml"
+  },
+  "coverage": {
+    "coverage_key": "chunk::Chunk",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/chunk_op.yaml",
+    "class_name": "Chunk",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnChunk"
+    ],
+    "aclnn_source": [
+      "default_guess"
+    ],
+    "infer": true,
+    "pyboost": false,
+    "kbk": false,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": false
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/chunk.cc",
+      "mindspore/ops/infer/ops_func_impl/chunk.h",
+      "mindspore/ops/infer/symbol_ops_impl/chunk.cc"
+    ],
+    "pyboost": [],
+    "kbk": [],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_array_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_chunk.cc",
+      "tests/ut/cpp/ops/view/test_chunk.cc"
+    ],
+    "st": [
+      "tests/st/ops/test_func_chunk.py"
+    ],
+    "docs_cn": [],
+    "docs_en": []
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.chunk::chunk_op.yaml",
+    "coverage_key": "chunk::Chunk"
+  }
+}

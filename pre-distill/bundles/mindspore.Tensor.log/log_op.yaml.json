@@ -1,0 +1,74 @@
+{
+  "bundle_key": "mindspore.Tensor.log::log_op.yaml",
+  "schema_version": "v1",
+  "generated_at": "2026-03-31T21:45:05+08:00",
+  "identity": {
+    "public_api": "mindspore.Tensor.log",
+    "public_surface": "mindspore.Tensor",
+    "api_name": "log",
+    "op_branch": "log_op.yaml",
+    "op": "log",
+    "primitive": "Log"
+  },
+  "resolver": {
+    "py_method": "tensor_log",
+    "interface": "tensor",
+    "target_module": "mindspore.ops.api_def",
+    "target_symbol": "log",
+    "resolver_kind": "api_def_interface",
+    "resolver_path": "mindspore/ops/api_def/log.yaml",
+    "source_file": "mindspore/ops/api_def/log.yaml"
+  },
+  "coverage": {
+    "coverage_key": "log::Log",
+    "op_yaml_path": "mindspore/ops/op_def/yaml/log_op.yaml",
+    "class_name": "Log",
+    "dispatch_enable": true,
+    "dispatch_kind": "auto_generate",
+    "dispatch_ascend": "default",
+    "aclnn": [
+      "aclnnLog"
+    ],
+    "aclnn_source": [
+      "auto_generate_source"
+    ],
+    "infer": true,
+    "pyboost": true,
+    "kbk": true,
+    "bprop": true,
+    "ut": true,
+    "st": true,
+    "docs_cn": false,
+    "docs_en": true
+  },
+  "evidence": {
+    "infer": [
+      "mindspore/ops/infer/ops_func_impl/log.cc",
+      "mindspore/ops/infer/ops_func_impl/log.h"
+    ],
+    "pyboost": [
+      "mindspore/ops/kernel/ascend/aclnn/pyboost_impl/auto_generate/log.h"
+    ],
+    "kbk": [
+      "mindspore/ops/kernel/ascend/aclnn/kernel_mod_impl/auto_generate/aclnn_kernel_register_auto.cc"
+    ],
+    "bprop": [
+      "mindspore/ccsrc/frontend/expander/grad/grad_math_ops.cc"
+    ],
+    "ut": [
+      "tests/ut/cpp/ops/test_ops_log.cc"
+    ],
+    "st": [
+      "tests/st/ops/ascend/test_log_op.py",
+      "tests/st/ops/test_ops_log.py"
+    ],
+    "docs_cn": [],
+    "docs_en": [
+      "mindspore/ops/op_def/yaml/doc/log_doc.yaml"
+    ]
+  },
+  "refs": {
+    "identity_key": "mindspore.Tensor.log::log_op.yaml",
+    "coverage_key": "log::Log"
+  }
+}

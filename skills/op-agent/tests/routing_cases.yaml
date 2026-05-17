@@ -1,7 +1,7 @@
-schema_version: "1.0.0"
+schema_version: "1.1.0"
 cases:
   - id: "cpu_plugin_default"
-    title: "CPU default route prefers plugin"
+    title: "CPU default route dispatches to plugin builder"
     input:
       api_name: "mindspore.mint.abs"
       target_backend_raw: "CPU"
@@ -9,17 +9,14 @@ cases:
       known_evidence: "The operator is missing on CPU. No specific integration requirement provided."
     expected:
       normalized_backend: "CPU"
-      support_options:
-        - builder: "cpu-plugin-builder"
-          status: "recommended"
-        - builder: "cpu-native-builder"
-          status: "available"
       best_fit: "cpu-plugin-builder"
-      ask_clarification: false
+      handoff_skill: "cpu-plugin-builder"
+      handoff_task: "Implement the missing CPU operator through the plugin path."
+      start_now: true
       forbid_codegen: true
 
   - id: "cpu_native_override"
-    title: "CPU native route when deep framework integration is required"
+    title: "CPU native requirement dispatches to native builder"
     input:
       api_name: "mindspore.mint.xxx"
       target_backend_raw: "CPU"
@@ -27,17 +24,14 @@ cases:
       known_evidence: "The user explicitly requires deep framework integration inside MindSpore core."
     expected:
       normalized_backend: "CPU"
-      support_options:
-        - builder: "cpu-native-builder"
-          status: "available"
-        - builder: "cpu-plugin-builder"
-          status: "recommended"
       best_fit: "cpu-native-builder"
-      ask_clarification: false
+      handoff_skill: "cpu-native-builder"
+      handoff_task: "Implement the missing CPU operator inside MindSpore core."
+      start_now: true
       forbid_codegen: true
 
   - id: "npu_alias_ascend"
-    title: "Ascend alias normalizes to NPU"
+    title: "Ascend alias normalizes to NPU and dispatches to ACLNN builder"
     input:
       api_name: "mindspore.mint.mul"
       target_backend_raw: "Ascend"
@@ -45,15 +39,14 @@ cases:
       known_evidence: "This is an ACLNN-based implementation task."
     expected:
       normalized_backend: "NPU"
-      support_options:
-        - builder: "npu-native-builder"
-          status: "standard"
-      best_fit: "npu-native-builder"
-      ask_clarification: false
+      best_fit: "aclnn-builder"
+      handoff_skill: "aclnn-builder"
+      handoff_task: "Implement the Ascend ACLNN adaptation end to end."
+      start_now: true
       forbid_codegen: true
 
   - id: "npu_alias_aclnn"
-    title: "aclnn alias normalizes to NPU"
+    title: "aclnn alias normalizes to NPU and dispatches to ACLNN builder"
     input:
       api_name: "mindspore.mint.sub"
       target_backend_raw: "aclnn"
@@ -61,33 +54,29 @@ cases:
       known_evidence: "The task is framed as an aclnn adaptation."
     expected:
       normalized_backend: "NPU"
-      support_options:
-        - builder: "npu-native-builder"
-          status: "standard"
-      best_fit: "npu-native-builder"
-      ask_clarification: false
+      best_fit: "aclnn-builder"
+      handoff_skill: "aclnn-builder"
+      handoff_task: "Implement the Ascend ACLNN adaptation end to end."
+      start_now: true
       forbid_codegen: true
 
-  - id: "gpu_roadmap"
-    title: "GPU route stays on roadmap"
+  - id: "gpu_direct_route"
+    title: "GPU route dispatches directly to GPU builder"
     input:
       api_name: "mindspore.mint.xxx"
       target_backend_raw: "GPU"
       problem_type: "operator-gap"
-      known_evidence: ""
+      known_evidence: "The operator is unsupported on GPU."
     expected:
       normalized_backend: "GPU"
-      support_options:
-        - builder: "gpu-native-builder"
-          status: "planned"
-        - builder: "gpu-plugin-builder"
-          status: "planned"
-      best_fit: "Roadmap"
-      ask_clarification: false
+      best_fit: "gpu-builder"
+      handoff_skill: "gpu-builder"
+      handoff_task: "Implement the missing GPU operator with the GPU builder."
+      start_now: true
       forbid_codegen: true
 
-  - id: "cpu_ambiguity"
-    title: "CPU ambiguity asks for a decision signal"
+  - id: "cpu_ambiguity_defaults_to_plugin"
+    title: "CPU ambiguity still dispatches to plugin builder by default"
     input:
       api_name: "mindspore.ops.CustomOp"
       target_backend_raw: "CPU"
@@ -95,17 +84,14 @@ cases:
       known_evidence: "Unsupported on CPU."
     expected:
       normalized_backend: "CPU"
-      support_options:
-        - builder: "cpu-plugin-builder"
-          status: "recommended"
-        - builder: "cpu-native-builder"
-          status: "available"
       best_fit: "cpu-plugin-builder"
-      ask_clarification: true
+      handoff_skill: "cpu-plugin-builder"
+      handoff_task: "Implement the missing CPU operator through the plugin path."
+      start_now: true
       forbid_codegen: true
 
   - id: "npu_mint_api"
-    title: "mint API on NPU stays on native path"
+    title: "mint API on NPU dispatches to ACLNN builder"
     input:
       api_name: "mindspore.mint.abs"
       target_backend_raw: "NPU"
@@ -113,9 +99,8 @@ cases:
       known_evidence: ""
     expected:
       normalized_backend: "NPU"
-      support_options:
-        - builder: "npu-native-builder"
-          status: "standard"
-      best_fit: "npu-native-builder"
-      ask_clarification: false
+      best_fit: "aclnn-builder"
+      handoff_skill: "aclnn-builder"
+      handoff_task: "Implement the mint API adaptation with the ACLNN builder."
+      start_now: true
       forbid_codegen: true
